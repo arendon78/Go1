@@ -18,7 +18,7 @@ class Neuron:
     EPSP_time = 150
 
     # Duration of Inhibitory Post-Synaptic Potential IPSP (every 15 ms)
-    # Including charge (5.4 ms), stable response (3 ms) and discharge (5.4 ms)
+    # Including charge (5.4 ms), stable response (3 ms) and discharge (5.4 ms)  
     IPSP_time = 150
 
     # Duration of an action potential pulse (5 ms)
@@ -66,6 +66,16 @@ class Neuron:
     # Neuron's resolution
     resolution = 0
 
+    def set_axon_terminals(self):
+        # Turn all axon terminals on
+        for i in range(self.num_axon_terminals):
+            self.axon_terminals[i] = 1
+
+    def reset_axon_terminals(self):
+        # Turn all axon terminals off
+        for i in range(self.num_axon_terminals):
+            self.axon_terminals[i] = 0
+
     def active_potential(self, t):
         # This action potential takes 5 ms in total
         # action potential + refractory period
@@ -85,6 +95,37 @@ class Neuron:
             self.set_axon_terminals()
 
         return self.membrane_potential
+    
+
+    def EPSP(self, index, t, weight):
+        # Excitatory Post-Synaptic Potential
+        # These are the pulses that will be added up and if the threshold is reached (15 mV), fire the neuron
+        # 5.4 ms to charge, 5.4 ms to discharge, and 3 ms in a constant value
+
+        # Charge curve
+        if t < self.EPSP_time/30 + 3: # 5 ms approx of charge + 3 ms of constant value
+            value = weight * (1 - np.exp(-(t/self.tau))) + self.temp_summation[index]
+        # Discharge curve
+        else: # At time = 8 ms from the start of the EPSP, start discharge
+            value = weight * np.exp(-((t-7.9)/self.tau))
+
+        return value
+
+
+    def set_weights(self, values):
+        # The weight(s) for synapses must be such that the output voltage remains
+        # between 0.1 mV and 5 mV
+        for i in range(self.num_dendrites):
+            self.weights[i] = values[i]
+
+
+    def reset_PSP(self):
+        # Reset all PSP values to False
+        for i in range(self.num_dendrites):
+            self.active_PSP[i] = False
+            self.dendrites[i] = 0
+            self.time_dendrites[i] = 0
+            self.temp_summation[i] = 0
 
     # Perform spatial summation on all dendrites of the neuron
     def spatial_summation(self):
@@ -117,44 +158,6 @@ class Neuron:
         self.membrane_potential = result
 
         return result
-
-    def EPSP(self, index, t, weight):
-        # Excitatory Post-Synaptic Potential
-        # These are the pulses that will be added up and if the threshold is reached (15 mV), fire the neuron
-        # 5.4 ms to charge, 5.4 ms to discharge, and 3 ms in a constant value
-
-        # Charge curve
-        if t < self.EPSP_time/30 + 3: # 5 ms approx of charge + 3 ms of constant value
-            value = weight * (1 - np.exp(-(t/self.tau))) + self.temp_summation[index]
-        # Discharge curve
-        else: # At time = 8 ms from the start of the EPSP, start discharge
-            value = weight * np.exp(-((t-7.9)/self.tau))
-
-        return value
-
-    def set_weights(self, values):
-        # The weight(s) for synapses must be such that the output voltage remains
-        # between 0.1 mV and 5 mV
-        for i in range(self.num_dendrites):
-            self.weights[i] = values[i]
-
-    def reset_PSP(self):
-        # Reset all PSP values to False
-        for i in range(self.num_dendrites):
-            self.active_PSP[i] = False
-            self.dendrites[i] = 0
-            self.time_dendrites[i] = 0
-            self.temp_summation[i] = 0
-
-    def set_axon_terminals(self):
-        # Turn all axon terminals on
-        for i in range(self.num_axon_terminals):
-            self.axon_terminals[i] = 1
-
-    def reset_axon_terminals(self):
-        # Turn all axon terminals off
-        for i in range(self.num_axon_terminals):
-            self.axon_terminals[i] = 0
 
     def present_inputs(self, inputs):
         # Check that there's not an active potential occurring at the moment

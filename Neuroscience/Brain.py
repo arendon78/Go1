@@ -9,7 +9,7 @@ V = np.zeros([sim_time,1])            #Initialize V.
 V[0]=0                           #Set the initial value of V.
 
 # Initialize neuron
-neuron = Neuron(res)
+neuron = Neuron(res)#
 neuron.set_weights([5,3])
 
 #inputs = np.zeros([sim_time,1])            #Initialize V.

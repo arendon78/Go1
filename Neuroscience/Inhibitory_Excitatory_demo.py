@@ -13,13 +13,13 @@ sim_time = 1000                   #Set the simulation time
 V = [np.zeros([sim_time,1]), np.zeros([sim_time,1]), np.zeros([sim_time,1])]
 
 # Initialize neurons
-neuron1 = Excitatory_Neuron(res, 2, 2)
+neuron1 = Inhibitory_Neuron(res, 2, 2)
 neuron1.set_weights([10,10])
 
 neuron2 = Inhibitory_Neuron(res, 2, 1)
 neuron2.set_weights([5,3])
 
-neuron3 = Excitatory_Neuron(res, 2, 1)
+neuron3 = Inhibitory_Neuron(res, 2, 1)
 neuron3.set_weights([3,3])
 
 # Establish connections between neurons

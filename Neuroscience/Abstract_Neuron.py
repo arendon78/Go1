@@ -29,29 +29,10 @@ class Abstract_Neuron:
 
     # Threshold Voltage (mV) to fire the neuron
     Thres_Act_Pot_volt = 14.9
-
-    # Neuron's resolution
-    resolution = 0
-
-    def active_potential(self, t):
-        # This action potential takes 5 ms in total
-        # action potential + refractory period
-
-        # If the active potential is over, then turn active_potential_bool off
-        if t == self.Act_Pot_time/10:
-            self.active_potential_bool = False
-
-        self.membrane_potential = (np.sin(1.5*t)/(1.5*t)-0.1266)*100
-
-        # If the signal has reached its peak, then turn max_active_potential off
-        if self.max_active_potential:
-            self.max_active_potential = False
-
-        # If the neuron is at its peak voltage, then send signal to the axon terminals
-        if self.membrane_potential > self.Act_Pot_volt:
-            self.max_active_potential = True
-
-        return self.membrane_potential
+    
+# redundant
+    # # Neuron's resolution
+    # resolution = 0
 
     # Perform spatial summation on all dendrites of the neuron
     def spatial_summation(self):
@@ -64,6 +45,7 @@ class Abstract_Neuron:
                 self.time_dendrites[i] += 1
 
                 # If the input comes from an excitatory dendrite, Call to EPSP function
+
                 if self.temp_inputs[i] == 1:
                     self.volt_dendrites[i] = self.EPSP(i, self.time_dendrites[i]*self.resolution, self.weights[i])
                 # If the input comes from an inhibitory dendrite, Call to IPSP function
@@ -91,6 +73,28 @@ class Abstract_Neuron:
         self.membrane_potential = result
 
         return result
+    
+
+
+    def active_potential(self, t):
+        # This action potential takes 5 ms in total
+        # action potential + refractory period
+
+        # If the active potential is over, then turn active_potential_bool off
+        if t == self.Act_Pot_time/10:
+            self.active_potential_bool = False
+
+        self.membrane_potential = (np.sin(1.5*t)/(1.5*t)-0.1266)*100
+
+        # If the signal has reached its peak, then turn max_active_potential off
+        if self.max_active_potential:
+            self.max_active_potential = False
+
+        # If the neuron is at its peak voltage, then send signal to the axon terminals
+        if self.membrane_potential > self.Act_Pot_volt:
+            self.max_active_potential = True
+
+        return self.membrane_potential
 
     def EPSP(self, index, t, weight):
         # Excitatory Post-Synaptic Potential
@@ -106,22 +110,19 @@ class Abstract_Neuron:
 
         return value
 
-    # def IPSP(self, index, t, weight):
-    #     # Inhibitory Post-Synaptic Potential
-    #     # These are the pulses that will be added up and if the threshold is reached (15 mV), fire the neuron
-    #     # 5.4 ms to charge, 5.4 ms to discharge, and 3 ms in a constant value
+    def IPSP(self, index, t, weight):
+        # Inhibitory Post-Synaptic Potential
+        # These are the pulses that will be added up and if the threshold is reached (15 mV), fire the neuron
+        # 5.4 ms to charge, 5.4 ms to discharge, and 3 ms in a constant value
 
-    #     # Discharge curve
-    #     if t < self.EPSP_time/30 + 3: # 5 ms approx of discharge + 3 ms of constant value
-    #         value = -weight * (1 - np.exp(-(t/self.tau))) + self.temp_summation[index]
-    #     # Charge curve
-    #     else: # At time = 8 ms from the start of the IPSP, start charge
-    #         value = -weight * np.exp(-((t-7.9)/self.tau))
+        # Discharge curve
+        if t < self.EPSP_time/30 + 3: # 5 ms approx of discharge + 3 ms of constant value
+            value = -weight * (1 - np.exp(-(t/self.tau))) + self.temp_summation[index]
+        # Charge curve
+        else: # At time = 8 ms from the start of the IPSP, start charge
+            value = -weight * np.exp(-((t-7.9)/self.tau))
 
-    #     return value
-
-    def IPSP(selft, index, t, weight):
-        return -self.EPSP(index, t, weight )
+        return value
 
     def set_weights(self, values):
         # The weight(s) for synapses must be such that the output voltage remains
@@ -165,6 +166,7 @@ class Abstract_Neuron:
 
         # Adds a new connection to axon_terminals
         if index != -1:
+            print(self.axon_terminals)
             self.axon_terminals.append([target_neuron,index])
 
     def assign_input(self):
@@ -177,14 +179,6 @@ class Abstract_Neuron:
 
         # This indicates no indexes are available for this neuron
         return -1
-
-    def propagate_outputs(self):
-        # Update inputs from connected neurons
-        for item in self.axon_terminals:
-            if self.max_active_potential:
-                item[0].inputs[item[1]] = 1
-            else:
-                item[0].inputs[item[1]] = 0
 
     def __init__(self, res, inputs, outputs):
         # Initialize number of dendrites (inputs) in the neuron

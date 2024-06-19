@@ -22,3 +22,7 @@ L2 + A
 L2 + A
 L2 + B
 L1 + L2 + Start
+
+
+python3 -m strctures.Tunable_Oscilator.py 
+conda activate py38

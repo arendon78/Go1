@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -fPIC -rdynamic CMakeFiles/example_joystick.dir/example/example_joystick.cpp.o -o example_joystick   -L/home/santinu/stage/Go1/unitree_legged_sdk-3.8.0/lib/cpp/amd64  -Wl,-rpath,/home/santinu/stage/Go1/unitree_legged_sdk-3.8.0/lib/cpp/amd64: -pthread -lunitree_legged_sdk 

@@ -11,69 +11,71 @@ from Neuroscience.structures.Organ import Organ
 
 import numpy as np
 
-import copy
-
 class Flip_Flop_T(Organ) : 
-    res = 0.1
 
     def print(self):
         for n in self.brain : 
             n.print()
             print("")
 
-    def start(self,inputs,k): 
+    def pass_inputs_oscillators(self, inputs, k):
         # Set inputs for the oscillators on each 5th dendrite of each NAND gate
-        self.fst_NAND.brain[4].inputs[1] = inputs[k][2]  # neuron1_5.inputs[1]
-        self.scd_NAND.brain[4].inputs[1] = inputs[k][2]  # neuron2_5.inputs[1]
-        self.thrd_NAND.brain[4].inputs[1] = inputs[k][2] # neuron3_5.inputs[1]
-        self.fth_NAND.brain[4].inputs[1] = inputs[k][2]  # neuron4_5.inputs[1]
-        # Set selfputs for NAND gates 1 and 2 (neurons 1_1 and 2_1)
-        self.fst_NAND.brain[0].inputs[1] = inputs[k][0]  # neuron1_1.inputs[1]
-        self.fst_NAND.brain[0].inputs[2] = inputs[k][1]  # neuron1_1.inputs[2]
-        self.scd_NAND.brain[0].inputs[1] = inputs[k][0]  # neuron2_1.inputs[1]
-        self.scd_NAND.brain[0].inputs[2] = inputs[k][1]  # neuron2_1.inputs[2]
+        self.fst_NAND.brain[4].inputs[1] = inputs[k][1]  # neuron1_5.inputs[1]
+        self.scd_NAND.brain[4].inputs[1] = inputs[k][1]  # neuron2_5.inputs[1]
+        self.thrd_NAND.brain[4].inputs[1] = inputs[k][1] # neuron3_5.inputs[1]
+        self.fth_NAND.brain[4].inputs[1] = inputs[k][1]  # neuron4_5.inputs[1]
 
-    def __init__(self): 
+    def pass_inputs_selfputs(self,inputs,k):
+        # Set selfputs for NAND gates 1 and 2 (neurons 1_1 and 2_1)
+        self.fst_NAND.brain[0].inputs[2] = inputs[k][0]  # neuron1_1.inputs[2]
+        self.scd_NAND.brain[0].inputs[2] = inputs[k][0]  # neuron2_1.inputs[2]
+
+    def pass_inputs(self,inputs,k): 
+        self.pass_inputs_oscillators(inputs,k)
+        # Set selfputs for NAND gates 1 and 2 (neurons 1_1 and 2_1)
+        self.pass_inputs_selfputs(inputs,k)
+
+    def __init__(self,res): 
 
         super().__init__()
 
     #1st NAND Gate -----------------------
 
-        n1_0 = Excitatory_Neuron(self.res, 3, 4, name = "n1_0")
+        n1_0 = Excitatory_Neuron(res, 3, 4, name = "n1_0")
         n1_0.set_weights([6.5,6.5,6.5])
-        n1_1 = Excitatory_Neuron(self.res, 1, 1,  name = "n1_1")
+        n1_1 = Excitatory_Neuron(res, 1, 1,  name = "n1_1")
         n1_1.set_weights([15])
-        n1_2 = Inhibitory_Neuron(self.res, 3, 1,  name = "n1_2")
+        n1_2 = Inhibitory_Neuron(res, 3, 1,  name = "n1_2")
         n1_2.set_weights([15,15,15])
-        n1_3 = Inhibitory_Neuron(self.res, 1, 1,  name = "n1_3")
+        n1_3 = Inhibitory_Neuron(res, 1, 1,  name = "n1_3")
         n1_3.set_weights([15])
-        n1_4 = Excitatory_Neuron(self.res, 2, 2,  name = "n1_4")
+        n1_4 = Excitatory_Neuron(res, 2, 2,  name = "n1_4")
         n1_4.set_weights([15,15])
-        n1_5 = Excitatory_Neuron(self.res, 1, 2,  name = "n1_5")
+        n1_5 = Excitatory_Neuron(res, 1, 2,  name = "n1_5")
         n1_5.set_weights([15])
-        n1_6 = Excitatory_Neuron(self.res, 4, 1,  name = "n1_6")
+        n1_6 = Excitatory_Neuron(res, 4, 1,  name = "n1_6")
         n1_6.set_weights([15,15,8,8])
         
-        self.fst_NAND = Gate_NAND(n1_0,n1_1,n1_2,n1_3,n1_4,n1_5,n1_6,res = self.res)
+        self.fst_NAND = Gate_NAND(n1_0,n1_1,n1_2,n1_3,n1_4,n1_5,n1_6,res = res)
         
     #2nd NAND Gate -----------------------
 
-        n2_0 = Excitatory_Neuron(self.res, 3, 4, name = "n2_0")
+        n2_0 = Excitatory_Neuron(res, 3, 4, name = "n2_0")
         n2_0.set_weights([6.5,6.5,6.5])
-        n2_1 = Excitatory_Neuron(self.res, 1, 1,  name = "n2_1")
+        n2_1 = Excitatory_Neuron(res, 1, 1,  name = "n2_1")
         n2_1.set_weights([15])
-        n2_2 = Inhibitory_Neuron(self.res, 3, 1,  name = "n2_2")
+        n2_2 = Inhibitory_Neuron(res, 3, 1,  name = "n2_2")
         n2_2.set_weights([15,15,15])
-        n2_3 = Inhibitory_Neuron(self.res, 1, 1,  name = "n2_3")
+        n2_3 = Inhibitory_Neuron(res, 1, 1,  name = "n2_3")
         n2_3.set_weights([15])
-        n2_4 = Excitatory_Neuron(self.res, 2, 2,  name = "n2_4")
+        n2_4 = Excitatory_Neuron(res, 2, 2,  name = "n2_4")
         n2_4.set_weights([15,15])
-        n2_5 = Excitatory_Neuron(self.res, 1, 2,  name = "n2_5")
+        n2_5 = Excitatory_Neuron(res, 1, 2,  name = "n2_5")
         n2_5.set_weights([15])
-        n2_6 = Excitatory_Neuron(self.res, 4, 1,  name = "n2_6")
+        n2_6 = Excitatory_Neuron(res, 4, 1,  name = "n2_6")
         n2_6.set_weights([15,15,8,8])
 
-        self.scd_NAND = Gate_NAND(n2_0,n2_1,n2_2,n2_3,n2_4,n2_5,n2_6,res = self.res)
+        self.scd_NAND = Gate_NAND(n2_0,n2_1,n2_2,n2_3,n2_4,n2_5,n2_6,res = res)
 
     
         self.scd_NAND.brain[0].num_dendrites = 3
@@ -83,13 +85,13 @@ class Flip_Flop_T(Organ) :
         self.scd_NAND.brain[0].set_weights([6.5,6.5,6.5])
 
     #3rd NAND Gate -----------------------
-        self.thrd_NAND = Gate_NAND(res = self.res , name = "n3_")
+        self.thrd_NAND = Gate_NAND(res = res , name = "n3_")
     
-        delay_neuron = Excitatory_Neuron(self.res, 1, 1, name = "delay neuron") # Neuron to provide a delay between NAND gates 3 and 4
+        delay_neuron = Excitatory_Neuron(res, 1, 1, name = "delay neuron") # Neuron to provide a delay between NAND gates 3 and 4
         delay_neuron.set_weights([15])
 
     #4th NAND Gate -----------------------
-        self.fth_NAND = Gate_NAND(res = self.res, name = "n4_")
+        self.fth_NAND = Gate_NAND(res = res, name = "n4_")
         
 
     #connection
@@ -106,5 +108,18 @@ class Flip_Flop_T(Organ) :
             for neuron in el: 
                 self.add_to_brain(neuron)
         self.add_to_brain(delay_neuron)
+        # [print(el.name) for el in self.brain]
 
-    
+
+
+#brain = [
+# n1_0,   n2_0,   n3_0,   n4_0,    
+# n1_1,   n2_1,   n3_1,   n4_1,    
+# n1_2,   n2_2,   n3_2,   n4_2,    
+# n1_3,   n2_3,   n3_3,   n4_3,    
+# n1_4,   n2_4,   n3_4,   n4_4,    
+# n1_5,   n2_5,   n3_5,   n4_5,    
+# n1_6,   n2_6,   n3_6,   n4_6,    
+# 
+# delay neuron]
+

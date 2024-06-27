@@ -26,11 +26,11 @@ for i in range(x):
 FlipFlop = Flip_Flop_T()
 
 
-inputs = np.zeros([sim_time,3])            #Initialize V.
+inputs = np.zeros([sim_time,2])            #Initialize V.
 
 # inputs[0] = T input, inputs[1] = clock signal, inputs[2] = starting signal for oscillators of each nand gate
 
-inputs[1] = [0,0,1]
+inputs[1] = [0,1]
 
 # Needs two consecutive pulses 110 apart from each other to work
 # inputs[500] = [1,1,0]
@@ -43,14 +43,14 @@ inputs[1] = [0,0,1]
 # Inhibitory neurons may be needed to block the inputs and prevent other neurons from firing
 # once the desired output is obtained
 
-inputs[850] = [1,1,0]
-inputs[960] = [1,1,0]
+inputs[850] = [1,0]
+inputs[960] = [1,0]
 
 k=1
 
 while k < sim_time:
     
-    FlipFlop.start(inputs,k)
+    FlipFlop.pass_inputs(inputs,k)
 
     FlipFlop.simulate(k,V)
     

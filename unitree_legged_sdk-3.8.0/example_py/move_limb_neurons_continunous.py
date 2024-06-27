@@ -6,6 +6,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
 sys.path.append(project_root)
 
@@ -24,6 +25,64 @@ def jointLinearInterpolation(initPos, targetPos, rate):
     p = initPos*(1-rate) + targetPos*rate
     return p
 
+import math
+
+def theta_hip(z, y):
+    """
+    Calculate the hip angle θ_hip.
+    
+    Parameters:
+    z (float): The z-coordinate.
+    y (float): The y-coordinate.
+    
+    Returns:
+    float: The hip angle θ_hip in radians.
+    """
+    return math.atan2(z, y)
+
+def theta_thigh(x, y, z, L=0.213):
+    """
+    Calculate the thigh angle θ_thigh.
+    
+    Parameters:
+    x (float): The x-coordinate.
+    y (float): The y-coordinate.
+    z (float): The z-coordinate.
+    L (float): The length parameter, default is 0.213.
+    
+    Returns:
+    float: The thigh angle θ_thigh in radians.
+    """
+    distance = math.sqrt(x**2 + y**2 + z**2)
+    cos_term = distance / (2 * L)
+    # Ensure cos_term is within the valid range for acos
+    cos_term = min(1.0, max(-1.0, cos_term))
+    term1 = math.acos(cos_term)
+    term2 = math.atan2(-x, math.sqrt(y**2 + z**2))
+    return term1 + term2
+
+def theta_calf(x, y, z, L=0.213):
+    """
+    Calculate the calf angle θ_calf.
+    
+    Parameters:
+    x (float): The x-coordinate.
+    y (float): The y-coordinate.
+    z (float): The z-coordinate.
+    L (float): The length parameter, default is 0.213.
+    
+    Returns:
+    float: The calf angle θ_calf in radians.
+    """
+    thigh_angle = theta_thigh(x, y, z, L)
+    sin_term = (-x / L) - math.sin(thigh_angle)
+    # Ensure sin_term is within the valid range for asin
+    sin_term = min(1.0, max(-1.0, sin_term))
+    term1 = math.asin(sin_term)
+    return term1 - thigh_angle
+
+
+
 
 if __name__ == '__main__':
 
@@ -39,7 +98,7 @@ if __name__ == '__main__':
 
     #---------------------------------
 
-    d = {'FR_0':3, 'FR_1':4, 'FR_2':5,
+    d = {'FR_0':0, 'FR_1':1, 'FR_2':2,
          'FL_0':3, 'FL_1':4, 'FL_2':5, 
          'RR_0':6, 'RR_1':7, 'RR_2':8, 
          'RL_0':9, 'RL_1':10, 'RL_2':11 }
@@ -47,7 +106,7 @@ if __name__ == '__main__':
     VelStopF  = 16000.0
     HIGHLEVEL = 0xee
     LOWLEVEL  = 0xff
-    sin_mid_q = [0.8, 3.5, -1]
+    sin_mid_q = [0, 1.0,-1.7]
     dt = 0.002
     qInit = [0, 0, 0]
     qDes = [0, 0, 0]
@@ -87,7 +146,7 @@ if __name__ == '__main__':
 
         #Neurons
 
-        freq.update_firing_rate()
+        freq.update_firing_rate(motiontime)
         oscillator.brain[0].inputs[1] = inputs[motiontime]
 
         oscillator.simulate(motiontime,V)
@@ -100,9 +159,9 @@ if __name__ == '__main__':
 
             # first, get record initial position
             if( motiontime >= 0 and motiontime < 10):
-                qInit[0] = state.motorState[d['FR_0']].q
-                qInit[1] = state.motorState[d['FR_1']].q
-                qInit[2] = state.motorState[d['FR_2']].q
+                qInit[0] = state.motorState[d['RR_0']].q
+                qInit[1] = state.motorState[d['RR_1']].q
+                qInit[2] = state.motorState[d['RR_2']].q
             
             # second, move to the origin point of a sine movement with Kp Kd
             if( motiontime >= 10 and motiontime < 400):
@@ -120,31 +179,42 @@ if __name__ == '__main__':
             
 
             if( motiontime >= 400):
+                new_motion_time = motiontime - 400 
+                print(new_motion_time)
+                z = 0
+                y = 27.4
+                x = 20
                 
+                qDes[0] = theta_hip(z,y)
+                # qDes[1] = theta_thigh(x,y,z)
+                qDes[1] = sin_mid_q[1] + 1.6*math.sin(new_motion_time/200)
+                # qDes[2]  = theta_calf(x,y,z)
+                qDes[2] = sin_mid_q[2] + 0.8*math.sin(new_motion_time/200 + math.pi/2)
 
-                qDes[0] = sin_mid_q[0] 
-                qDes[1] = sin_mid_q[1]  
-                qDes[2] = sin_mid_q[2] + (motiontime//1000)/10
+
+                print(f"θ_hip: {qDes[0]} radians")
+                print(f"θ_thigh: {qDes[1]} radians")
+                print(f"θ_calf: {qDes[2]} radians")
 
             
 
-            cmd.motorCmd[d['FR_0']].q = qDes[0]
-            cmd.motorCmd[d['FR_0']].dq = 0
-            cmd.motorCmd[d['FR_0']].Kp = Kp[0]
-            cmd.motorCmd[d['FR_0']].Kd = Kd[0]
-            cmd.motorCmd[d['FR_0']].tau = -0.65
+            cmd.motorCmd[d['FL_0']].q = qDes[0]
+            cmd.motorCmd[d['FL_0']].dq = 0
+            cmd.motorCmd[d['FL_0']].Kp = Kp[0]
+            cmd.motorCmd[d['FL_0']].Kd = Kd[0]
+            cmd.motorCmd[d['FL_0']].tau = -0.65
 
-            cmd.motorCmd[d['FR_1']].q = qDes[1]
-            cmd.motorCmd[d['FR_1']].dq = 0
-            cmd.motorCmd[d['FR_1']].Kp = Kp[1]
-            cmd.motorCmd[d['FR_1']].Kd = Kd[1]
-            cmd.motorCmd[d['FR_1']].tau = 0.0
+            cmd.motorCmd[d['FL_1']].q = qDes[1]
+            cmd.motorCmd[d['FL_1']].dq = 0
+            cmd.motorCmd[d['FL_1']].Kp = Kp[1]
+            cmd.motorCmd[d['FL_1']].Kd = Kd[1]
+            cmd.motorCmd[d['FL_1']].tau = 0.0
 
-            cmd.motorCmd[d['FR_2']].q =  qDes[2]
-            cmd.motorCmd[d['FR_2']].dq = 0
-            cmd.motorCmd[d['FR_2']].Kp = Kp[2]
-            cmd.motorCmd[d['FR_2']].Kd = Kd[2]
-            cmd.motorCmd[d['FR_2']].tau = 0.0
+            cmd.motorCmd[d['FL_2']].q =  qDes[2]
+            cmd.motorCmd[d['FL_2']].dq = 0
+            cmd.motorCmd[d['FL_2']].Kp = Kp[2]
+            cmd.motorCmd[d['FL_2']].Kd = Kd[2]
+            cmd.motorCmd[d['FL_2']].tau = 0.0
             # cmd.motorCmd[d['FR_2']].tau = 2 * sin(t*freq_rad)
 
 

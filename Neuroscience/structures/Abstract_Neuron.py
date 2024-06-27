@@ -8,6 +8,7 @@ from Neuroscience.structures.Organ import Organ
 
 # Definition of class Excitatory_Neuron
 class Abstract_Neuron(Organ):
+    instanciation_counter = 0
     # For this model a tau of 1.0857 ms will be used
     # This means that EPSPs and IPSPs will take approx. 5.4 ms to charge, 5.4 ms to discharge,
     # and it will remain 3 ms in a constant value
@@ -192,8 +193,9 @@ class Abstract_Neuron(Organ):
 
     def __init__(self, res, inputs, outputs, name=""):
         super().__init__()
-
-        self.name = name
+        self.name = str(Abstract_Neuron.instanciation_counter)
+        Abstract_Neuron.instanciation_counter +=1
+        
         # Initialize number of dendrites (inputs) in the neuron
         self.num_dendrites = inputs
 

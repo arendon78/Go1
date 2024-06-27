@@ -1,12 +1,19 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import os
+import sys
+
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
+sys.path.append(project_root)
 
 # Import both Excitatory and Inhibitory Neuron models
+from Neuroscience.structures.Organ import Organ
 from Neuroscience.structures.Excitatory_Neuron import Excitatory_Neuron
 from Neuroscience.structures.Inhibitory_Neuron import Inhibitory_Neuron
 
 res = 0.1                       #Set the resolution
-sim_time = 10000                #Set the simulation time
+sim_time = 50000                #Set the simulation time
 x = 90                          # number of neurons in this simulation
 
 #Initialize V.
@@ -603,26 +610,30 @@ inputs = np.zeros([sim_time,2])            #Initialize V.
 inputs[1] = [0,1]
 
 # Needs two consecutive pulses 110 apart from each other to work
-inputs[700] = [1,0]
-inputs[810] = [1,0]
-inputs[1700] = [1,0]
-inputs[1810] = [1,0]
-inputs[2700] = [1,0]
-inputs[2810] = [1,0]
-inputs[3700] = [1,0]
-inputs[3810] = [1,0]
-inputs[4700] = [1,0]
-inputs[4810] = [1,0]
-inputs[5700] = [1,0]
-inputs[5810] = [1,0]
-inputs[6700] = [1,0]
-inputs[6810] = [1,0]
-inputs[7700] = [1,0]
-inputs[7810] = [1,0]
-inputs[8700] = [1,0]
-inputs[8810] = [1,0]
-inputs[9700] = [1,0]
-inputs[9810] = [1,0]
+# inputs[700] = [1,0]
+# inputs[810] = [1,0]
+# inputs[1700] = [1,0]
+# inputs[1810] = [1,0]
+# inputs[2700] = [1,0]
+# inputs[2810] = [1,0]
+# inputs[3700] = [1,0]
+# inputs[3810] = [1,0]
+# inputs[4700] = [1,0]
+# inputs[4810] = [1,0]
+# inputs[5700] = [1,0]
+# inputs[5810] = [1,0]
+# inputs[6700] = [1,0]
+# inputs[6810] = [1,0]
+# inputs[7700] = [1,0]
+# inputs[7810] = [1,0]
+# inputs[8700] = [1,0]
+# inputs[8810] = [1,0]
+# inputs[9700] = [1,0]
+# inputs[9810] = [1,0]
+
+for i in range(sim_time): 
+    if i %1000 == 700 or i%1000 == 810 : 
+        inputs[i] = [1,0]
 
 # Inhibitory neurons may be needed to block the inputs and prevent other neurons from firing
 # once the desired output is obtained
@@ -704,3 +715,11 @@ for i in range(len(brain)):
         ax = plt.gca()
         ax.set_ylim([-40, 100])
         plt.show()
+
+print([el.name for el in brain])
+
+o = Organ()
+for neuron in brain:
+    o.add_to_brain(neuron)
+
+o.build_and_display_neuron_graph()

@@ -15,7 +15,7 @@ res = 0.1
 #---
 
 #to see clearly spikes
-sim_time = 1000
+sim_time = 5000
 
 # to see clearly the frequency change
 #sim_time = 10000
@@ -25,8 +25,8 @@ sim_time = 1000
 
 
 
-NUM_TIMES = 1000
-VOLT_OFFSET = 0
+NUM_TIMES = 100
+VOLT_OFFSET = 7.5
 
 
 inputs = np.zeros([sim_time,1])
@@ -38,6 +38,7 @@ inputs[1]=1
 
 
 V = [[np.zeros([sim_time, 1]) for _ in range(3)] for _ in range(NUM_TIMES)]
+F = [[] for _ in range(NUM_TIMES)]
 max = [[]for _ in range (NUM_TIMES)]
 
 oscillators = []
@@ -49,6 +50,7 @@ for i in range(0,NUM_TIMES):
     # print("i*15/21 = ",(i*15)/21)
     print("((i*(15-VOLT_OFFSET)/NUM_TIMES)+VOLT_OFFSET) = ", ((i*(15-VOLT_OFFSET)/NUM_TIMES)+VOLT_OFFSET))
     oscillators[i].tune(2,[((i*(15-VOLT_OFFSET)/NUM_TIMES)+VOLT_OFFSET),((i*(15-VOLT_OFFSET)/NUM_TIMES)+VOLT_OFFSET)])
+    
     output_neurons.append(oscillators[i].brain[2])
     # oscillators[i].tune(0,[15,15])
     # oscillators[i].tune(1,[14.9,14.9])
@@ -60,16 +62,20 @@ freq = Frequency_Detector(res,output_neurons)
 for i in range(0,NUM_TIMES):
     k = 1
     max[i].append(0)
+    F[i].append(0)
     while k < sim_time :
         # in the middle of the simulation, retune the neurons so that they fire more
-        # if k == sim_time//2:
+        if k == sim_time//2:
+            None
             # print("i = ",i)
-            # oscillators[i].tune(2,[((i*(15-VOLT_OFFSET)/NUM_TIMES)+VOLT_OFFSET),((i*(15-VOLT_OFFSET)/NUM_TIMES)+VOLT_OFFSET)])
+            # oscillators[i].tune(2,[((i*(15-VOLT_OFFSET+3)/NUM_TIMES)+VOLT_OFFSET-3),((i*(15-VOLT_OFFSET+3)/NUM_TIMES)+VOLT_OFFSET-3)])
 
         oscillators[i].brain[0].inputs[1] = inputs[k]
         # print(k)
         # print( "i = ",i )
         freq.update_firing_rate()
+        print(i,k)
+        F[i].append( freq.get_freq_hertz(i))
 
 
         oscillators[i].simulate(k,V[i])
@@ -84,20 +90,21 @@ for i in range(0,NUM_TIMES):
 
 
 # Plot the results in a single figure with subplots
-# fig, axs = plt.subplots(100, 10, figsize=(15, 10))  # Create a grid of 7 rows x 3 columns
-# axs = axs.flatten()  # Flatten to make it easier to iterate over
+fig, axs = plt.subplots(25, 4, figsize=(15, 10))  # Create a grid of 7 rows x 3 columns
+axs = axs.flatten()  # Flatten to make it easier to iterate over
 
 
 
-# for i in range (NUM_TIMES):
-    # t = np.arange(0, len(V[i][0])) * res  # Define the time axis
-    # axs[i].plot(t, V[i][2])
-    # 
-    # axs[i].plot(t, max[i])
-    # 
-    # axs[i].set_xlabel('Time [ms]')
-    # axs[i].set_ylabel('Voltage [mV]')
-    # axs[i].set_title(f'last neuron input weight {((((i*(15-VOLT_OFFSET)/NUM_TIMES)+VOLT_OFFSET)*1000)//100)/10}')
+
+for i in range (NUM_TIMES):
+    t = np.arange(0, len(V[i][0])) * res  # Define the time axis
+    axs[i].plot(t, V[i][2])
+    
+    axs[i].plot(t, max[i])
+    
+    axs[i].set_xlabel('Time [ms]')
+    axs[i].set_ylabel('Voltage [mV]')
+    axs[i].set_title(f'last neuron input weight {((((i*(15-VOLT_OFFSET)/NUM_TIMES)+VOLT_OFFSET)*1000)//100)/10}')
 
 
 
@@ -123,3 +130,16 @@ for i in range(freq.len):
     print(freq.get_freq_hertz(i), "voltage = ",(((i*(15-VOLT_OFFSET)/NUM_TIMES)+VOLT_OFFSET)))
 
 print (freq.frequency_ratio())
+
+fig, axs = plt.subplots(25, 4, figsize=(15, 10))  # Create a grid of 7 rows x 3 columns
+axs = axs.flatten()  # Flatten to make it easier to iterate over
+
+for i in range (NUM_TIMES):
+    t = np.arange(0, len(F[i])) * res  # Define the time axis
+    axs[i].plot(t, F[i])
+    axs[i].set_xlabel('Time [ms]')
+    axs[i].set_ylabel('Frequency [Hz]')
+    axs[i].set_title(f'last neuron input weight {((((i*(15-VOLT_OFFSET)/NUM_TIMES)+VOLT_OFFSET)*1000)//100)/10}')
+
+plt.tight_layout()  # Adjust subplots to fit into figure area.
+plt.show()

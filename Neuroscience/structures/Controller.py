@@ -14,31 +14,33 @@ class Controller(Organ):
 
     ## use DEFINE value such as SHOULD, KNEE...
 
-    range0 = 1.8
-    offset0 = 0.5
-
-    range1=4.7
-    offset1 = 0.7
-
-    range2=2.3
-    offset3= 3.0
-
 
     frequencies = [
             0,
-            30.030030030030026,
-            36.101083032490976,
-            45.045045045045036,
-            59.880239520958085,
-            60.24096385542168,
-            90.09009009009007
+            3.003003003003003,
+            3.5971223021582737,
+            4.504504504504505,
+            5.9880239520958085,
+            6.024096385542169,
+            9.00900900900901
         ]
-    N_REPEAT = 5
+    N_REPEAT = 4
 
 
 
 
     # value - offset 
+
+    def pass_inputs(self,input):  
+        for os in self.oscillators : 
+            os.brain[0].inputs[1] = input
+
+    def simulate(self,k,V):
+        if k%200 == 0:
+            print(self.oscillators)
+        # print(len(self.oscillators))
+        for i in range (len(self.oscillators)) : 
+                self.oscillators[i].simulate(k,V[i])
 
     def find_combination_index(self, ratio):
         distance = 1
@@ -113,6 +115,8 @@ class Controller(Organ):
         return lprime
     
     def create_oscillators(self,ratio):
+        self.oscillators = []
+        self.set_changed_instance(True)
         tuple = self.find_combination(ratio)
         print("tuple in create_oscillators",tuple)
         print("verification : ", sum(tuple)/(90.09009009009007*self.N_REPEAT))
@@ -130,24 +134,27 @@ class Controller(Organ):
                 to_app.tune(2,[7.5,7.5])
 
             if abs(j) == self.frequencies[2]: 
-                to_app.tune(2,[7.53,7.53])
+                to_app.tune(2,[7.65,7.65])
 
             if abs(j) == self.frequencies[3]: 
-                to_app.tune(2,[7.695,7.695])
+                to_app.tune(2,[7.8,7.8])
 
             if abs(j) == self.frequencies[4]: 
-                to_app.tune(2,[7.935,7.935])
+                to_app.tune(2,[7.95,7.95])
 
             if abs(j) == self.frequencies[5]: 
                 to_app.tune(2,[8.325,8.325])
 
-            if abs(j) == self.frequencies[6]: 
-                to_app.tune(2,[10.53,10.53])
+            if abs(j) == self.frequencies[6]:
+                to_app.tune(2,[10.65,10.65])
             self.oscillators.append(to_app)
-        
-    def activate(self):
-        for i in range(self.N_REPEAT):
-            self.oscillators[i].brain[0].inputs[1] = 1
+        # self.pass_inputs(1)
+
+    def set_changed_instance(self,bool): 
+        self.changed_instance = bool
+
+    def get_changed_instance(self): 
+        return self.changed_instance
     
     # def simulate(self,k,V):
     #     if len(V) != self.N_REPEAT:
@@ -162,5 +169,6 @@ class Controller(Organ):
         self.res = res
         self.oscillators = []
         self.main_list = self.build_combinations()
+        self.set_changed_instance(True)
 
 

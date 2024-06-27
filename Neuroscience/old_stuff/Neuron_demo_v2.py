@@ -5,7 +5,7 @@ import numpy as np
 from Neuroscience.structures.Excitatory_Neuron import Excitatory_Neuron
 from Neuroscience.structures.Inhibitory_Neuron import Inhibitory_Neuron
 
-res = 0.1                        #Set the resolution
+res = 0.1                     #Set the resolution
 sim_time = 1000                   #Set the simulation time
 V = np.zeros([sim_time,1])            #Initialize V.
 V[0]=0                           #Set the initial value of V.

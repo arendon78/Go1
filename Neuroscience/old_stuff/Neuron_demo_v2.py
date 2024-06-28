@@ -5,7 +5,7 @@ import numpy as np
 from Neuroscience.structures.Excitatory_Neuron import Excitatory_Neuron
 from Neuroscience.structures.Inhibitory_Neuron import Inhibitory_Neuron
 
-res = 0.1                     #Set the resolution
+res = 0.10001         #Set the resolution
 sim_time = 1000                   #Set the simulation time
 V = np.zeros([sim_time,1])            #Initialize V.
 V[0]=0                           #Set the initial value of V.
@@ -32,17 +32,31 @@ neuron3.connect_with_neuron(neuron2)
 
 #inputs = np.zeros([sim_time,1])            #Initialize V.
 inputs = np.zeros([sim_time, neuron1.num_dendrites])            #Initialize V.
-inputs[10] = [0,1]
-inputs[80] = [1,0]
-inputs[150] = [1,1]
-inputs[220] = [1,0]
-inputs[400] = [1,1]
-inputs[460] = [1,1]
-inputs[600] = [1,0]
-inputs[670] = [0,1]
-inputs[740] = [1,0]
-inputs[800] = [1,1]
-inputs[870] = [1,0]
+inputs[int(10/0.1*res)] = [0,1]
+inputs[int(80/0.1*res)] = [1,0]
+inputs[int(150/0.1*res)] = [1,1]
+inputs[int(220/0.1*res)] = [1,0]
+inputs[int(400/0.1*res)] = [1,1]
+inputs[int(460/0.1*res)] = [1,1]
+inputs[int(600/0.1*res)] = [1,0]
+inputs[int(670/0.1*res)] = [0,1]
+inputs[int(740/0.1*res)] = [1,0]
+inputs[int(800/0.1*res)] = [1,1]
+inputs[int(870/0.1*res)] = [1,0]
+
+
+
+print("input at : ",int(10/0.1*res))
+print("input at : ",int(80/0.1*res))
+print("input at : ",int(150/0.1*res))
+print("input at : ",int(220/0.1*res))
+print("input at : ",int(400/0.1*res))
+print("input at : ",int(460/0.1*res))
+print("input at : ",int(600/0.1*res))
+print("input at : ",int(670/0.1*res))
+print("input at : ",int(740/0.1*res))
+print("input at : ",int(800/0.1*res))
+print("input at : ",int(870/0.1*res))
 
 k=1
 

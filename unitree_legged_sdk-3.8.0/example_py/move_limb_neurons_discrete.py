@@ -89,9 +89,11 @@ if __name__ == '__main__':
     sim_time = 2500
     N_REPEAT = 4
 
+    N_SIM = 90
+
 
     ## enculé
-    V = [[np.zeros([sim_time-400, 1]) for _ in range(3)] for _ in range(4)]
+    V = [[np.zeros([N_SIM*(sim_time-400), 1]) for _ in range(3)] for _ in range(4)]
 
     ## enculé
 
@@ -141,16 +143,8 @@ if __name__ == '__main__':
     b=[0]
     ## main loop
 
-    #échantillonage -------------
-    tofollow = []
-    for i in range(500): 
-        if i%(2)==0:
-            tofollow.append(math.sin((i/500)*2*math.pi))
 
-
-    #---------------------------
-
-
+    internal_time = 0
     while motiontime < sim_time-1:
         # print(motiontime)
         # print((motiontime//1000)/10 )
@@ -199,15 +193,15 @@ if __name__ == '__main__':
             if( motiontime >= 400):
                 A_N1 = 1.4
                 A_N2 = 0.5
-                new_motion_time = motiontime - 400 
+                new_motion_time = motiontime - 400
+
                 # print(new_motion_time)
-                n1  = A_N1*math.sin((new_motion_time/1500)*2*math.pi)
+                w = 2*math.pi/100
+                n1  = A_N1*math.sin(new_motion_time*w)
                 n2 = n1/A_N1
                 print("sin : ",math.sin(new_motion_time/500))
-                # if new_motion_time ==0 : 
-                #     ctrl.pass_inputs(1)
 
-                if new_motion_time % 400==0: 
+                if new_motion_time % (15) ==0:
                     # print("zero here\n\n\n")
                     ctrl.create_oscillators(n2)
                     ctrl.pass_inputs(1)
@@ -216,10 +210,32 @@ if __name__ == '__main__':
                     ctrl.pass_inputs(0)
 
                 # print(new_motion_time)
-                ctrl.simulate(new_motion_time,V)
-                watch.update_firing_rate()
+
                 
+                ctrl.simulate(internal_time,V)
+                watch.update_firing_rate()
                 contraction_ratio = watch.frequency_ratio()
+                internal_time +=1
+                
+                for i in range(0,N_SIM-1):
+                    ctrl.pass_inputs(0)
+                    ctrl.simulate(internal_time,V)
+                    watch.update_firing_rate()
+                    contraction_ratio = watch.frequency_ratio()
+                    internal_time+=1
+
+                # ctrl.pass_inputs(0)
+                # ctrl.simulate(internal_time,V)
+                # watch.update_firing_rate()
+                # contraction_ratio = watch.frequency_ratio()
+                # internal_time+=1
+
+                # ctrl.pass_inputs(0)
+                # ctrl.simulate(internal_time,V)
+                # watch.update_firing_rate()
+                # contraction_ratio = watch.frequency_ratio()
+                # internal_time+=1
+
                 a.append(contraction_ratio)
                 b.append(n2)
                 print(contraction_ratio)
@@ -230,11 +246,10 @@ if __name__ == '__main__':
                 
                 # remplacer ça par un truc qui va générer le bon mouvement et un qui va regarder et générer le bon output.
             
-
                 qDes[0] = theta_hip(z,y)
                 # qDes[1] = theta_thigh(x,y,z)
-                # qDes[1] = sin_mid_q[1] + A_N1*contraction_ratio
-                qDes[1] = sin_mid_q[1] + n1
+                qDes[1] = sin_mid_q[1] + A_N1*contraction_ratio
+                # qDes[1] = sin_mid_q[1] + n1
                 # qDes[2]  = theta_calf(x,y,z)
                 qDes[2] = sin_mid_q[2] #+ 0.5*math.sin(new_motion_time/200 + math.pi/2)
 

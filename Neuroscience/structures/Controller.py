@@ -50,7 +50,7 @@ class Controller(Organ):
             if new_d<distance:
                 index = i
                 distance = new_d
-        print(index)
+        # print(index)
         return index 
 
 
@@ -118,8 +118,8 @@ class Controller(Organ):
         self.oscillators = []
         self.set_changed_instance(True)
         tuple = self.find_combination(ratio)
-        print("tuple in create_oscillators",tuple)
-        print("verification : ", sum(tuple)/(90.09009009009007*self.N_REPEAT))
+        # print("tuple in create_oscillators",tuple)
+        # print("verification : ", sum(tuple)/(90.09009009009007*self.N_REPEAT))
         assert len(tuple) == self.N_REPEAT
         for j in tuple:
             if j ==0 : 

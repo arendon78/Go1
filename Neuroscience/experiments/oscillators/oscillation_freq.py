@@ -25,8 +25,8 @@ sim_time = 5000
 
 
 
-NUM_TIMES = 100
-VOLT_OFFSET = 7.5
+NUM_TIMES = 2
+VOLT_OFFSET = 11.9
 
 
 inputs = np.zeros([sim_time,1])
@@ -74,13 +74,21 @@ for i in range(0,NUM_TIMES):
         # print(k)
         # print( "i = ",i )
         freq.update_firing_rate()
-        print(i,k)
-        F[i].append( freq.get_freq_hertz(i))
+        # print(i,k)
+        if (k<1000 and k>900):
+            print("inside loop : what is plotted : ",freq.get_freq(i))
+            print("inside loop : what is plotted : ",freq.get_freq(0))
+        F[i].append( freq.get_freq(i))
 
 
         oscillators[i].simulate(k,V[i])
         # print(oscillators[i].brain[2].membrane_potential)
-        if oscillators[i].brain[2].max_active_potential == True:
+        # if oscillators[i].brain[2].max_active_potential == True:
+        #     max[i].append(oscillators[i].brain[2].membrane_potential)
+        # else :
+        #     max[i].append(0)
+
+        if freq.watch_neurons[i].max_active_potential == True:
             max[i].append(oscillators[i].brain[2].membrane_potential)
         else :
             max[i].append(0)
@@ -127,7 +135,7 @@ plt.show()
 
 for i in range(freq.len):
     # print(freq.frequency[i])
-    print(freq.get_freq_hertz(i), "voltage = ",(((i*(15-VOLT_OFFSET)/NUM_TIMES)+VOLT_OFFSET)))
+    print(freq.get_freq(i), "voltage = ",(((i*(15-VOLT_OFFSET)/NUM_TIMES)+VOLT_OFFSET)))
 
 print (freq.frequency_ratio())
 

@@ -12,7 +12,6 @@ sys.path.append(project_root)
 
 
 from Neuroscience.structures.Tunable_Oscillator import Tunable_Oscillator
-
 from Neuroscience.structures.Frequency_Detector import Frequency_Detector
 from Neuroscience.structures.Controller import Controller
 
@@ -86,7 +85,7 @@ def theta_calf(x, y, z, L=0.213):
 
 
 if __name__ == '__main__':
-    sim_time = 2500
+    sim_time = 1500
     N_REPEAT = 4
 
     N_SIM = 90
@@ -105,7 +104,7 @@ if __name__ == '__main__':
     inputs[1]=1
 
     ctrl = Controller(res)
-    ctrl.create_oscillators(0.25)
+    ctrl.create_oscillators(0.10)
 
     watch = Frequency_Detector(res ,controller = ctrl)
 
@@ -205,7 +204,7 @@ if __name__ == '__main__':
                     # print("zero here\n\n\n")
                     ctrl.create_oscillators(n2)
                     ctrl.pass_inputs(1)
-                else : 
+                else :
                     # print("not zeero")
                     ctrl.pass_inputs(0)
 
@@ -213,14 +212,14 @@ if __name__ == '__main__':
 
                 
                 ctrl.simulate(internal_time,V)
-                watch.update_firing_rate()
+                watch.update_firing_rate(internal_time)
                 contraction_ratio = watch.frequency_ratio()
                 internal_time +=1
                 
                 for i in range(0,N_SIM-1):
                     ctrl.pass_inputs(0)
                     ctrl.simulate(internal_time,V)
-                    watch.update_firing_rate()
+                    watch.update_firing_rate(internal_time)
                     contraction_ratio = watch.frequency_ratio()
                     internal_time+=1
 
@@ -246,17 +245,19 @@ if __name__ == '__main__':
                 
                 # remplacer ça par un truc qui va générer le bon mouvement et un qui va regarder et générer le bon output.
             
-                qDes[0] = theta_hip(z,y)
+                qDes[0] =  0
                 # qDes[1] = theta_thigh(x,y,z)
-                qDes[1] = sin_mid_q[1] + A_N1*contraction_ratio
+                qDes[1] = sin_mid_q[1] + contraction_ratio
+                print("qDes[1] : ",qDes[1])  
+
                 # qDes[1] = sin_mid_q[1] + n1
                 # qDes[2]  = theta_calf(x,y,z)
                 qDes[2] = sin_mid_q[2] #+ 0.5*math.sin(new_motion_time/200 + math.pi/2)
 
 
-                # print(f"θ_hip: {qDes[0]} radians")
-                # print(f"θ_thigh: {qDes[1]} radians")
-                # print(f"θ_calf: {qDes[2]} radians")
+                print(f"θ_hip: {qDes[0]} radians")
+                print(f"θ_thigh: {qDes[1]} radians")
+                print(f"θ_calf: {qDes[2]} radians")
 
             
 
@@ -272,7 +273,7 @@ if __name__ == '__main__':
             cmd.motorCmd[d['FL_1']].Kd = Kd[1]
             cmd.motorCmd[d['FL_1']].tau = 0.0
 
-            cmd.motorCmd[d['FL_2']].q =  qDes[2]
+            # cmd.motorCmd[d['FL_2']].q =  qDes[2]
             cmd.motorCmd[d['FL_2']].dq = 0
             cmd.motorCmd[d['FL_2']].Kp = Kp[2]
             cmd.motorCmd[d['FL_2']].Kd = Kd[2]

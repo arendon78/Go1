@@ -56,6 +56,7 @@ if __name__ == '__main__':
             torque = np.fmin(np.fmax(torque, -5.0), 5.0)
             # torque = np.fmin(np.fmax(torque, -15.0), 15.0)
 
+            print()
 
             cmd.motorCmd[d['FR_1']].q = PosStopF
             cmd.motorCmd[d['FR_1']].dq = VelStopF

@@ -43,8 +43,8 @@ class Abstract_Neuron(Organ):
 
     # Perform spatial summation on all dendrites of the neuron
     def spatial_summation(self):
-        result = 0
 
+        result = 0
         # Do spatial summation on the neuron's dendrites.
         for i in range(self.num_dendrites):
             # If the dendrite has an PSP active

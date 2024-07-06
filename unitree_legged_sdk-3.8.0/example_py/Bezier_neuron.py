@@ -12,7 +12,7 @@ sys.path.append(project_root)
 
 
 from Neuroscience.structures.Tunable_Oscillator import Tunable_Oscillator
-
+from Neuroscience.structures.Controller import Controller
 from Neuroscience.structures.Frequency_Detector import Frequency_Detector
 
 
@@ -195,6 +195,8 @@ def generate_trajectory(standx, Lspan, deltaL, delta, standy, Yspan, deltaY, num
 
     return bezier_curve_points + stance_curve_points
 
+
+
 def unphase(deg, list):
     assert deg>=0 and deg <= 360
     index =int(deg/360*len(list))
@@ -229,6 +231,14 @@ def plot_trajectory_3(bezier_points, stance_points):
     plt.title('Forward Gait Foot Trajectory')
     plt.show()
 
+def plot_trajectory_single(points):
+    trajectory = np.array(points)
+    
+    plt.scatter(trajectory[:, 0], trajectory[:, 1], c='blue', s=10)  # Use a single color for all points
+    plt.xlabel('X coordinate WRT hip (m)')
+    plt.ylabel('Y coordinate WRT hip (m)')
+    plt.title('Forward Gait Foot Trajectory')
+    plt.show()
 
 def plot_joint_angles(full_trajectory):
     full_trajectory = np.array(full_trajectory)
@@ -280,9 +290,6 @@ if __name__ == '__main__':
     Yspan= 0.04
     # Yspan= 0.06
     deltaY= 0.01
-    #works with 100, we'll just try and simulate with 10
-    # NUM_POINST_BEZIER = 100
-    # NUM_POINTS_STANCE = 100
 
     NUM_POINST_BEZIER = 50
     NUM_POINTS_STANCE = 50
@@ -304,9 +311,10 @@ if __name__ == '__main__':
     bezier_curve_points = bezier(control_points)
     stance_curve_points = stance_phase(bezier_curve_points[-1], bezier_curve_points[0])
 
-    # plot_trajectory(control_points, bezier_curve_points, stance_curve_points)     
-    # plot_trajectory_2(generate_trajectory(standx, Lspan, deltaL, delta, standy, Yspan, deltaY))   
-    # plot_trajectory_3(bezier_curve_points,stance_curve_points)
+    plot_trajectory(control_points, bezier_curve_points, stance_curve_points)     
+    plot_trajectory_2(trajectory)   
+    plot_trajectory_3(bezier_curve_points,stance_curve_points)
+    plot_trajectory_single(trajectory)
     # plot_joint_angles(trajectory)
 
 
@@ -367,10 +375,6 @@ if __name__ == '__main__':
 
     Tpi = 0
     motiontime = 0
-    sim_time = 10000
-    V = [np.zeros([sim_time,1]), np.zeros([sim_time,1]), np.zeros([sim_time,1])]
-    inputs = np.zeros([sim_time,1])            #Initialize V.
-    inputs[1] = [1]
 
     offset_cycle_FR = 0
     offset_cycle_FL = 1
@@ -405,12 +409,316 @@ if __name__ == '__main__':
         # RL tihgh :  1.224181056022644
         # RL calf :  -2.787914514541626
 
+    #neurons ------------------------
+
+    #instanciation
+    res = 0.1
+
+    controllers = { part : [Controller(res),
+                            Controller(res),
+                            Controller(res)]
+                    for part in parts }
+    
+    [[controllers[part][i].create_oscillators(0.25) for part in parts ] for i in range(3) ]
+    # to each articulation : associates a controller
+
+    V = [[np.zeros([(20000), 1]) for _ in range(3)] for _ in range(5)]
+    #mock V : do not plot it it won't work.
+
+    # voltages = {part : [V,V,V] for part in parts }
+
+    watchers = { part : [Frequency_Detector(res ,controller = controllers[part][0]),
+                         Frequency_Detector(res ,controller = controllers[part][1]),
+                         Frequency_Detector(res ,controller = controllers[part][2])] 
+                for part in parts }
+    # to each articulation : associates a frequency detector
+
+
+    # computing the path to follow based on the previously generated trajectory.
+
+    neurons_coords = {  'FR' : [],
+                        'FL' : [],
+                        'RR' : [],
+                        'RL' : []
+    }
+
+    false_coords = {    'FR' : [],
+                        'FL' : [],
+                        'RR' : [],
+                        'RL' : []
+
+    }
+
+    inside_oscillator_coords = {    'FR' : [],
+                                    'FL' : [],
+                                    'RR' : [],
+                                    'RL' : []
+
+    }
+
+    frequency_parts = { 'FR' : [[],[],[]]
+    ,
+                        'FL' : [[],[],[]]
+                        ,
+                        'RR' : [[],[],[]]
+                        ,
+                        'RL' : [[],[],[]]
+
+    }
+
+    command         = { 'FR' : [[],[],[]]
+    ,
+                        'FL' : [[],[],[]]
+                        ,
+                        'RR' : [[],[],[]]
+                        ,
+                        'RL' : [[],[],[]]
+
+    }
+
+    inside_oscillator = { 'FR' : [[],[],[]]
+    ,
+                        'FL' : [[],[],[]]
+                        ,
+                        'RR' : [[],[],[]]
+                        ,
+                        'RL' : [[],[],[]]
+
+    }
+
+
+
+
+    #computation loop
+    print(len(trajectory))
+    print(TOTAL_OFFSET)
+    print(len(trajectory)*(TOTAL_OFFSET+1))
+
+    for i in range(len(trajectory)*(TOTAL_OFFSET+1)): 
+
+        coords = {'FR': trajectories['FR'][i],
+            'FL': trajectories['FL'][i],
+            'RR': trajectories['RR'][i],
+            'RL': trajectories['RL'][i]
+        }
+
+
+        print(i)
+        # for part in parts : 
+        for part in ['FR','FL','RR','RL']:
+
+            
+            internal_time = 0
+            # print(internal_time)
+            x = coords[part][0]
+            y = coords[part][1]
+            z = 0
+
+            hip = z
+            thigh = theta_thigh(x,y,z)
+            calf = theta_calf(x,y,z)
+
+
+            # controllers[part][0].create_oscillators(hip)
+            # controllers[part][0].pass_inputs(1)
+            # controllers[part][0].simulate(internal_time,V)
+            # watchers[part][0].update_firing_rate()
+
+            inside_oscillator_thigh = controllers[part][1].create_oscillators(thigh)
+            # inside_oscillator[part][1].append(inside_oscillator_thigh)
+            # controllers[part][1].create_oscillators(x)
+            controllers[part][1].pass_inputs(1)
+            controllers[part][1].simulate(internal_time,V)
+            # watchers[part][1].update_firing_rate()
+
+            frequency_parts[part][1].append(watchers[part][1].frequency_ratio())
+
+            inside_oscillator_calf = controllers[part][2].create_oscillators(calf)
+            # inside_oscillator[part][2].append(inside_oscillator_calf)
+            # controllers[part][2].create_oscillators(y)
+            controllers[part][2].pass_inputs(1)
+            controllers[part][2].simulate(internal_time,V)
+            # watchers[part][2].update_firing_rate()
+            frequency_parts[part][2].append(watchers[part][2].frequency_ratio())
+            
+            
+
+            internal_time+=1
+            #simulate them for a reasonable time
+            # problem : simulates all the neurons. should only simulate one neuron at a time (the one that is active)
+            for j in range( 1000 ) : 
+                if i ==4:
+                    None
+                    # watchers[part][1].print_frequency()
+                    # print(watchers[part][1].watch_neurons[0].weights)
+                    # print(watchers[part][1].watch_neurons[1].weights)
+                    # print(watchers[part][1].watch_neurons[2].weights)
+                    # print(watchers[part][1].watch_neurons[3].weights)
+
+                if i == 8 : 
+                    None
+                    if j == 0 :
+                        # watchers[part][1].print_frequency()
+                        None
+
+                    if j == 500 : 
+                        None
+                        # watchers[part][1].print_frequency()
+                        
+                        # print(watchers[part][1].watch_neurons[0].weights)
+                        # print(watchers[part][1].watch_neurons[1].weights)
+                        # print(watchers[part][1].watch_neurons[2].weights)
+                        # print(watchers[part][1].watch_neurons[3].weights)
+
+                    # watchers[part][2].print_frequency()
+                inside_oscillator[part][1].append(inside_oscillator_thigh)
+                inside_oscillator[part][2].append(inside_oscillator_calf)
+
+                # controllers[part][0].pass_inputs(0)
+                # controllers[part][0].simulate(internal_time,V)
+                # watchers[part][0].update_firing_rate()
+                watchers[part][1].update_firing_rate(j)
+                controllers[part][1].pass_inputs(0)
+                controllers[part][1].simulate(internal_time,V)
+                
+
+                frequency_parts[part][1].append(watchers[part][1].frequency_ratio())
+                command[part][1].append(thigh)
+                # command[part][1].append(x)
+
+                watchers[part][2].update_firing_rate(j)
+                controllers[part][2].pass_inputs(0)
+                controllers[part][2].simulate(internal_time,V)
+                frequency_parts[part][2].append(watchers[part][2].frequency_ratio())
+                command[part][2].append(calf)
+                # command[part][2].append(y)
+
+                internal_time+=1
+
+            # print(watchers[part][0])
+            ## neuron_hip   = watchers[part][0].frequency_ratio()
+            # neuron_thigh = watchers[part][1].frequency_ratio()
+            # neuron_calf  = watchers[part][2].frequency_ratio()
+
+            neuron_thigh = watchers[part][1].frequency_ratio()
+            neuron_calf  = watchers[part][2].frequency_ratio()
+            
+            #I don't care about neuron_hip in the first place
+            
+            neurons_coords[part].append((neuron_thigh,neuron_calf))
+            false_coords[part].append((thigh,calf))
+
+    #plot the coords from neurons : 
+    
+    # print(neurons_coords)
+    plot_trajectory_single(neurons_coords['FR'])
+    plot_trajectory_single(false_coords['FR'])
+    # print(trajectories['FR'])
+
+
+    freq1 = np.array(frequency_parts['FR'][1])
+    freq2 = np.array(frequency_parts['FR'][2])
+    # print(frequency_parts['FR'][1])
+    print("\n\n\n")
+    # print(inside_oscillator['FR'][1])
+    oscillator1_data = np.array(inside_oscillator['FR'][1])
+    oscillator2_data = np.array(inside_oscillator['FR'][2])
+
+    freq_command1 = np.array(command['FR'][1])
+    freq_command2 = np.array(command['FR'][2])
+
+    x1 = np.arange(len(freq1))
+    x2 = np.arange(len(freq2))
+    x3 = np.arange(len(freq_command1))
+    x4 = np.arange(len(freq_command2))
+    x5 = np.arange(len(oscillator1_data))
+    x6 = np.arange(len(oscillator2_data))
+
+    # fig1, ((response1,response2,oscillator1),(command1,command2, oscillator2)) = plt.subplots(2,3, figsize = (12,6))
+
+    # response1.plot(x1,freq1, color = "blue")
+    # response1.plot(x3,freq_command1,color= "green")
+    # response1.plot(x5,oscillator1_data,color= "red")
+    # response1.set_ylabel("position and Frequency")
+
+    # response2.plot(x2,freq2, color = "blue")
+    # response2.plot(x4,freq_command2,color= "green")
+    # response1.plot(x6,oscillator2_data,color= "red")
+    # response2.set_ylabel("Frequency")
+
+    # Créer une figure avec 2 sous-graphiques (2 lignes, 1 colonne)
+    fig1, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 6))
+
+    # Tracer les données dans le premier sous-graphe (ax1)
+    ax1.plot(x1, freq1, color="blue", label="Freq 1")
+    ax1.plot(x3, freq_command1, color="green", label="Command 1")
+    ax1.plot(x5, oscillator1_data, color="red", label="Oscillator 1")
+    ax1.set_ylabel("Position and Frequency")
+    ax1.legend()
+
+    # Tracer les données dans le deuxième sous-graphe (ax2)
+    ax2.plot(x2, freq2, color="blue", label="Freq 2")
+    ax2.plot(x4, freq_command2, color="green", label="Command 2")
+    ax2.plot(x6, oscillator2_data, color="red", label="Oscillator 2")
+    ax2.set_ylabel("Frequency")
+    ax2.legend()
+
+    plt.tight_layout()
+    plt.show()
+
+    # command1.plot(x3,freq_command1,color= "purple")
+    # response1.set_ylabel("position")
+
+    # command2.plot(x4,freq_command2,color= "green")
+    # response1.set_ylabel("position")
+
+
+
+    # plt.scatter()
+    # plot_trajectory_single(coords['FR'])
+    # plot_trajectory_single(neurons_coords['FL'])
+    # plot_trajectory_single(neurons_coords['RR'])
+    # plot_trajectory_single(neurons_coords['RL'])
+
+
+    #------------------------
+
+    #computing MAE and MSE
+    n= len(oscillator1_data)
+    print(len(oscillator1_data))
+    print(len(freq_command1))
+    assert (len(oscillator1_data) == len(freq_command1))
+    sum_absolute_error = 0
+    squarred_error = 0
+    maximum_error = -1
+    for i in range(n): 
+        absolute_error = abs(oscillator1_data[i] - freq_command1[i] )
+        sum_absolute_error += absolute_error
+        print(sum_absolute_error)
+        if absolute_error> maximum_error : 
+            maximum_error = absolute_error
+        
+        squarred_error+= (oscillator1_data[i] - freq_command1[i]) * (oscillator1_data[i] - freq_command1[i])
+
+    result_MAE = sum_absolute_error / n
+    result_MSE = squarred_error / n
+
+    print("MAE : ", result_MAE)
+    print("MSE : ", result_MSE)
+    print("maximum error : ",maximum_error)
+
+    amplitude = max(freq_command1) - min(freq_command1)
+
+    print("relative MAE (percentage) : ", str((result_MAE / amplitude)*100)[:5], "%")
+
 
 
 
 
     ## main loop
-    while motiontime < sim_time-1:
+    distance = 0
+    while motiontime < 20000-1:
+        print(motiontime)
         time.sleep(0.002)
         # time.sleep(0.005)
         motiontime += 1
@@ -426,15 +734,23 @@ if __name__ == '__main__':
                     'RR': trajectories['RR'][motiontime%len(trajectory)*(TOTAL_OFFSET+1)],
                     'RL': trajectories['RL'][motiontime%len(trajectory)*(TOTAL_OFFSET+1)]
                 }
+        
+        coords2 =  {'FR': neurons_coords['FR'][motiontime%len(trajectory)*(TOTAL_OFFSET+1)],
+                    'FL': neurons_coords['FL'][motiontime%len(trajectory)*(TOTAL_OFFSET+1)],
+                    'RR': neurons_coords['RR'][motiontime%len(trajectory)*(TOTAL_OFFSET+1)],
+                    'RL': neurons_coords['RL'][motiontime%len(trajectory)*(TOTAL_OFFSET+1)]
+                }
+        
+        
+
 
 
         STAND_UP_TIME = 1000
-        WALKING_TIME = 2000
+        WALKING_TIME = 1000
         INIT_TIME = 10
 
 
         if( motiontime >= 0):
-            print(motiontime)
 
             # first, get record initial position------------------)
             if( motiontime >= 0 and motiontime < 10):
@@ -450,9 +766,8 @@ if __name__ == '__main__':
             if( motiontime >= 10 and motiontime < STAND_UP_TIME +INIT_TIME):
                 rate_count += 1
                 rate = rate_count/(STAND_UP_TIME//2 - 100)                     # needs count to 500
-                # Kp = [75, 75, 75]
-                Kp = [60, 60, 60]
-                Kd = [5,5, 5]
+                Kp = [75, 75, 75]
+                Kd = [5, 5, 5]
                 
                 if (motiontime <=(STAND_UP_TIME+INIT_TIME)//2):
                     for part in parts : 
@@ -476,23 +791,46 @@ if __name__ == '__main__':
                         qDes[part][2] = jointLinearInterpolation(stand_up_2[part][2], stand_up_3[part][2], rate)
 
 
-#walking phase ---------------------------------------------------------------------
+# #walking phase  : neuronless ---------------------------------------------------------------------
+
+#             if( motiontime >= STAND_UP_TIME + INIT_TIME and motiontime<STAND_UP_TIME + WALKING_TIME + INIT_TIME):
+#                 new_motion_time = motiontime - (STAND_UP_TIME + INIT_TIME)
+#                 print(new_motion_time)
+#                 # 
+# # 
+#                 for part in parts :
+# # 
+#                     x = coords[part][0]
+#                     y = coords[part][1]
+#                     z = 0
+# # 
+#                     # for number in ['_0','_1','_2']: 
+#                     qDes[part][0] = z
+#                     qDes[part][1] = theta_thigh(x,y,z)
+#                     qDes[part][2] = theta_calf(x,y,z)
+#                     print(stand_up_2[part][2])
+# #------------------------------------------------------------------------------------------------------
+
+# walking phase ---------------------------------------------------------------------
 
             if( motiontime >= STAND_UP_TIME + INIT_TIME and motiontime<STAND_UP_TIME + WALKING_TIME + INIT_TIME):
                 new_motion_time = motiontime - (STAND_UP_TIME + INIT_TIME)
-                print(new_motion_time)
+                # print(new_motion_time)
                 # 
 # 
                 for part in parts :
-# 
-                    x = coords[part][0]
-                    y = coords[part][1]
-                    z = 0
-# 
-                    # for number in ['_0','_1','_2']: 
-                    qDes[part][0] = z
-                    qDes[part][1] = theta_thigh(x,y,z)
-                    qDes[part][2] = theta_calf(x,y,z)
+                    # x = coords[part][0]
+                    # y = coords[part][1]
+                    # z = 0
+                    # # for number in ['_0','_1','_2']: 
+                    # qDes[part][0] = z
+                    # qDes[part][1] = theta_thigh(x,y,z)
+                    # qDes[part][2] = theta_calf(x,y,z)
+
+                    qDes[part][0] = 0
+                    qDes[part][1] = coords2[part][0]
+                    qDes[part][2] = coords2[part][1]
+                    # distance += math.sqrt((qDes[part][1]-coords2[part][0])**2 + (qDes[part][2]-coords2[part][1])**2)
                     # print(stand_up_2[part][2])
 #------------------------------------------------------------------------------------------------------
             if (motiontime == STAND_UP_TIME + WALKING_TIME +INIT_TIME -1 ) : rate_count=0
@@ -546,5 +884,9 @@ if __name__ == '__main__':
         if(motiontime > 10):
             safe.PowerProtect(cmd, state, 1)
 
+
         udp.SetSend(cmd)
         udp.Send()
+        if (motiontime >20000): 
+            break
+    print("mean distance : ",distance/20000)

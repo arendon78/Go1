@@ -14,7 +14,7 @@ import numpy as np
 class Flip_Flop_T(Organ) : 
 
     def print(self):
-        for n in self.brain : 
+        for n in self.brain :
             n.print()
             print("")
 

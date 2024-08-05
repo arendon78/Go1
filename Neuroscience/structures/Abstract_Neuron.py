@@ -179,6 +179,10 @@ class Abstract_Neuron(Organ):
             # print(self.axon_terminals)
             self.axon_terminals.append([target_neuron,index])
 
+    def is_connected(self, n):
+        return n in [el[0] for el in self.axon_terminals]
+
+
     def assign_input(self):
         # Check for an available dendrite(input) to link it with the calling neuron
         for i in range(self.num_dendrites):

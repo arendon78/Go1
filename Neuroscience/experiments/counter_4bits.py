@@ -11,10 +11,10 @@ sys.path.append(project_root)
 
 from Neuroscience.structures.Organ import Organ
 from Neuroscience.structures.Counter_4_bits import Counter_4_bits
-from Neuroscience.structures.Frequency_Detector import Frequency_Detector
+from Neuroscience.structures.Frequency_Detector_old import Frequency_Detector
 
 res = 0.1                       #Set the resolution
-sim_time = 20000                #Set the simulation time
+sim_time = 10000                #Set the simulation time
 x = 120                  # number of neurons in this simulation
 
 #Initialize V.
@@ -59,7 +59,7 @@ for i in range(sim_time):
 #initialisation of counter
 
 counter = Counter_4_bits(res)#add res argument ? 
-freq = Frequency_Detector(res,counter.ouput_neurons)
+freq = Frequency_Detector(res,counter.output_neurons)
 
 # Inhibitory neurons may be needed to block the inputs and prevent other neurons from firing
 # once the desired output is obtained

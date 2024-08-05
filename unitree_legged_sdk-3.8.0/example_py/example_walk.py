@@ -6,7 +6,11 @@ import math
 
 sys.path.append('../lib/python/amd64')
 import robot_interface as sdk
+# import unitree_legged_sdk as sdk
+import time
 
+# Initialize the SDK and connect to the robot
+# control = sdk.Control()
 
 if __name__ == '__main__':
 

@@ -7,8 +7,8 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..
 sys.path.append(project_root)
 
 
-from Neuroscience.structures.Tunable_Oscillator import Tunable_Oscillator
-from Neuroscience.structures.Frequency_Detector import Frequency_Detector
+from Neuroscience.structures.Tunable_Oscillator_old import Tunable_Oscillator
+from Neuroscience.structures.Frequency_Detector_old import Frequency_Detector
 
 res = 0.1
 
@@ -25,8 +25,8 @@ sim_time = 5000
 
 
 
-NUM_TIMES = 2
-VOLT_OFFSET = 11.9
+NUM_TIMES = 10
+VOLT_OFFSET = 2
 
 
 inputs = np.zeros([sim_time,1])
@@ -37,7 +37,7 @@ inputs[1]=1
 #------------------------------------------------
 
 
-V = [[np.zeros([sim_time, 1]) for _ in range(3)] for _ in range(NUM_TIMES)]
+V = [[np.zeros([sim_time, 1]) for _ in range(4)] for _ in range(NUM_TIMES)]
 F = [[] for _ in range(NUM_TIMES)]
 max = [[]for _ in range (NUM_TIMES)]
 
@@ -73,7 +73,7 @@ for i in range(0,NUM_TIMES):
         oscillators[i].brain[0].inputs[1] = inputs[k]
         # print(k)
         # print( "i = ",i )
-        freq.update_firing_rate()
+        freq.update_firing_rate(k)
         # print(i,k)
         if (k<1000 and k>900):
             print("inside loop : what is plotted : ",freq.get_freq(i))
@@ -98,7 +98,7 @@ for i in range(0,NUM_TIMES):
 
 
 # Plot the results in a single figure with subplots
-fig, axs = plt.subplots(25, 4, figsize=(15, 10))  # Create a grid of 7 rows x 3 columns
+fig, axs = plt.subplots(5, 2, figsize=(15, 10))  # Create a grid of 7 rows x 3 columns
 axs = axs.flatten()  # Flatten to make it easier to iterate over
 
 
@@ -139,7 +139,7 @@ for i in range(freq.len):
 
 print (freq.frequency_ratio())
 
-fig, axs = plt.subplots(25, 4, figsize=(15, 10))  # Create a grid of 7 rows x 3 columns
+fig, axs = plt.subplots(5, 2, figsize=(15, 10))  # Create a grid of 7 rows x 3 columns
 axs = axs.flatten()  # Flatten to make it easier to iterate over
 
 for i in range (NUM_TIMES):

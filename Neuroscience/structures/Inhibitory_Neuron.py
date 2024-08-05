@@ -29,3 +29,4 @@ class Inhibitory_Neuron(Abstract_Neuron):
 
     def __init__(self, res, inputs, outputs, name = ""):
         super().__init__(res, inputs, outputs, name = name)# calls the constructor of AbstractNeuron class (prevents duplicated code)
+        self.type = "Inhibitory"    

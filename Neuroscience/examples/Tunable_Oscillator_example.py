@@ -3,7 +3,7 @@ import numpy as np
 
 # Import both Excitatory and Inhibitory Neuron models
 from structures.Excitatory_Neuron import Excitatory_Neuron
-from structures.Tunable_Oscillator import Tunable_Oscillator
+from Neuroscience.structures.Tunable_Oscillator import Tunable_Oscillator
 
 #### Header
 #---------------

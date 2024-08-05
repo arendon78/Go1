@@ -92,7 +92,7 @@ if __name__ == '__main__':
 
 
     ## enculé
-    V = [[np.zeros([N_SIM*(sim_time-400), 1]) for _ in range(3)] for _ in range(4)]
+    V = [[np.zeros([N_SIM*(sim_time-400), 1]) for _ in range(4)] for _ in range(4)]
 
     ## enculé
 

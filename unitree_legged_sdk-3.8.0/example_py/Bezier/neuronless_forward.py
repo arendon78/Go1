@@ -288,8 +288,8 @@ if __name__ == '__main__':
     # NUM_POINTS_STANCE = 50
 
 
-    NUM_POINST_BEZIER = 50
-    NUM_POINTS_STANCE = 50
+    NUM_POINST_BEZIER = 5
+    NUM_POINTS_STANCE = 5
 
     trajectory = generate_trajectory(standx, Lspan, deltaL, delta, standy, Yspan, deltaY,num_points_bezier=NUM_POINST_BEZIER, num_points_stance= NUM_POINTS_STANCE)
     

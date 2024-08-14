@@ -160,5 +160,3 @@ class Controller(Organ):
         self.brain = [neuron for oscillator in self.oscillators for neuron in oscillator.brain]
 
         # print(self.brain)
-
-

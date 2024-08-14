@@ -43,7 +43,6 @@ class Organ:
                         self.adjacency.add_edge(i,j)
 
 
-
     def print_network(self, name):
         neuron_types = [neuron.type for neuron in self.brain]
         # self.adjacency.plot_force_directed_graph(neuron_types,graph_name = name)

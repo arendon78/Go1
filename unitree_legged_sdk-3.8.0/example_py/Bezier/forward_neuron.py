@@ -35,11 +35,8 @@ if __name__ == '__main__':
     parts = ['FR','FL','RR','RL'] 
     # generation of the foot trajectory 
 
-    # NUM_POINTS_BEZIER = 50
-    # NUM_POINTS_STANCE = 50
-
-    NUM_POINTS_BEZIER = 10
-    NUM_POINTS_STANCE = 10
+    NUM_POINTS_BEZIER = 50
+    NUM_POINTS_STANCE = 50
 
     trajectory = foot_trajectory(NUM_POINTS_BEZIER, NUM_POINTS_STANCE)
 
@@ -107,8 +104,6 @@ if __name__ == '__main__':
     # associates a controller to each articulation
     [[controllers[part][i].create_oscillators(0.25) for part in parts ] for i in range(3) ]
 
-    
-
     #mock V
     V = [[np.zeros([(20000),1])] for _ in range (16) ]
 
@@ -119,33 +114,44 @@ if __name__ == '__main__':
                 for part in parts }
 
     #simulates the neurons on the trajectory
-    neurons_coords, command_coords, frequency_parts, command, inside_oscillator = compute_neurons(trajectories, controllers, watchers,V)
-
-    #plot the coords from neurons : 
-    plot_everything(neurons_coords, command_coords, frequency_parts, command, inside_oscillator)
+    compute_simulation = False
 
 
-    #compute error
-    print("\n\n -------- compute error ---------- \n\n")
+    if (compute_simulation):
+        neurons_coords, command_coords, frequency_parts, command, inside_oscillator = compute_neurons(trajectories, controllers, watchers,V)
 
-    oscillator1_data = np.array(inside_oscillator['FR'][1])
-    freq_command1 = np.array(command['FR'][1])
+        #saves the neurons coords array so that you can lauch exeperiments wihtout always make the whole simulation again and again
+        json_path = "data/neurons_coords.json"
+        with open(json_path,"w") as json_file: 
+            json.dump(neurons_coords,json_file) 
 
-    maximum_error, result_MAE, result_MSE, relative_MAE  = error(oscillator1_data,freq_command1)
+        #plot the coords from neurons : 
+        plot_everything(neurons_coords, command_coords, frequency_parts, command, inside_oscillator)
 
-    print("maximum error : ",maximum_error)
-    print("MAE : ", result_MAE)
-    print("MSE : ", result_MSE)
-    print("relative MAE (percentage) : ", str(relative_MAE*100)[:5], "%")
-    input("To begin the walking gait, press enter")
+        #compute error
+        print("\n\n -------- compute error ---------- \n\n")
 
+        oscillator1_data = np.array(inside_oscillator['FR'][1])
+        freq_command1 = np.array(command['FR'][1])
 
+        maximum_error, result_MAE, result_MSE, relative_MAE  = error(oscillator1_data,freq_command1)
+
+        print("maximum error : ",maximum_error)
+        print("MAE : ", result_MAE)
+        print("MSE : ", result_MSE)
+        print("relative MAE (percentage) : ", str(relative_MAE*100)[:5], "%")
+        input("To begin the walking gait, press enter")
 
     #----------------------------------------------
     print("\n\n -------- main loop ---------- \n\n")
 
     ## main loop
     distance = 0
+    #uses the last saved neuron coords array
+    if not compute_simulation : 
+        json_path = "data/neurons_coords.json"
+        with open(json_path,"r") as json_file: 
+            neurons_coords = json.load(json_file) 
 
 
     main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up_1,stand_up_2,stand_up_3)

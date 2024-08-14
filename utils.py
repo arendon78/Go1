@@ -2,6 +2,8 @@ import math
 import matplotlib.pyplot as plt
 import seaborn as sns
 import networkx as nx
+import numpy as np
+from scipy.special import comb
 
 def jointLinearInterpolation(initPos, targetPos, rate):
 
@@ -69,58 +71,6 @@ def theta_calf(x, y, z, L=0.213):
     return term1 - thigh_angle
 
 
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.special import comb
-
-# def bezier(points, num_points=50):
-#     """
-#     Generates a Bézier curve from a list of control points.
-
-#     Parameters:
-#     points (list of tuples): List of control points (x, y).
-#     num_points (int): Number of points to generate along the curve.
-
-#     Returns:
-#     list of tuples: Points on the Bézier curve.
-#     """
-
-#     n = len(points) - 1
-#     t_values = np.linspace(0, 1, num_points)
-#     curve_points = []
-
-#     for t in t_values:
-#         x = sum(comb(n, i) * (1 - t)**(n - i) * t**i * points[i][0] for i in range(n + 1))
-#         y = sum(comb(n, i) * (1 - t)**(n - i) * t**i * points[i][1] for i in range(n + 1))
-#         curve_points.append((x, y))
-
-#     return curve_points
-
-
-
-# def stance_phase(start_point, end_point, num_points=50, delta = 0.007):
-#     """
-#     Generates a stance-phase trajectory using a sinusoidal function.
-
-#     Parameters:
-#     start_point (tuple): The starting point of the stance phase.
-#     end_point (tuple): The ending point of the stance phase.
-#     num_points (int): Number of points to generate along the stance trajectory.
-#     amplitude (float): Amplitude of the sinusoidal function.
-
-#     Returns:
-#     list of tuples: Points on the stance-phase trajectory.
-#     """
-
-#     x_start, y_start = start_point
-#     x_end, y_end = end_point
-#     x_values = np.linspace(x_start, x_end, num_points)
-#     y_values = y_start - delta * np.sin(np.pi * np.linspace(0, 1, num_points))
-
-#     return list(zip(x_values, y_values))
-
-
-
 def plot_trajectory(control_points, bezier_points, stance_points):
     """
     Plots the swing and stance phases of the foot trajectory.
@@ -142,48 +92,6 @@ def plot_trajectory(control_points, bezier_points, stance_points):
     plt.ylabel('Y coordinate WRT hip (m)')
     plt.title('Sample Foot Trajectory Generation')
     plt.show()
-
-
-
-# def generate_control_points(standx, Lspan, deltaL, delta, standy, Yspan, deltaY):
-#     """
-#     Generates control points for the Bézier curve based on given parameters.
-
-#     Parameters:
-#     standx (float): Stand x-coordinate.
-#     Lspan (float): Span in the x-direction.
-#     deltaL (float): Change in the x-direction for some points.
-#     delta (float): Small delta for some y-coordinates.
-#     standy (float): Stand y-coordinate.
-#     Yspan (float): Span in the y-direction.
-#     deltaY (float): Change in the y-direction for some points.
-
-#     Returns:
-#     list of tuples: Control points.
-#     """
-#     points = [
-#         (standx - Lspan, standy),  # 0
-#         (standx - Lspan - deltaL, standy),  # 1
-#         (standx - Lspan - deltaL - delta, standy + Yspan),  # 2
-#         (standx - Lspan - deltaL - delta, standy + Yspan),  # 3
-#         (standx - Lspan - deltaL - delta, standy + Yspan),  # 4
-#         (standx, standy + Yspan),  # 5
-#         (standx, standy + Yspan),  # 6
-#         (standx, standy + Yspan + deltaY),  # 7
-#         (standx + Lspan + deltaL + delta, standy + Yspan + deltaY),  # 8
-#         (standx + Lspan + deltaL + delta, standy + Yspan + deltaY),  # 9
-#         (standx + Lspan + deltaL, standy),  # 10
-#         (standx + Lspan, standy)  # 11
-#     ]
-#     return points
-
-# def generate_trajectory(standx, Lspan, deltaL, delta, standy, Yspan, deltaY, num_points_bezier = 50, num_points_stance = 50):
-#     points = generate_control_points(standx, Lspan, deltaL, delta, standy, Yspan, deltaY)
-#     bezier_curve_points = bezier(points,num_points=num_points_bezier)
-#     stance_curve_points = stance_phase(bezier_curve_points[-1], bezier_curve_points[0],delta=delta,num_points=num_points_stance)
-
-#     return bezier_curve_points + stance_curve_points
-
 
 
 def unphase(deg, list):
@@ -223,9 +131,6 @@ def plot_trajectory_3(bezier_points, stance_points):
 def plot_trajectory_single(points, indices_to_consider, x_description, y_descritpion):
     trajectory = np.array(points)
     
-    # plt.scatter(trajectory[:, 0], trajectory[:, 1], c='blue', s=10)  # Use a single color for all points
-    # plt.xlabel('Theta thigh (radian)')
-    # plt.ylabel('Theta calf (radian)')
 
     plt.scatter(trajectory[:, indices_to_consider[0]], trajectory[:, indices_to_consider[1]], c='blue', s=10)
     plt.xlabel(x_description)
@@ -270,7 +175,7 @@ def plot_joint_angles(full_trajectory):
     plt.show()
 
 
-#part on adjacency matrix : to delete ! -----------------------------
+#part on adjacency matrix ----------------
 
 import numpy as np
 
@@ -278,6 +183,10 @@ class AdjacencyMatrix:
     def __init__(self, size=0):
         self.matrix = np.zeros((size, size), dtype=int)
         self.size = size
+
+    def instanciate_matrix(adjacency_matrix):
+        mat = AdjacencyMatrix.__init__(np.size(adjacency_matrix))
+        mat.matrix = adjacency_matrix
 
     def add_vertex(self):
         size = self.matrix.shape[0]

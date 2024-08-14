@@ -13,9 +13,10 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
 sys.path.append(project_root)
 
 from Neuroscience.structures.Abstract_Neuron import Abstract_Neuron
+from utils import *
 
 
-ACT_POT = Abstract_Neuron.Thres_Act_Pot_volt
+ACT_POT = Abstract_Neuron.Act_Pot_volt
 
 # Path to the JSON file
 file_path = '../unitree_legged_sdk-3.8.0/example_py/Bezier/data/neuron_activity.json'
@@ -60,7 +61,6 @@ def directed_to_undirected(adj_matrix):
     # Include the diagonal elements from the original matrix
     for i in range(n):
         undirected_matrix[i, i] = adj_matrix[i, i]
-    
     return undirected_matrix
 
 def pretty_print(matrix):
@@ -105,6 +105,7 @@ class Neuron(VMobject):
 
 
 class NeuralNetwork(Scene):
+
     def construct(self):
         neurons = []
         n_neurons_per_pack = 4*4*3 #3 articulations each with 4 tunable oscillators each containing 4 neurons
@@ -120,7 +121,6 @@ class NeuralNetwork(Scene):
         # Create neurons in packs and store them by pack
         neurons_by_pack = []
 
-        # for center in pack_centers:
         for part in parts : 
             center = pack_centers[part]
             pack_neurons = []
@@ -132,26 +132,24 @@ class NeuralNetwork(Scene):
             n_neurons_per_pack = sum([len(data_json[part][n][0])for n in ['0','1','2']])
             adjacency_matrix = np.zeros((n_neurons_per_pack, n_neurons_per_pack), dtype=int)
 
-            print(n_neurons_per_pack)
-
             for i in range(n_neurons_per_pack):
-
                 pre_off_x = previous_offset[0]
                 pre_off_y = previous_offset[1]
-                # neurons are created inside the circle close to one another in a radom way
+                # neurons are created inside the circle close to one another in a random way
                 offset = np.array([
                     random.uniform(min(-pre_off_x - 0.1,-radius), max(pre_off_x + 0.1,radius)),
                     random.uniform(min(-pre_off_y - 0.1,-radius), max(pre_off_y + 0.1,radius)),
                     0
                 ])
                 # neuron color
+                #access to the list of neuron types stored in the json
                 if data_json[part][str(i//16)][2][i%16] == 0 : 
                     current_color = RED
                 else : 
                     current_color = BLUE
 
 
-
+                #adds neuron to the scene
                 neuron = Neuron(color = current_color)
                 neuron.move_to(center + offset)
                 previous_offset = offset
@@ -170,8 +168,6 @@ class NeuralNetwork(Scene):
                             adjacency_matrix[ len(current_matrix) * int(n) + i, len(current_matrix) * int(n) + j] = index
             
             neurons_by_pack.append(pack_neurons)
-            # draw_graph(adjacency_matrix,"adjacency")
-            # pretty_print(adjacency_matrix)
             adjacency_matrices.append(adjacency_matrix)
         
         # Function to apply repulsion and spring forces within each pack
@@ -179,7 +175,6 @@ class NeuralNetwork(Scene):
             undirected_matrix = directed_to_undirected(adjacency_matrix)
             spring_constant = 1
             rest_length = 0.2
-            # for i in range(50):
             for i in range(50):  # Number of iterations
                 for idx, neuron in enumerate(neurons_pack):
                     force = np.array([0.0, 0.0, 0.0])
@@ -208,7 +203,7 @@ class NeuralNetwork(Scene):
                     new_position = neuron.get_center() + force * 0.1  # Adjust the 0.01 factor for step size
                     neuron.move_to(new_position)
                 
-                # Example logging statement for each iteration
+                # logging statement for each iteration
                 print(f'Forces applied within pack {i}')
 
         # Function to avoid overlap by nudging neurons slightly apart
@@ -231,7 +226,6 @@ class NeuralNetwork(Scene):
         def apply_centripetal_force(neurons_pack, center):
             for i in range(150):  # Number of iterations for centripetal force
                 for idx, neuron in enumerate(neurons_pack):
-                    # print("center, neuron.get_center() : ",center, neuron.get_center())
                     force = np.array([0.0, 0.0, 0.0])
                     # Centripetal force towards pack center
                     center_diff = center - neuron.get_center()
@@ -241,7 +235,7 @@ class NeuralNetwork(Scene):
                     new_position = neuron.get_center() + force * 0.01  # Adjust the 0.01 factor for step size
                     neuron.move_to(new_position)
                 
-                # Example logging statement for each iteration
+                # logging statement for each iteration
                 print(f'Centripetal force applied to pack centered at {center}.')
 
         # Apply repulsion and spring forces for each pack
@@ -293,6 +287,8 @@ class NeuralNetwork(Scene):
         print(f"Mean distance between connected neurons: {mean_connected}")
         print(f"Mean distance between unconnected neurons: {mean_unconnected}")
 
+
+        
         def map_data_to_neuron(part,n,k, neurons_by_pack) : 
             #corresponds to activity of neuron data_json[part][n][1][k]
             index = -1
@@ -314,82 +310,79 @@ class NeuralNetwork(Scene):
     
             #returns the activity of such neuron
             return part, n, k, data_json[part][n][1][k]
-        
-        #logique : on parcourt l'activité de TOUT les neurones par pas de temps, 
-        #lorsqu'un neurone (du ficheir json) s'active (i.e. son voltage = ACT_POT), 
-        # on rajoute le neurone (du graphe) correpsondant en utilisant la méthode de mapping.
-        #à la liste des neurones séléctionné et on l'anime.
 
 
-
-        def activation(part, n, potentials, neurons_by_pack):
-            # Initialize lists to hold batch updates
-            neurons_to_update = []
-            new_colors = []
-            new_radiuses = []
-
+        def activation(time_neuron_to_fire, neurons_by_pack):
             active_color = "yellow"  # Choose a distinct color
             active_scale_factor = 1.5  # Scale factor for active neurons
+
+            active_color
+            l = len(time_neuron_to_fire)
             
-
-            for neuron_number, potential in potentials:
-
-                i=0
-                for p in potential:
-
-                    # Map the neuron number to the neuron object
-                    n_to_activate = map_data_to_neuron(part, n, neuron_number, neurons_by_pack)
-
+            for i in range(l):
+                if i/l *100 in [i *10 for i in range(10)]:
+                    print("loading... ", i/l * 100," % \n")
+                if len(time_neuron_to_fire[i]) == 0 : 
+                    None
+                else : 
                     
+                    for el in time_neuron_to_fire[i]:
+                        part = el[0]
+                        n = el[1]
+                        neuron_number = el[2]
 
-                    # Calculate the activation proportion
-                    proportion = min(max(int(p[0]) / ACT_POT, 0), 1)
-
-                    is_active = (proportion == 1)
-
-                    if is_active:
-                        # print("is_active !")
-                        new_color = active_color
+                        # Map the neuron number to the neuron object
+                        n_to_activate = map_data_to_neuron(part, n, neuron_number, neurons_by_pack)
                         new_radius = n_to_activate.original_radius * active_scale_factor
 
-                    else : 
-                        new_color = n_to_activate.original_color
-                        new_radius = n_to_activate.original_radius
+                        n_to_activate.radius = new_radius
+                        n_to_activate.circle.width = 2* new_radius
+                        n_to_activate.circle.height = 2* new_radius
+                        n_to_activate.circle.set_color(active_color)
 
-                    # Interpolate color based on the activation proportion
-                    # new_color = interpolate_color(n_to_activate.color, YELLOW, proportion)
+                    #generates the animation
+                    self.wait(0.017)# for 60fps 1 frame is 0,016666667s
+                    #self.wait(0,07)# for 15fps ( lower quality ) frame is 0,066666667
 
-                    # Collect the neuron and its new color for batch updating
-                    neurons_to_update.append(n_to_activate)
-                    new_colors.append(new_color)
-                    new_radiuses.append(new_radius)
-                    i+=1
+                    for el in time_neuron_to_fire[i] : 
 
-            # Apply all color updates at once
-            for neuron, color, radius in zip(neurons_to_update, new_colors, new_radiuses):
-                neuron.radius = radius
-                neuron.circle.width = 2* radius
-                neuron.circle.height = 2* radius
-                neuron.circle.set_color(color)
+                        part = el[0]
+                        n = el[1]
+                        neuron_number = el[2]
 
-            # Wait for a short period to create the animation effect
-            self.wait(0.1)
-            for neuron, color,radius in zip(neurons_to_update, new_colors,new_radiuses):
-                neuron.radius = neuron.original_radius
-                neuron.circle.width = 2* neuron.original_radius
-                neuron.circle.height = 2* neuron.original_radius
+                        # Map the neuron number to the neuron object
+                        n_to_activate = map_data_to_neuron(part, n, neuron_number, neurons_by_pack)
+                        new_radius = n_to_activate.original_radius * active_scale_factor
+                        
 
-                neuron.circle.set_color(neuron.original_color)
+                        n_to_activate.radius = n_to_activate.original_radius
+                        n_to_activate.circle.width = 2 * n_to_activate.original_radius
+                        n_to_activate.circle.height = 2 * n_to_activate.original_radius
+                        n_to_activate.circle.set_color(n_to_activate.original_color)
 
+
+        #creation of a data structure where each index is on step of simulation, containing a list of the neurons which fired at this step.
+        time_neuron_to_fire = [[] for _ in range(len(data_json[part][n][1][0]))]
+        print("len outside : ",len(time_neuron_to_fire))
+        print("len outside : other ",len(time_neuron_to_fire[0]))
         for part in parts : 
             for n in ['0','1','2']: 
-                for step_number in range((len(data_json[part][n][1]))):
-                    neurons = data_json[part][n][1][step_number]
-                    potentials = []
-                    for neuron_index in range(len(neurons)) :
-                        potentials_1_step = neurons[neuron_index]
-                        potentials.append([neuron_index,potentials_1_step])  
-                    activation(part, n, potentials, neurons_by_pack)
+                for neuron_index in range(len(data_json[part][n][1])):
+                    neuron_potiential_list = data_json[part][n][1][neuron_index]
+                    l = len(neuron_potiential_list)
+                    k=0
+                    for p, time in neuron_potiential_list: 
+                        # if k > l//10: #only computes the beginning of the simulation
+                        #     break                      
+                        if ACT_POT - p < 0.07:
+                            # we avoid to plot the oscillating part, just the output neuron
+                            if neuron_index in [ 2 + 4*(i//2) + i%2 for i in range(len(data_json[part][n][1])//2)]:# selects [2,3,6,7,10,11,14,15] in [0,...,15]
+                                time_neuron_to_fire[int(time)].append([part, n, neuron_index])
+                        k+=1
+
+
+
+        activation( time_neuron_to_fire, neurons_by_pack)    
 
 
         

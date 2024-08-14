@@ -143,6 +143,3 @@ class Frequency_Detector :
             else: 
                 s+="0"
         return s
-
-
-

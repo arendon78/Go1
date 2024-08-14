@@ -18,7 +18,7 @@ class Gate_NAND(Organ):
 
         super().__init__()
 
-        if res is not None:
+        if res is not None and neuron0 is None:
             neuron0 = Excitatory_Neuron(res, 2, 4, name = name + "0")
             neuron0.set_weights([7.5,7.5])
 
@@ -62,7 +62,6 @@ class Gate_NAND(Organ):
             neuron5.connect_with_neuron(neuron6)
 
             neuron4.taken_inputs[1] = 1
-
 
         else : 
             raise ValueError("Invalid initialization parameters")

@@ -44,5 +44,18 @@ for el,name in zip(list,list_name) :
     el.update_adjacency_matrix()
     el.print_network(name)
 
+# Gate_N.update_adjacency_matrix()
+# Gate_N.print_network("Gate_NAND")
+
+# Gate_N.print_network("Gate_NAND")
+# Gate_N.print_network("Gate_NAND")
+# Gate_N.print_network("Gate_NAND")
+# Gate_N.print_network("Gate_NAND")
+# Gate_N.print_network("Gate_NAND")
+# Gate_N.print_network("Gate_NAND")
+# Gate_N.print_network("Gate_NAND")
+# Gate_N.print_network("Gate_NAND")
+# Gate_N.print_network("Gate_NAND")
+# Gate_N.print_network("Gate_NAND")
 
 

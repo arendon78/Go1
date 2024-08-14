@@ -84,9 +84,17 @@ def compute_neurons(trajectories,controllers, watchers,V):
     #     for part in parts
     # }
 
+    # data_json = {
+    #     part : {
+    #         n : [controllers[part][n].adjacency, [[np.zeros([(SIM_TIME),2]) for _ in range (controllers[part][n].adjacency.size)] for __ in range(N_STEPS) ], [1 if isinstance(neuron,Excitatory_Neuron) else 0 for neuron in controllers[part][n].brain] ]
+    #     for n in [0,1,2]
+    #     }
+    #     for part in parts
+    # }
+
     data_json = {
         part : {
-            n : [controllers[part][n].adjacency, [[np.zeros([(SIM_TIME),1]) for _ in range (controllers[part][n].adjacency.size)] for __ in range(N_STEPS) ], [1 if isinstance(neuron,Excitatory_Neuron) else 0 for neuron in controllers[part][n].brain] ]
+            n : [controllers[part][n].adjacency, [np.zeros([(SIM_TIME*N_STEPS),2]) for _ in range (controllers[part][n].adjacency.size)], [1 if isinstance(neuron,Excitatory_Neuron) else 0 for neuron in controllers[part][n].brain] ]
         for n in [0,1,2]
         }
         for part in parts
@@ -101,22 +109,24 @@ def compute_neurons(trajectories,controllers, watchers,V):
     #computation loop
 
     print(len(trajectories['FR']),"steps to simulate")
+    for part in ['FR','FL','RR','RL']:
+        
+        internal_time = 0
 
-    for i in range(len(trajectories['FR'])): 
+        for i in range(len(trajectories['FR'])): 
 
-        coords = {'FR': trajectories['FR'][i],
-            'FL': trajectories['FL'][i],
-            'RR': trajectories['RR'][i],
-            'RL': trajectories['RL'][i]
-        }
+            coords = {'FR': trajectories['FR'][i],
+                'FL': trajectories['FL'][i],
+                'RR': trajectories['RR'][i],
+                'RL': trajectories['RL'][i]
+            }
 
 
-        print(i)
-        # for part in parts : 
-        for part in ['FR','FL','RR','RL']:
+            print(i)
+            # for part in parts : 
 
             
-            internal_time = 0
+            
             # print(internal_time)
             x = coords[part][0]
             y = coords[part][1]
@@ -137,7 +147,7 @@ def compute_neurons(trajectories,controllers, watchers,V):
             else : 
                 controllers[part][0].pass_inputs(0)
             # print("first controller to be simualted")
-            controllers[part][0].simulate(internal_time, data_json[part][0][1][i])
+            controllers[part][0].simulate(internal_time, data_json[part][0][1])
             # print(data_json[part][0][1][i])
             # print("size : ", np.size(data_json[part][0][1]))
             frequency_parts[part][0].append(watchers[part][0].frequency_ratio())
@@ -153,7 +163,7 @@ def compute_neurons(trajectories,controllers, watchers,V):
                 controllers[part][1].pass_inputs(0)
 
             # print("2cd controller to be simualted")
-            controllers[part][1].simulate(internal_time,data_json[part][1][1][i])
+            controllers[part][1].simulate(internal_time,data_json[part][1][1])
             frequency_parts[part][1].append(watchers[part][1].frequency_ratio())
            
             #2
@@ -166,7 +176,7 @@ def compute_neurons(trajectories,controllers, watchers,V):
             else : 
                 controllers[part][2].pass_inputs(0)
             # print("third")
-            controllers[part][2].simulate(internal_time,data_json[part][2][1][i])
+            controllers[part][2].simulate(internal_time,data_json[part][2][1])
             frequency_parts[part][2].append(watchers[part][2].frequency_ratio())
             
 
@@ -174,7 +184,7 @@ def compute_neurons(trajectories,controllers, watchers,V):
             #simulate them for a reasonable time
             # problem : simulates all the neurons. should only simulate one neuron at a time (the one that is active)
             for j in range(SIM_TIME) : 
-
+                # print("internal_time : ",internal_time)
 
                 inside_oscillator[part][0].append(inside_oscillator_hip)
                 inside_oscillator[part][1].append(inside_oscillator_thigh)
@@ -182,19 +192,19 @@ def compute_neurons(trajectories,controllers, watchers,V):
 
                 watchers[part][0].update_firing_rate(j)
                 controllers[part][0].pass_inputs(0)
-                None if j == 0 else controllers[part][0].simulate(internal_time,data_json[part][0][1][i])
+                None if j == 0 else controllers[part][0].simulate(internal_time,data_json[part][0][1])
                 frequency_parts[part][0].append(watchers[part][0].frequency_ratio())
                 command[part][0].append(hip)
 
                 watchers[part][1].update_firing_rate(j)
                 controllers[part][1].pass_inputs(0)
-                None if j == 0 else  controllers[part][1].simulate(internal_time,data_json[part][1][1][i])
+                None if j == 0 else  controllers[part][1].simulate(internal_time,data_json[part][1][1])
                 frequency_parts[part][1].append(watchers[part][1].frequency_ratio())
                 command[part][1].append(thigh)
 
                 watchers[part][2].update_firing_rate(j)
                 controllers[part][2].pass_inputs(0)
-                None if j == 0 else controllers[part][2].simulate(internal_time,data_json[part][2][1][i])
+                None if j == 0 else controllers[part][2].simulate(internal_time,data_json[part][2][1])
                 frequency_parts[part][2].append(watchers[part][2].frequency_ratio())
                 command[part][2].append(calf)
 
@@ -220,13 +230,15 @@ def compute_neurons(trajectories,controllers, watchers,V):
 
     for part in parts : 
         for n in range(3):
-            for i in range(N_STEPS): 
-                for j in range(16) :#
-                    data_json[part][n][1][i][j] = data_json[part][n][1][i][j].tolist()
-                    if j == 0  and i == 0: 
-                        data_json[part][n][0] = data_json[part][n][0].matrix.tolist() 
-                    # data_json[part][n][0].pretty_print() 
+            for i in range(16): 
+                data_json[part][n][1][i] = data_json[part][n][1][i].tolist()
+                if i == 0: 
+                    data_json[part][n][0] = data_json[part][n][0].matrix.tolist() 
+                # data_json[part][n][0].pretty_print() 
+
+                
     json_file_path = 'data/neuron_activity.json'
+
     with open(json_file_path, 'w') as json_file:
         json.dump(data_json, json_file)
 

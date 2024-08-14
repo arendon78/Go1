@@ -6,6 +6,8 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 
+import json
+
 from utils import *
 
 
@@ -69,5 +71,26 @@ def plot_everything(neurons_coords, command_coords, frequency_parts, command, in
     ax2.set_ylabel("Position and Frequency on calf")
     ax2.legend()
 
+
+
+
+
     plt.tight_layout()
     plt.show()
+
+    json_file_path0 = '../../../../../trash/freq0.json'
+    json_file_path1 = '../../../../../trash/freq1.json'
+    json_file_path2 = '../../../../../trash/freq2.json'
+
+    freq0 = freq0.tolist()
+    freq1 = freq1.tolist()
+    freq2 = freq2.tolist()
+
+    with open(json_file_path0, 'w') as json_file:
+        json.dump(freq0, json_file)
+
+    with open(json_file_path1, 'w') as json_file:
+        json.dump(freq1, json_file)
+
+    with open(json_file_path2, 'w') as json_file:
+        json.dump(freq2, json_file)

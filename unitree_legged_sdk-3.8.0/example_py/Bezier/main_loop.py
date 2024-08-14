@@ -4,6 +4,8 @@ import time
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+import json
+import time 
 
 from utils import *
 from foot_trajectory import *
@@ -23,6 +25,8 @@ from Neuroscience.structures.Frequency_Detector import Frequency_Detector
 
 sys.path.append('../../lib/python/amd64')
 import robot_interface as sdk
+
+
 
 
 
@@ -60,10 +64,16 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
     Tpi = 0
     motiontime = 0
 
+    forces = { 'FR' : [],
+               'FL' : [],
+               'RR' : [],
+               'RL' : [],
+    }
+
 
 
     while motiontime < 20000-1:
-        print(motiontime)
+        # print(motiontime)
         time.sleep(0.002)
         # time.sleep(0.005)
         motiontime += 1
@@ -86,11 +96,26 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
                     'RL': neurons_coords['RL'][motiontime%len(trajectory)*(TOTAL_OFFSET+1)]
                 }
         
+        after_2_step = {   'FR': neurons_coords['FR'][0],
+                    'FL': neurons_coords['FL'][0],
+                    'RR': neurons_coords['RR'][0],
+                    'RL': neurons_coords['RL'][0]
+                }
+        
+        after_1_step = { 'FR': neurons_coords['FR'][len(trajectory)*(0)],
+                         'FL': neurons_coords['FL'][len(trajectory)*(1)],
+                         'RR': neurons_coords['RR'][len(trajectory)*(1)],
+                         'RL': neurons_coords['RL'][len(trajectory)*(0)]
+                }
+        
         STAND_UP_TIME = 1000
-        WALKING_TIME = 1000
+        WALKING_TIME = 6000
+        TWO_STEP_TIME = len(neurons_coords['FR'])
+        ONE_STEP_TIME = TWO_STEP_TIME//2
         INIT_TIME = 10
 
         if( motiontime >= 0):
+            # print("hey",TWO_STEP_TIME)
 
             # first, get record initial position------------------)
             if( motiontime >= 0 and motiontime < 10):
@@ -135,25 +160,58 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
 
             if( motiontime >= STAND_UP_TIME + INIT_TIME and motiontime<STAND_UP_TIME + WALKING_TIME + INIT_TIME):
                 new_motion_time = motiontime - (STAND_UP_TIME + INIT_TIME)
-                # print(new_motion_time)
-                # 
-# 
-                for part in parts :
-                    # x = coords[part][0]
-                    # y = coords[part][1]
-                    # z = 0
-                    # # for number in ['_0','_1','_2']: 
-                    # qDes[part][0] = z
-                    # qDes[part][1] = theta_thigh(x,y,z)
-                    # qDes[part][2] = theta_calf(x,y,z)
 
-                    qDes[part][0] = 0
-                    qDes[part][1] = coords2[part][0]
-                    qDes[part][2] = coords2[part][1]
-                    # distance += math.sqrt((qDes[part][1]-coords2[part][0])**2 + (qDes[part][2]-coords2[part][1])**2)
-                    # print(stand_up_2[part][2])
+                
+                for number_steps in range(0,WALKING_TIME//(ONE_STEP_TIME),4):
+                    if new_motion_time >  number_steps*TWO_STEP_TIME and new_motion_time < (number_steps+1)*TWO_STEP_TIME:
+                        print("1",number_steps,new_motion_time)
+                        for part in parts : 
+                            qDes[part][0] = jointLinearInterpolation(stand_up_2[part][0], after_2_step[part][0], rate)
+                            qDes[part][1] = jointLinearInterpolation(stand_up_2[part][1], after_2_step[part][1], rate)
+                            qDes[part][2] = jointLinearInterpolation(stand_up_2[part][2], after_2_step[part][2], rate)
+
+                    elif new_motion_time >  (number_steps+1)*ONE_STEP_TIME and new_motion_time < (number_steps+2)*ONE_STEP_TIME:
+                        print("2",number_steps+1,new_motion_time)
+                        for part in parts :
+                            qDes[part][0] = coords2[part][0]
+                            qDes[part][1] = coords2[part][1]
+                            qDes[part][2] = coords2[part][2]
+                            # print("command sent to robot : ",qDes[part][0], qDes[part][1],qDes[part][2])
+
+                    elif new_motion_time >  (number_steps+2)*ONE_STEP_TIME and new_motion_time < (number_steps+3)*ONE_STEP_TIME:
+                        print("1",number_steps,new_motion_time)
+                        for part in parts : 
+                            qDes[part][0] = jointLinearInterpolation(stand_up_2[part][0], after_2_step[part][0], rate)
+                            qDes[part][1] = jointLinearInterpolation(stand_up_2[part][1], after_2_step[part][1], rate)
+                            qDes[part][2] = jointLinearInterpolation(stand_up_2[part][2], after_2_step[part][2], rate)
+
+                # Accessing force sensor data
+                # for sensor in range(4): 
+                    # force_value = state.footForce[sensor]
+                    # print(f"Force sensor {sensor} : {force_value}")
+
+                forces['FR'].append(state.footForce[0])
+                forces['FL'].append(state.footForce[1])
+                forces['RR'].append(state.footForce[2])
+                forces['RL'].append(state.footForce[3])
+
+                        
+# 
+# 
+                # for part in parts :
+                #     qDes[part][0] = coords2[part][0]
+                #     qDes[part][1] = coords2[part][1]
+                #     qDes[part][2] = coords2[part][2]
+                #     print("command sent to robot : ",qDes[part][0], qDes[part][1],qDes[part][2])
+
 #------------------------------------------------------------------------------------------------------
-            if (motiontime == STAND_UP_TIME + WALKING_TIME +INIT_TIME -1 ) : rate_count=0
+            if (motiontime == STAND_UP_TIME + WALKING_TIME +INIT_TIME -1 ) : 
+                rate_count=0
+                #saving forces datas
+                json_path = "data/forces.json"
+                with open(json_path,"w") as json_file: 
+                    json.dump(forces,json_file) 
+                #--------               
 #---------------------------------------------------------------------------
 
             if (motiontime >= STAND_UP_TIME + WALKING_TIME +INIT_TIME and motiontime < STAND_UP_TIME + WALKING_TIME + 2 * INIT_TIME):

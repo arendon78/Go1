@@ -7,8 +7,8 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..
 sys.path.append(project_root)
 
 
-from Neuroscience.structures.Tunable_Oscillator_old import Tunable_Oscillator
-from Neuroscience.structures.Frequency_Detector_old import Frequency_Detector
+from Neuroscience.structures.Tunable_Oscillator import Tunable_Oscillator
+from Neuroscience.structures.Frequency_Detector import Frequency_Detector
 
 res = 0.1
 
@@ -25,8 +25,8 @@ sim_time = 5000
 
 
 
-NUM_TIMES = 10
-VOLT_OFFSET = 2
+NUM_TIMES = 2
+VOLT_OFFSET = 8
 
 
 inputs = np.zeros([sim_time,1])
@@ -105,12 +105,12 @@ axs = axs.flatten()  # Flatten to make it easier to iterate over
 
 
 for i in range (NUM_TIMES):
-    t = np.arange(0, len(V[i][0])) * res  # Define the time axis
+    t = np.arange(0, len(V[i][0])) * 1  # Define the time axis
     axs[i].plot(t, V[i][2])
     
     axs[i].plot(t, max[i])
     
-    axs[i].set_xlabel('Time [ms]')
+    axs[i].set_xlabel('Time [steps]')
     axs[i].set_ylabel('Voltage [mV]')
     axs[i].set_title(f'last neuron input weight {((((i*(15-VOLT_OFFSET)/NUM_TIMES)+VOLT_OFFSET)*1000)//100)/10}')
 
@@ -143,10 +143,10 @@ fig, axs = plt.subplots(5, 2, figsize=(15, 10))  # Create a grid of 7 rows x 3 c
 axs = axs.flatten()  # Flatten to make it easier to iterate over
 
 for i in range (NUM_TIMES):
-    t = np.arange(0, len(F[i])) * res  # Define the time axis
+    t = np.arange(0, len(F[i])) *1  # Define the time axis
     axs[i].plot(t, F[i])
-    axs[i].set_xlabel('Time [ms]')
-    axs[i].set_ylabel('Frequency [Hz]')
+    axs[i].set_xlabel('Time [steps]')
+    axs[i].set_ylabel('Frequency [spike/1000 steps]')
     axs[i].set_title(f'last neuron input weight {((((i*(15-VOLT_OFFSET)/NUM_TIMES)+VOLT_OFFSET)*1000)//100)/10}')
 
 plt.tight_layout()  # Adjust subplots to fit into figure area.

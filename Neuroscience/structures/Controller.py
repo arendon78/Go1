@@ -159,4 +159,4 @@ class Controller(Organ):
         self.main_list = self.build_combinations()
         self.brain = [neuron for oscillator in self.oscillators for neuron in oscillator.brain]
 
-        # print(self.brain)
+        print("len :  \n",len(self.brain))

@@ -181,7 +181,7 @@ def find_a_pattern(merged_mins_maxes_coordinates,fr_coordinates) :
                             
 #builds an ordered list (along time axis) of maxes and mins 
 
-def build_merge(local_maxes, local_mins) :
+def build_merge(local_maxes, local_mins) :# O(n**2)
     merged_mins_maxes_coordinates = []
 
     local_maxes_copy = local_maxes

@@ -86,6 +86,6 @@ class Counter_4_bits(Organ):
         self.neuronC_4.connect_with_neuron(self.T3.brain[7])
 
 
-        self.output_neurons = [self.T0.brain[-1], self.T1.brain[-1], self.T2.brain[-1], self.T3.brain[-1]]
+        self.output_neurons =  [self.T3.brain[-1],self.T2.brain[-1],self.T1.brain[-1],self.T0.brain[-1]]
         self.brain = self.T3.brain + self.T2.brain + self.T1.brain + self.T0.brain + [self.neuronC_1,self.neuronC_2, self.neuronC_3, self.neuronC_4]
 

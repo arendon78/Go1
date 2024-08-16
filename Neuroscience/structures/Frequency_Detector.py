@@ -31,7 +31,7 @@ class Frequency_Detector :
 
 #new version -------------------
 
-    def __init__(self, res, list_neurons=[], controller=None):
+    def __init__(self, res, list_neurons=[], controller=None,delta_t = 700, spike_detector = False ):
         self.previous_to_watch = []
         if controller:
             self.watch_neurons = [oscillator.output_neuron [ oscillator.to_watch ] for oscillator in controller.oscillators]
@@ -40,13 +40,15 @@ class Frequency_Detector :
         else:
             self.watch_neurons = list_neurons
             self.len = len(self.watch_neurons)
+            self.clock = [-1 for _ in range(self.len)]
+        self.spike_detector = spike_detector
 
         # self.internal_time = 0
         self.resolution = res
         self.timestamps = np.zeros((self.len, 2)) - 1  # initialise timestamps to -1
         self.frequency = np.zeros(self.len)
         self.max_sum_frequency = self.max_frequency * self.len
-        self.delta_t = 700
+        self.delta_t = delta_t
         self.controller = controller
         self.time = 0
         self.timer_active = False
@@ -58,6 +60,8 @@ class Frequency_Detector :
         self.timestamps = np.zeros((self.len, 2)) - 1  # reinitialise timestamps to -1
         self.frequency = np.zeros(self.len)
 
+
+    #main method
     def update_firing_rate(self,k):
         for f in self.frequency :
             if f == 1 :
@@ -65,19 +69,35 @@ class Frequency_Detector :
 
         if self.controller: 
             new_to_watch = [oscillator.to_watch for oscillator in self.controller.oscillators]
-           
             if new_to_watch != self.to_watch :
                 # print("changing ! ",new_to_watch,self.to_watch)
                 self.new_init_(self.controller,new_to_watch)
 
+
         for i in range(self.len) :
             cur_neur = self.watch_neurons[i]
+
+            # if self.clock[i] > 0:
+                # self.clock[i]-=1
             if abs(self.timestamps[i, 0] - k) > self.delta_t :
                 self.frequency[i] = 0
+                # self.clock[i]= -1 
+                #warning : if a signals lasts less than 
             if cur_neur.max_active_potential == True :
                 self.timestamps[i] = np.roll(self.timestamps[i], 1)
                 self.timestamps[i, 0] = k
-                self.calculate_frequency(i)
+                
+                if self.spike_detector :
+                    if self.clock[i] == -1 : #first time he sees a spike, He starts the clock
+                        self.clock[i] = self.delta_t
+                    elif self.clock[i] == 0 :#once the clock is over, immediatly calculate frequency. This allows to have a constant offset between the detection phase and the no detection phase.
+                        self.calculate_frequency(i)
+                    else : 
+                        None
+
+
+                else :          
+                    self.calculate_frequency(i)
 
 
     def calculate_frequency(self, index):

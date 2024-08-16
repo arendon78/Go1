@@ -102,7 +102,7 @@ times = times = list(range(len(fr_coordinates)))
 
 
 
-
+###---- will start a benchmark : vanilla as it is then with numpy arrays then with multithreading (multiprocessing library) 
 
 #the idea is to simulate a flow of input and compare the detection of patterns with the real input to ensure the detection is ok in live.
 #main loop then
@@ -110,23 +110,26 @@ k=0
 p=0
 old_frame = []
 present_frame = []
+start = time.time()
 while k < len(fr_coordinates) : 
     point = fr_coordinates[k]
+    # print("point : ",point)
 
     present_frame.append(point)# here you have point = fr_coordinate.
     # to adjust you can just change it to the actual point of the input and that's it ! 
     # print(present_frame)
-    local_maxes = monte_carlo_gradient(1,present_frame)
-    local_mins = monte_carlo_gradient(-1,present_frame)
+    if len(present_frame) %30 == 0 : 
+        local_maxes = monte_carlo_gradient(1,present_frame)
+        local_mins = monte_carlo_gradient(-1,present_frame)
 
-    new_merged_mins_maxes_coordinates = build_merge(local_maxes, local_mins)
-    bool, p0,p1,p2 = find_a_pattern(new_merged_mins_maxes_coordinates, present_frame)
-    # print(bool)
-    if bool : 
-        print("pattern found !\n\n",p0,p1,p2)
-        p+=1
-        old_frame +=present_frame
-        present_frame = []
+        new_merged_mins_maxes_coordinates = build_merge(local_maxes, local_mins)
+        bool, p0,p1,p2 = find_a_pattern(new_merged_mins_maxes_coordinates, present_frame)
+        # print(bool)
+        if bool : 
+            print("pattern found !\n\n",p0,p1,p2)
+            p+=1
+            old_frame +=present_frame
+            present_frame = []
 
     # print(k)
     k+=1
@@ -135,8 +138,11 @@ while k < len(fr_coordinates) :
 print(p)
 
 # print("old_frame : ",old_frame)
-print("\n\n")
-print("present_ frame : ",present_frame)
+# print("\n\n")
+# print("present_ frame : ",present_frame)
+end=time.time()
+
+print("time : ", end-start)
 
 
 
@@ -201,7 +207,7 @@ print("present_ frame : ",present_frame)
 # axs[3].legend()
 
 # Adjust layout
-plt.tight_layout()
+# plt.tight_layout()
 
-# Show the plot
-plt.show()
+# # Show the plot
+# plt.show()

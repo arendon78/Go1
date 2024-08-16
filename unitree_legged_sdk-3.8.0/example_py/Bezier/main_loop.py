@@ -13,6 +13,7 @@ from computation_neuron import *
 from error_calculation import *
 from plot_neurons import *
 from main_loop import *
+from forces.utils_forces import *
 
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../'))
@@ -69,6 +70,10 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
                'RR' : [],
                'RL' : [],
     }
+
+    old_frame = []
+    present_frame = []
+    p=0
 
 
 
@@ -164,36 +169,77 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
                 
                 for number_steps in range(0,WALKING_TIME//(ONE_STEP_TIME),4):
                     if new_motion_time >  number_steps*TWO_STEP_TIME and new_motion_time < (number_steps+1)*TWO_STEP_TIME:
-                        print("1",number_steps,new_motion_time)
+                        # print("1",number_steps,new_motion_time)
                         for part in parts : 
                             qDes[part][0] = jointLinearInterpolation(stand_up_2[part][0], after_2_step[part][0], rate)
                             qDes[part][1] = jointLinearInterpolation(stand_up_2[part][1], after_2_step[part][1], rate)
                             qDes[part][2] = jointLinearInterpolation(stand_up_2[part][2], after_2_step[part][2], rate)
 
                     elif new_motion_time >  (number_steps+1)*ONE_STEP_TIME and new_motion_time < (number_steps+2)*ONE_STEP_TIME:
-                        print("2",number_steps+1,new_motion_time)
+                        # print("2",number_steps+1,new_motion_time)
                         for part in parts :
+                            if (new_motion_time == (number_steps+1)*ONE_STEP_TIME +1) : 
+                                start = time.time()
+                                print("this is the time when the first command of a foot trajectory was sent : ", new_motion_time)
                             qDes[part][0] = coords2[part][0]
                             qDes[part][1] = coords2[part][1]
                             qDes[part][2] = coords2[part][2]
                             # print("command sent to robot : ",qDes[part][0], qDes[part][1],qDes[part][2])
 
                     elif new_motion_time >  (number_steps+2)*ONE_STEP_TIME and new_motion_time < (number_steps+3)*ONE_STEP_TIME:
-                        print("1",number_steps,new_motion_time)
+                        # print("1",number_steps,new_motion_time)
                         for part in parts : 
                             qDes[part][0] = jointLinearInterpolation(stand_up_2[part][0], after_2_step[part][0], rate)
                             qDes[part][1] = jointLinearInterpolation(stand_up_2[part][1], after_2_step[part][1], rate)
                             qDes[part][2] = jointLinearInterpolation(stand_up_2[part][2], after_2_step[part][2], rate)
 
-                # Accessing force sensor data
-                # for sensor in range(4): 
-                    # force_value = state.footForce[sensor]
-                    # print(f"Force sensor {sensor} : {force_value}")
+                fr_force = state.footForce[0]
+                fl_force = state.footForce[1]
+                rr_force = state.footForce[2]
+                rl_force = state.footForce[3]
 
-                forces['FR'].append(state.footForce[0])
-                forces['FL'].append(state.footForce[1])
-                forces['RR'].append(state.footForce[2])
-                forces['RL'].append(state.footForce[3])
+
+                forces['FR'].append(fr_force)
+                forces['FL'].append(fl_force)
+                forces['RR'].append(rr_force)
+                forces['RL'].append(rl_force)
+
+                #-----------force treatment and pattern recognition-------------
+                # firstly, we just use the sensor of FR limb to make it work
+
+                if new_motion_time == 0 : 
+                    new_point = [new_motion_time,fr_force]
+                else : 
+                    old_point = new_point
+
+                    new_point = [new_motion_time, fr_force]
+
+                    old_point =  old_point + [calculate_derivative(new_point,old_point)]
+
+                    #---you have a delay of 1 point...
+                    
+                    present_frame.append(old_point)
+
+                    if len(present_frame)%40 == 0 : 
+                        local_maxes = monte_carlo_gradient(1,present_frame)
+                        local_mins = monte_carlo_gradient(-1,present_frame)
+
+                        new_merged_mins_maxes_coordinates = build_merge(local_maxes, local_mins)
+                        bool, p0,p1,p2 = find_a_pattern(new_merged_mins_maxes_coordinates, present_frame)
+
+                        if bool : 
+                            # print("pattern found !\n\n",p0,p1,p2)#-----------this is typically where we would take action after the recognition of a step.
+                            end = time.time()
+                            print("time delay : ",end-start)
+                            print("pattern found ! at : ", new_motion_time)
+                            p+=1
+                            old_frame += present_frame
+                            present_frame = []
+
+
+
+
+
 
                         
 # 

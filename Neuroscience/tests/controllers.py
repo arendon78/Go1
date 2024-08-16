@@ -16,7 +16,7 @@ sim_time = 10000
 N_REPEAT = 4
 
 ctrl = Controller(res)
-V = [[np.zeros([sim_time, 1]) for _ in range(4)] for _ in range(4)]
+V = [[np.zeros([sim_time, 1]) for _ in range(sim_time)] for _ in range(16)]
 F = [[] for _ in range(N_REPEAT)]
 
 
@@ -83,15 +83,17 @@ t=0
 #new
 ctrl.pass_inputs(1)
 while t<10:
+    print(t*0.05)
     for i in range(1000):
         watch.update_firing_rate(k)
-
+        ctrl.simulate(k,V)
+        ctrl.pass_inputs(0)
 
         if i == 0 and t!=0 : 
             ctrl.create_oscillators(t*0.05)
+            ctrl.pass_inputs(1)
 
-        ctrl.simulate(k,V)
-        ctrl.pass_inputs(0)
+
 
         for i in range(0,N_REPEAT):
             F[i].append( watch.get_freq(i))
@@ -104,9 +106,10 @@ fig, axs = plt.subplots(6, 5, figsize=(15, 10))  # Create a grid of 7 rows x 3 c
 axs = axs.flatten()  # Flatten to make it easier to iterate over
 
 for i in range (N_REPEAT):
-    t = np.arange(0, len(V[i][0])) * 1  # Define the time axis
-    axs[i].plot(t, V[i][2])
-    axs[i].plot(t, V[i][3])
+    t = np.arange(0, len(V[ (4*(i+1)-1) ])) * 1  # Define the time axis
+    axs[i].plot(t, V[ (4*(i+1)-1 )])#inhibitory neurons
+    axs[i].plot(t, V[ (4*(i+1)-2 )])#excitatory neurons
+    # axs[i].plot(t, V[4*i][3])
 
     axs[i].set_xlabel('Time [ms]')
     axs[i].set_ylabel('Voltage [mV]')
@@ -114,13 +117,6 @@ for i in range (N_REPEAT):
 
 plt.tight_layout()  # Adjust subplots to fit into figure area.
 plt.show()
-
-print(watch.print_frequency())
-print(watch.frequency_ratio())
-print("convert to motion : ")
-print(watch.convert_to_motion(0))
-print("neurons fire : ")
-print(watch.neurons_fire_string())
 
 
 
@@ -136,6 +132,8 @@ for i in range (N_REPEAT):
 
 plt.tight_layout()  # Adjust subplots to fit into figure area.
 plt.show()
+
+
 
 
 

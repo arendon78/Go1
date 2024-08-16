@@ -61,6 +61,7 @@ class Organ:
 
         neuron_count = 0
         # One for loop for calculating the state of the neurons with the current inputs
+
         for neuron in self.brain:
             # If there's an input present and an action potential is not going on,
             # then prepare to keep track of the voltage and reinitialize timers
@@ -69,6 +70,8 @@ class Organ:
             # call spatial_summation function to keep track of the overall voltage in the neuron
             if not neuron.active_potential_bool:
                 # print("k,neuron_count : ",k,neuron_count)
+                # print(k)
+                # print(neuron_count)
                 V[neuron_count][k] = neuron.spatial_summation()
 
             # There is an active potential taking place

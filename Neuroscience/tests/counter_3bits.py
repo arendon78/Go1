@@ -12,7 +12,7 @@ from Neuroscience.structures.Organ import Organ
 from Neuroscience.structures.Counter_3_bits import Counter_3_bits
 
 res = 0.1                       #Set the resolution
-sim_time = 10000                #Set the simulation time
+sim_time = 40000                #Set the simulation time
 x = 90                          # number of neurons in this simulation
 
 #Initialize V.
@@ -55,7 +55,7 @@ for i in range(sim_time):
 
 #initialisation of counter
 
-counter = Counter_3_bits()
+counter = Counter_3_bits(res)
 
 # Inhibitory neurons may be needed to block the inputs and prevent other neurons from firing
 # once the desired output is obtained
@@ -89,4 +89,4 @@ o = Organ()
 for neuron in counter.brain:
     o.add_to_brain(neuron)
 
-o.build_and_display_neuron_graph()
+# o.build_and_display_neuron_graph()

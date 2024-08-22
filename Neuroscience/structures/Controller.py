@@ -154,6 +154,7 @@ class Controller(Organ):
 
     def __init__(self, res):
         super().__init__()
+        self.name = "Controller"
         self.res = res
         self.oscillators = [Tunable_Oscillator(res = self.res) for i in range (self.N_REPEAT)]
         self.main_list = self.build_combinations()

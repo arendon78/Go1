@@ -12,6 +12,7 @@ class Tunable_Oscillator(Organ) :
     def __init__ (self, neuron0=None, neuron1=None, neuron2_Excitatory=None,neuron2_Inhibitory=None,res = None):
 
         super().__init__()
+        self.name = "Tunable_Oscillator"
 
         self.to_watch =  1 # True : watch excitatory. False : watch Inhibitory neuron
 

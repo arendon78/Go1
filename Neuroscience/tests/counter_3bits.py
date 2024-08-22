@@ -12,7 +12,7 @@ from Neuroscience.structures.Organ import Organ
 from Neuroscience.structures.Counter_3_bits import Counter_3_bits
 
 res = 0.1                       #Set the resolution
-sim_time = 40000                #Set the simulation time
+sim_time = 80000                #Set the simulation time
 x = 90                          # number of neurons in this simulation
 
 #Initialize V.

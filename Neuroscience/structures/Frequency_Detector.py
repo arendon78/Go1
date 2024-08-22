@@ -32,6 +32,7 @@ class Frequency_Detector :
 #new version -------------------
 
     def __init__(self, res, list_neurons=[], controller=None,delta_t = 700, spike_detector = False ):
+        self.name = "Frequency_Detector"
         self.previous_to_watch = []
         if controller:
             self.watch_neurons = [oscillator.output_neuron [ oscillator.to_watch ] for oscillator in controller.oscillators]

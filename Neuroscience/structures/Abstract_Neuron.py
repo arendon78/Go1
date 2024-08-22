@@ -195,9 +195,10 @@ class Abstract_Neuron(Organ):
         return -1
 
 
-    def __init__(self, res, inputs, outputs, name=""):
+    def __init__(self, res, inputs, outputs, instance_count=""):
         super().__init__()
-        self.name = str(Abstract_Neuron.instanciation_counter)
+        
+        self.instance_count = str(Abstract_Neuron.instanciation_counter)
         Abstract_Neuron.instanciation_counter +=1
         
         # Initialize number of dendrites (inputs) in the neuron

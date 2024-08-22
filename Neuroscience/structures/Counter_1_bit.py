@@ -24,6 +24,7 @@ class Counter_1_bit(Organ):
     def __init__(self,res):
         #mettre en place les noms et vérifier la fonction de débug
         super().__init__()
+        self.name = "Counter_1_bit"
 
         self.T0 = Flip_Flop_T(res)
 
@@ -47,7 +48,8 @@ class Counter_1_bit(Organ):
         self.neuronC_1.connect_with_neuron(self.neuronC_2)
         self.neuronC_2.connect_with_neuron(self.neuronC_1)
  
-        self.output_neurons = [self.T0.brain[-1]]
+        # self.output_neurons = [self.T0.brain[-1]]
+        self.output_neurons = [self.T0.fth_NAND.output_neurons[0]] # This is the Q output
         self.brain = self.T0.brain + [self.neuronC_1, self.neuronC_2]
 
         

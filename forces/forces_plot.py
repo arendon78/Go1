@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 # Step 1: Read JSON data from file
 # json_path = '../unitree_legged_sdk-3.8.0/example_py/Bezier/data/forces.json'  # Replace with your actual path
 # json_path = './walking_50_points.json'
-# json_path = './walking_4_stops_50_points.json'
-json_path = './stop_each_2_steps_leaning_forward.json'
+json_path = './walking_4_stops_50_points.json'
+# json_path = './stop_each_2_steps_leaning_forward.json'
 # json_path = './forces.json'
 
 with open(json_path, 'r') as json_file:

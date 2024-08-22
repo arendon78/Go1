@@ -28,8 +28,9 @@ class Excitatory_Neuron(Abstract_Neuron):
             else:
                 item[0].inputs[item[1]] = 0
 
-    def __init__(self, res, inputs, outputs,name =""):
-        super().__init__(res, inputs, outputs,name = name) #calls the constructor of AbstractNeuron class (prevents duplicated code)
+    def __init__(self, res, inputs, outputs,instance_count = ""):
+        super().__init__(res, inputs, outputs,instance_count = instance_count) #calls the constructor of AbstractNeuron class (prevents duplicated code)
         self.type = "Excitatory"
+        self.name = "Excitatory_Neuron"
 
     

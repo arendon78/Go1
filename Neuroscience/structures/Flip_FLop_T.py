@@ -37,42 +37,44 @@ class Flip_Flop_T(Organ) :
 
     def __init__(self,res): 
 
+        
         super().__init__()
+        self.name = "Flip_Flop"
 
     #1st NAND Gate -----------------------
 
-        n1_0 = Excitatory_Neuron(res, 3, 4, name = "n1_0")
+        n1_0 = Excitatory_Neuron(res, 3, 4)
         n1_0.set_weights([6.5,6.5,6.5])
-        n1_1 = Excitatory_Neuron(res, 1, 1,  name = "n1_1")
+        n1_1 = Excitatory_Neuron(res, 1, 1)
         n1_1.set_weights([15])
-        n1_2 = Inhibitory_Neuron(res, 3, 1,  name = "n1_2")
+        n1_2 = Inhibitory_Neuron(res, 3, 1)
         n1_2.set_weights([15,15,15])
-        n1_3 = Inhibitory_Neuron(res, 1, 1,  name = "n1_3")
+        n1_3 = Inhibitory_Neuron(res, 1, 1)
         n1_3.set_weights([15])
-        n1_4 = Excitatory_Neuron(res, 2, 2,  name = "n1_4")
+        n1_4 = Excitatory_Neuron(res, 2, 2)
         n1_4.set_weights([15,15])
-        n1_5 = Excitatory_Neuron(res, 1, 2,  name = "n1_5")
+        n1_5 = Excitatory_Neuron(res, 1, 2)
         n1_5.set_weights([15])
-        n1_6 = Excitatory_Neuron(res, 4, 1,  name = "n1_6")
+        n1_6 = Excitatory_Neuron(res, 4, 1)
         n1_6.set_weights([15,15,8,8])
         
         self.fst_NAND = Gate_NAND(n1_0,n1_1,n1_2,n1_3,n1_4,n1_5,n1_6,res = res)
         
     #2nd NAND Gate -----------------------
 
-        n2_0 = Excitatory_Neuron(res, 3, 4, name = "n2_0")
+        n2_0 = Excitatory_Neuron(res, 3, 4)
         n2_0.set_weights([6.5,6.5,6.5])
-        n2_1 = Excitatory_Neuron(res, 1, 1,  name = "n2_1")
+        n2_1 = Excitatory_Neuron(res, 1, 1)
         n2_1.set_weights([15])
-        n2_2 = Inhibitory_Neuron(res, 3, 1,  name = "n2_2")
+        n2_2 = Inhibitory_Neuron(res, 3, 1  )
         n2_2.set_weights([15,15,15])
-        n2_3 = Inhibitory_Neuron(res, 1, 1,  name = "n2_3")
+        n2_3 = Inhibitory_Neuron(res, 1, 1)
         n2_3.set_weights([15])
-        n2_4 = Excitatory_Neuron(res, 2, 2,  name = "n2_4")
+        n2_4 = Excitatory_Neuron(res, 2, 2)
         n2_4.set_weights([15,15])
-        n2_5 = Excitatory_Neuron(res, 1, 2,  name = "n2_5")
+        n2_5 = Excitatory_Neuron(res, 1, 2)
         n2_5.set_weights([15])
-        n2_6 = Excitatory_Neuron(res, 4, 1,  name = "n2_6")
+        n2_6 = Excitatory_Neuron(res, 4, 1)
         n2_6.set_weights([15,15,8,8])
 
         self.scd_NAND = Gate_NAND(n2_0,n2_1,n2_2,n2_3,n2_4,n2_5,n2_6,res = res)
@@ -85,29 +87,50 @@ class Flip_Flop_T(Organ) :
         self.scd_NAND.brain[0].set_weights([6.5,6.5,6.5])
 
     #3rd NAND Gate -----------------------
-        self.thrd_NAND = Gate_NAND(res = res , name = "n3_")
+        self.thrd_NAND = Gate_NAND(res = res)
     
-        delay_neuron = Excitatory_Neuron(res, 1, 1, name = "delay neuron") # Neuron to provide a delay between NAND gates 3 and 4
+        delay_neuron = Excitatory_Neuron(res, 1, 2) # Neuron to provide a delay between NAND gates 3 and 4
         delay_neuron.set_weights([15])
 
+        # delay_neuron2 = Excitatory_Neuron(res, 1, 1) # Neuron to provide a delay between NAND gates 3 and 4
+        # delay_neuron2.set_weights([15])
+
     #4th NAND Gate -----------------------
-        self.fth_NAND = Gate_NAND(res = res, name = "n4_")
+        self.fth_NAND = Gate_NAND(res = res)
         
+    #original connection : that work but degenerates at some point :/
+    # #connection
+    #     self.fst_NAND.connect(6, self.thrd_NAND.brain[0])    # Output of First NAND gate (neuron1_7) to input of Second NAND gate (neuron2_1)
+    #     self.scd_NAND.connect(6, self.fth_NAND.brain[0])    # Output of Second NAND gate (neuron2_7) to input of Fourth NAND gate (neuron4_1)
+    #     self.thrd_NAND.connect(6, delay_neuron)  # Self-connection for delay in Third NAND gate (neuron3_7 to neuron3_8)
+    #     delay_neuron.connect_with_neuron(self.scd_NAND.brain[0])   # Delayed output of Third NAND gate (neuron3_8) to input of Second NAND gate (neuron2_2)
+    #     delay_neuron.connect_with_neuron(self.fth_NAND.brain[0])   # Delayed output of Third NAND gate (neuron3_8) to input of Fourth NAND gate (neuron4_2)
+    #     self.fth_NAND.connect(6, self.fst_NAND.brain[0])    # Output of Fourth NAND gate (neuron4_7) to input of First NAND gate (neuron1_1)
+    #     self.fth_NAND.connect(6, self.thrd_NAND.brain[0])   # Output of Fourth NAND gate (neuron4_7) to input of Third NAND gate (neuron3_1)
+
 
     #connection
         self.fst_NAND.connect(6, self.thrd_NAND.brain[0])    # Output of First NAND gate (neuron1_7) to input of Second NAND gate (neuron2_1)
         self.scd_NAND.connect(6, self.fth_NAND.brain[0])    # Output of Second NAND gate (neuron2_7) to input of Fourth NAND gate (neuron4_1)
         self.thrd_NAND.connect(6, delay_neuron)  # Self-connection for delay in Third NAND gate (neuron3_7 to neuron3_8)
+        # self.thrd_NAND.connect(6, self.scd_NAND.brain[0])
+        # self.thrd_NAND.connect(6, self.fth_NAND.brain[0])
+        # delay_neuron1.connect_with_neuron(delay_neuron2)
         delay_neuron.connect_with_neuron(self.scd_NAND.brain[0])   # Delayed output of Third NAND gate (neuron3_8) to input of Second NAND gate (neuron2_2)
         delay_neuron.connect_with_neuron(self.fth_NAND.brain[0])   # Delayed output of Third NAND gate (neuron3_8) to input of Fourth NAND gate (neuron4_2)
         self.fth_NAND.connect(6, self.fst_NAND.brain[0])    # Output of Fourth NAND gate (neuron4_7) to input of First NAND gate (neuron1_1)
         self.fth_NAND.connect(6, self.thrd_NAND.brain[0])   # Output of Fourth NAND gate (neuron4_7) to input of Third NAND gate (neuron3_1)
+
+
 
     #append ton brain
         for el in [self.fst_NAND.brain,self.scd_NAND.brain,self.thrd_NAND.brain, self.fth_NAND.brain ]:
             for neuron in el: 
                 self.add_to_brain(neuron)
         self.add_to_brain(delay_neuron)
+
+        self.output_neurons = self.fth_NAND.output_neurons
+        # self.add_to_brain(delay_neuron2)
         # [print(el.name) for el in self.brain]
 
 

@@ -29,6 +29,7 @@ class Counter_3_bits(Organ):
     def __init__(self,res):
         #mettre en place les noms et vérifier la fonction de débug
         super().__init__()
+        self.name = "Counter_3_bits"
 
         self.T0 = Flip_Flop_T(res)
         self.T1 = Flip_Flop_T(res)

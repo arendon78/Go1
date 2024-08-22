@@ -16,12 +16,17 @@ from Neuroscience.structures.Counter_4_bits import Counter_4_bits
 from Neuroscience.structures.Frequency_Detector import Frequency_Detector
 from Neuroscience.structures.Activity_Detector import Activity_Detector
 
+
 res = 0.1                       #Set the resolution
-sim_time = 80000                #Set the simulation time
+sim_time = 60000                #Set the simulation time
 x = 120                  # number of neurons in this simulation
 
+DELAY = Activity_Detector.DELAY
 #Initialize V.
 V = []
+change_bit = []
+
+
 
 
 for i in range(x):
@@ -65,6 +70,10 @@ counter = Counter_4_bits(res)#add res argument ?
 freq = Frequency_Detector(res,counter.output_neurons,delta_t = 170)
 act = Activity_Detector(counter.output_neurons)
 
+
+change_bit = np.zeros([sim_time,1])
+
+
 # Inhibitory neurons may be needed to block the inputs and prevent other neurons from firing
 # once the desired output is obtained
 
@@ -88,19 +97,20 @@ while k < sim_time:
 
         if bitcode != previous_bitcode:
             missed.add(bitcode)
-            if int(bitcode, 2) == (int(previous_bitcode, 2) + 1) % 16:
-                missed.remove(bitcode)
-                print("\nfinally !  here are the bytes that you missed : ",missed)
-                missed = set()
-                end = k
-                change_times.append((k-800) * res)  # Store the time of the change
-                bitcode_values.append(bitcode)  # Store the bitcode at that time
-                print("Time elapsed : ", end - start)
-                times_elapsed.append(end-start)
-                print("k = ", (k / 10 - 80))
-                start = k
-                print(bitcode)
-                previous_bitcode = bitcode
+            # if int(bitcode, 2) == (int(previous_bitcode, 2) + 1) % 16:
+            missed.remove(bitcode)
+            # print("\nfinally !  here are the bytes that you missed : ",missed)
+            missed = set()
+            end = k
+            # change_times.append((k-800) * res)  # Store the time of the change
+            change_bit[int(k-DELAY)] = 80
+            bitcode_values.append(bitcode)  # Store the bitcode at that time
+            # print("Time elapsed : ", end - start)
+            times_elapsed.append(end-start)
+            # print("k = ", (k / 10 - 80))
+            start = k
+            print(bitcode)
+            previous_bitcode = bitcode
     k+=1
 
 standard_dev = statistics.stdev(times_elapsed)
@@ -126,6 +136,7 @@ for i in range(len(counter.brain)):
 #    if i == 62 or i == 69 or i == 76 or i == 83: # oscillators for flip flop T0
         plt.figure()                         #Plot the results.
         plt.plot(t,V[i])
+        plt.plot(t,change_bit)
         plt.xlabel('Time [ms]')
         plt.ylabel('Voltage [mV]')
         ax = plt.gca()

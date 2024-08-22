@@ -27,6 +27,7 @@ class Inhibitory_Neuron(Abstract_Neuron):
         print("dendrites : ",self.num_dendrites)
         print("axon terminals : ", self.num_axon_terminals)
 
-    def __init__(self, res, inputs, outputs, name = ""):
-        super().__init__(res, inputs, outputs, name = name)# calls the constructor of AbstractNeuron class (prevents duplicated code)
-        self.type = "Inhibitory"    
+    def __init__(self, res, inputs, outputs, instance_count = ""):
+        super().__init__(res, inputs, outputs, instance_count= instance_count)# calls the constructor of AbstractNeuron class (prevents duplicated code)
+        self.type = "Inhibitory"  
+        self.name = "Inhibitory_Neuron"   

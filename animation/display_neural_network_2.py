@@ -25,8 +25,6 @@ file_path = '../unitree_legged_sdk-3.8.0/example_py/Bezier/data/neuron_activity.
 with open(file_path, 'r') as file:
     data_json = json.load(file)
 
-
-
 # import successful
 # print(data_json)
 
@@ -35,10 +33,6 @@ adjacency_matrices = []
 
 parts = ['FR','FL','RR','RL']
 # print(data_json['FR']['0'][0])
-
-                    
-
-
 
 # for part in parts : 
 #     for n in [0,1,2]:

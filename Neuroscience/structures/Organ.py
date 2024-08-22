@@ -16,9 +16,10 @@ class Organ:
 
 
     def __init__(self):
+        self.name = "Your class does not implement name attribute (it should)"
         self.brain = []
-        self.input = []
-        self.output = []
+        self.input_neurons = []
+        self.output_neurons = []
         self.network = []
         self.adjacency = AdjacencyMatrix()
 
@@ -46,8 +47,8 @@ class Organ:
     def print_network(self, name):
         neuron_types = [neuron.type for neuron in self.brain]
         # self.adjacency.plot_force_directed_graph(neuron_types,graph_name = name)
-        self.adjacency.plot_force_directed_graph(neuron_types, graph_name = name)
-
+        # self.adjacency.plot_force_directed_graph(neuron_types, graph_name = name)
+        self.adjacency.pretty_print()
     
     def connect (self,index, neuron):
         self.brain[index].connect_with_neuron(neuron)
@@ -88,7 +89,7 @@ class Organ:
             if not np.any(neuron.active_PSP) and not neuron.active_potential_bool:
                 V[neuron_count][k] = 0
                 neuron.time_neuron = 0
-                neuron.membrane_potential = 0
+                neuron.membrane_potential = 0   
 
 
             # Update current outputs of the neurons to their connected neurons for the next iteration

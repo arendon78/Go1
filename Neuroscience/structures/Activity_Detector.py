@@ -17,6 +17,7 @@ class  Activity_Detector:
     DELAY = 800
 
     def __init__(self,watch_neurons):
+        self.name = "Activity Detector"
         self.watch_neurons = watch_neurons
         self.len = len(self.watch_neurons)
         assert self.len!=0

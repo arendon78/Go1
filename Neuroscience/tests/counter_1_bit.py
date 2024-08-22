@@ -24,6 +24,7 @@ for i in range(x):
     V.insert(i, np.zeros([sim_time, 1]))
 
 inputs = np.zeros([sim_time, 2])  # Initialize inputs
+
 inputs[0] = [0,1]
 # Setup input pulses
 for i in range(sim_time): 
@@ -88,3 +89,5 @@ for i in range(len(counter.brain)):
         ax.set_ylim([-40, 100])
         plt.legend()
         plt.show()
+
+print(len(counter.brain))

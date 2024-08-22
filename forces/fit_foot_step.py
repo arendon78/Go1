@@ -5,9 +5,9 @@ import random
 import math
 from utils_forces import *
 
-json_path = './datas/forces.json'
+# json_path = './datas/forces.json'
 # json_path = './datas/stop_each_2_steps_leaning_forward.json'
-# json_path = './datas/stop_each_4_step_leaning_forward.json'
+json_path = './datas/stop_each_4_step_leaning_forward.json'
 # json_path = './datas/walking_50_points.json'
 # json_path = './datas/walking_4_stops_50_points.json'
 with open(json_path, 'r') as json_file:

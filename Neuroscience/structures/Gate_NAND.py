@@ -16,28 +16,30 @@ class Gate_NAND(Organ):
     def __init__(self,neuron0 = None,neuron1 = None,neuron2 = None,neuron3 = None,neuron4 = None,neuron5 = None,neuron6 = None, res = None,name = ""):
         #builds a default NAND Gate
 
+
         super().__init__()
+        self.name = "NAND_Gate"
 
         if res is not None and neuron0 is None:
-            neuron0 = Excitatory_Neuron(res, 2, 4, name = name + "0")
+            neuron0 = Excitatory_Neuron(res, 2, 4)
             neuron0.set_weights([7.5,7.5])
 
-            neuron1 = Excitatory_Neuron(res, 1, 1,  name = name + "1")
+            neuron1 = Excitatory_Neuron(res, 1, 1)
             neuron1.set_weights([15])
 
-            neuron2 = Inhibitory_Neuron(res, 3, 1,  name = name + "2")
+            neuron2 = Inhibitory_Neuron(res, 3, 1)
             neuron2.set_weights([15,15,15])
 
-            neuron3 = Inhibitory_Neuron(res, 1, 1,  name = name + "3")
+            neuron3 = Inhibitory_Neuron(res, 1, 1)
             neuron3.set_weights([15])
 
-            neuron4 = Excitatory_Neuron(res, 2, 2,  name = name + "4")
+            neuron4 = Excitatory_Neuron(res, 2, 2)
             neuron4.set_weights([15,15])
 
-            neuron5 = Excitatory_Neuron(res, 1, 2,  name = name + "5")
+            neuron5 = Excitatory_Neuron(res, 1, 2)
             neuron5.set_weights([15])
 
-            neuron6 = Excitatory_Neuron(res, 4, 1,  name = name + "6")
+            neuron6 = Excitatory_Neuron(res, 4, 1)
             neuron6.set_weights([15,15,8,8])
         if neuron0 and neuron1 and neuron2 and neuron3 and neuron4 and neuron5 and neuron6 :
 
@@ -62,6 +64,7 @@ class Gate_NAND(Organ):
             neuron5.connect_with_neuron(neuron6)
 
             neuron4.taken_inputs[1] = 1
+            self.output_neurons = [neuron6]
 
         else : 
             raise ValueError("Invalid initialization parameters")

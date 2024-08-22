@@ -17,7 +17,7 @@ from Neuroscience.structures.Activity_Detector import Activity_Detector
 
 
 res = 0.1                       #Set the resolution
-sim_time = 80000                #Set the simulation time
+sim_time = 50000                #Set the simulation time
 x = 90                          # number of neurons in this simulation
 
 #Initialize V.

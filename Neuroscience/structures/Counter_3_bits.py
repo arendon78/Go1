@@ -73,7 +73,7 @@ class Counter_3_bits(Organ):
         self.neuronC_1.connect_with_neuron(self.neuronC_2)
         self.neuronC_2.connect_with_neuron(self.neuronC_1)
  
-        self.output_neurons = [self.T2.brain[-1], self.T1.brain[-1], self.T0.brain[-1]]
+        self.output_neurons = [self.T2.output_neurons[0], self.T1.output_neurons[0], self.T0.output_neurons[0]]
         self.brain = self.T2.brain + self.T1.brain + self.T0.brain + [self.neuronC_1, self.neuronC_2, self.neuronC_3]
 
         

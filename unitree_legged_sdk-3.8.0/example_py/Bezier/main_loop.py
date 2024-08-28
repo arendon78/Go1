@@ -76,7 +76,6 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
     p=0
 
 
-
     while motiontime < 20000-1:
         # print(motiontime)
         time.sleep(0.002)
@@ -150,15 +149,15 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
 
                 if (motiontime > (STAND_UP_TIME+INIT_TIME)//2 and motiontime <(STAND_UP_TIME+INIT_TIME)-10):
                     for part in parts : 
-                        qDes[part][0] = jointLinearInterpolation(stand_up_1[part][0], stand_up_2[part][0], rate)
-                        qDes[part][1] = jointLinearInterpolation(stand_up_1[part][1], stand_up_2[part][1], rate)
-                        qDes[part][2] = jointLinearInterpolation(stand_up_1[part][2], stand_up_2[part][2], rate)
+                        qDes[part][0] = jointLinearInterpolation(stand_up_1[part][0], stand_up_1[part][0], rate)
+                        qDes[part][1] = jointLinearInterpolation(stand_up_1[part][1], stand_up_1[part][1], rate)
+                        qDes[part][2] = jointLinearInterpolation(stand_up_1[part][2], stand_up_1[part][2], rate)
 
                 if (motiontime >= (STAND_UP_TIME+INIT_TIME) -10):
                     for part in parts : 
-                        qDes[part][0] = jointLinearInterpolation(stand_up_2[part][0], stand_up_3[part][0], rate)
-                        qDes[part][1] = jointLinearInterpolation(stand_up_2[part][1], stand_up_3[part][1], rate)
-                        qDes[part][2] = jointLinearInterpolation(stand_up_2[part][2], stand_up_3[part][2], rate)
+                        qDes[part][0] = jointLinearInterpolation(stand_up_1[part][0], stand_up_1[part][0], rate)
+                        qDes[part][1] = jointLinearInterpolation(stand_up_1[part][1], stand_up_1[part][1], rate)
+                        qDes[part][2] = jointLinearInterpolation(stand_up_1[part][2], stand_up_1[part][2], rate)
 
 
 # walking phase ---------------------------------------------------------------------
@@ -198,7 +197,6 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
                 rr_force = state.footForce[2]
                 rl_force = state.footForce[3]
 
-
                 forces['FR'].append(fr_force)
                 forces['FL'].append(fl_force)
                 forces['RR'].append(rr_force)
@@ -225,7 +223,7 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
                         local_mins = monte_carlo_gradient(-1,present_frame)
 
                         new_merged_mins_maxes_coordinates = build_merge(local_maxes, local_mins)
-                        bool, p0,p1,p2 = find_a_pattern(new_merged_mins_maxes_coordinates, present_frame)
+                        bool, p0,p1,p2 = find_a_pattern(new_merged_mins_maxes_coordinates, present_frame,500,500,4)
 
                         if bool : 
                             # print("pattern found !\n\n",p0,p1,p2)#-----------this is typically where we would take action after the recognition of a step.
@@ -235,12 +233,6 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
                             p+=1
                             old_frame += present_frame
                             present_frame = []
-
-
-
-
-
-
                         
 # 
 # 
@@ -298,6 +290,13 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
                 cmd.motorCmd[d[ part + '_2' ]].Kp = Kp[2]
                 cmd.motorCmd[d[ part + '_2' ]].Kd = Kd[2]
                 cmd.motorCmd[d[ part + '_2' ]].tau = 0.0
+            print(qDes['FR'])
+            fr_force = state.footForce[0]
+
+            print(fr_force)
+            assert qDes['FR'] == qDes['FL']
+            assert qDes['FL'] == qDes['RR']
+            assert qDes['RR'] == qDes['RL']
 
         if(motiontime > 10):
             safe.PowerProtect(cmd, state, 1)

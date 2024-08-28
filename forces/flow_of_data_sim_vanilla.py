@@ -106,36 +106,65 @@ times = times = list(range(len(fr_coordinates)))
 
 #the idea is to simulate a flow of input and compare the detection of patterns with the real input to ensure the detection is ok in live.
 #main loop then
-k=0
-p=0
+k = 0
+p = 0
+
+p_fl = 0
+
 old_frame = []
 present_frame = []
+
+#----
+old_frame_fl = []
+present_frame_fl= []
+#---
 start = time.time()
 while k < len(fr_coordinates) : 
     point = fr_coordinates[k]
-    # print("point : ",point)
+    #-------------------------------
+    point_fl = fl_coordinates[k]
+    #--------------------------------------------
 
+    # print("point : ",point)
     present_frame.append(point)# here you have point = fr_coordinate.
+    #-----------------------------------------------------------
+    present_frame_fl.append(point_fl)
+    #-----------------------------------------------------------
+
     # to adjust you can just change it to the actual point of the input and that's it ! 
     # print(present_frame)
-    if len(present_frame) %30 == 0 : 
-        local_maxes = monte_carlo_gradient(1,present_frame)
-        local_mins = monte_carlo_gradient(-1,present_frame)
+    # if len(present_frame) %30 == 0 : 
 
-        new_merged_mins_maxes_coordinates = build_merge(local_maxes, local_mins)
-        bool, p0,p1,p2 = find_a_pattern(new_merged_mins_maxes_coordinates, present_frame)
-        # print(bool)
-        if bool : 
-            print("pattern found !\n\n",p0,p1,p2)
-            p+=1
-            old_frame +=present_frame
-            present_frame = []
+    local_maxes = monte_carlo_gradient(1,present_frame)
+    local_mins = monte_carlo_gradient(-1,present_frame)
+    #-------------------
+    local_maxes_fl = monte_carlo_gradient(1,present_frame_fl)
+    local_mins_fl= monte_carlo_gradient(-1,present_frame_fl)
+    #----------------
+    new_merged_mins_maxes_coordinates = build_merge(local_maxes, local_mins)
+    bool, p0,p1,p2 = find_a_pattern(new_merged_mins_maxes_coordinates, present_frame,500,500,4)
+    # #-----------------------
+    new_merged_mins_maxes_coordinates_fl = build_merge(local_maxes_fl, local_mins_fl)
+    bool_fl, p0_fl, p1_fl, p2_fl = find_a_pattern(new_merged_mins_maxes_coordinates_fl, present_frame_fl,700,700,5.5)
+    #-------------------------
+    # print(bool)
+    if bool : 
+        # print("pattern found !\n\n",p0,p1,p2)
+        p+=1
+        old_frame +=present_frame
+        present_frame = []
 
-    # print(k)
+    if bool_fl : 
+        # print("pattern found in fl ! ",p0_fl,p1_fl,p2_fl)
+        p_fl += 1
+        old_frame_fl +=present_frame_fl
+        present_frame_fl = []
+
     k+=1
     # time.sleep(0.0001)
 
 print(p)
+print(p_fl)
 
 # print("old_frame : ",old_frame)
 # print("\n\n")

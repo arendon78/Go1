@@ -15,7 +15,7 @@ from computation_neuron import *
 from error_calculation import *
 from plot_neurons import *
 from main_loop import *
-
+from main_loop_v2 import *
 
 
 

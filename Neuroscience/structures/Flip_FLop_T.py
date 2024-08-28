@@ -129,7 +129,7 @@ class Flip_Flop_T(Organ) :
                 self.add_to_brain(neuron)
         self.add_to_brain(delay_neuron)
 
-        self.output_neurons = self.fth_NAND.output_neurons
+        self.output_neurons = [delay_neuron]
         # self.add_to_brain(delay_neuron2)
         # [print(el.name) for el in self.brain]
 

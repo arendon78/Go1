@@ -13,7 +13,7 @@ from Neuroscience.structures.Flip_FLop_T import Flip_Flop_T
 from Neuroscience.structures.Organ import Organ
 
 res = 0.1                       #Set the resolution
-sim_time = 10000                #Set the simulation time
+sim_time = 2000                #Set the simulation time
 x = 29                          # number of neurons in this simulation
 
 #Initialize V.
@@ -44,6 +44,7 @@ inputs[1] = [0,1]
 # once the desired output is obtained
 
 inputs[850] = [1,0]
+
 inputs[960] = [1,0]
 
 k=1

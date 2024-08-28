@@ -14,7 +14,7 @@ from Neuroscience.structures.Frequency_Detector import Frequency_Detector
 from Neuroscience.structures.Activity_Detector import Activity_Detector
 
 res = 0.1                       # Set the resolution
-sim_time = 100000                # Set the simulation time
+sim_time = 80000                # Set the simulation time
 x = 90                          # Number of neurons in this simulation
 
 # Initialize V.
@@ -48,7 +48,7 @@ F = []
 k = 0
 previous_bitcode = "0"
 start = 0
-times_elapsed = []
+times_elapsed = []  
 
 while k < sim_time:
     counter.pass_inputs(inputs, k)

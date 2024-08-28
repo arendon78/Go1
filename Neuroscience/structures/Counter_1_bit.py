@@ -49,7 +49,7 @@ class Counter_1_bit(Organ):
         self.neuronC_2.connect_with_neuron(self.neuronC_1)
  
         # self.output_neurons = [self.T0.brain[-1]]
-        self.output_neurons = [self.T0.fth_NAND.output_neurons[0]] # This is the Q output
+        self.output_neurons = [ self.T0.output_neurons[0]] # This is the Q output
         self.brain = self.T0.brain + [self.neuronC_1, self.neuronC_2]
 
         

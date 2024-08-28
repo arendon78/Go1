@@ -92,7 +92,7 @@ def find_value(time, list):
 
 def monte_carlo_gradient(direction,l):
     # print("len(l) : ", len(l))
-    n_rep = int(len(l)//10 *1.2)
+    n_rep = int(len(l)//10 *1.5)
     if direction <0 : 
         local_mins = []
         # print("nrep : ",n_rep)
@@ -123,8 +123,62 @@ def monte_carlo_gradient(direction,l):
 #-time between max1 min1 and min1 max2 is in a given range 
 #-the amplitudes are relatively close
 #-there is not a plateau at the bottom of the curve (mean of sqrt of derivatives)
-def find_pattern(merged_mins_maxes_coordinates,fr_coordinates) :
-    PRECISION = 0.5
+# def find_pattern_fr(merged_mins_maxes_coordinates,fr_coordinates) :
+#     PRECISION = 0.5
+#     pattern_to_fit = ["max","min","max"]
+#     p = 0
+#     for i in range(len(merged_mins_maxes_coordinates)-2): 
+#         p0 = merged_mins_maxes_coordinates[i]
+#         p1 = merged_mins_maxes_coordinates[i+1]
+#         p2 = merged_mins_maxes_coordinates[i+2]
+
+#         pattern = [p0[3],p1[3],p2[3]]
+#         if pattern == pattern_to_fit : # good pattern : now let's see if that works
+
+#             deltat1 = abs(p1[0] - p0[0])
+#             deltat2 = abs(p2[0] - p1[0])
+
+#             amplitude1 = abs(p1[1] - p0[1])
+#             amplitude2 = abs(p2[1] - p1[1])
+
+#             # if abs(deltat1 - 25) <25 * PRECISION and abs(deltat2 - 25) < 25 * PRECISION: 
+#             if p0[1] > 500 and p2[1] > 500:# this is a criterion of height : if you decrease the weight of the robot (by taking away the battery for example), it might not work as expected. This is the best criterion for caracterising a step.)
+#                 # if abs(amplitude1 - amplitude2)/ (amplitude1 + amplitude2) <0.2:# <0.1
+#                 if calculate_mean_rooted_derivative(p0[:-1],p2[:-1],fr_coordinates) > 4:
+#                     p+=1
+#                     print("pattern found !! the robot was walking : ", p0,p1,p2,abs(amplitude1 - amplitude2)/ (amplitude1 + amplitude2),deltat1, deltat2 ,
+#                       "\n mean absolute derivative : ",calculate_mean_rooted_derivative(p0[:-1],p2[:-1],fr_coordinates),"\n" )
+    # print(p)
+
+# def find_pattern_fl(merged_mins_maxes_coordinates,fr_coordinates) :
+#     PRECISION = 0.5
+#     pattern_to_fit = ["max","min","max"]
+#     p = 0
+#     for i in range(len(merged_mins_maxes_coordinates)-2): 
+#         p0 = merged_mins_maxes_coordinates[i]
+#         p1 = merged_mins_maxes_coordinates[i+1]
+#         p2 = merged_mins_maxes_coordinates[i+2]
+
+#         pattern = [p0[3],p1[3],p2[3]]
+#         if pattern == pattern_to_fit : # good pattern : now let's see if that works
+
+#             deltat1 = abs(p1[0] - p0[0])
+#             deltat2 = abs(p2[0] - p1[0])
+
+#             amplitude1 = abs(p1[1] - p0[1])
+#             amplitude2 = abs(p2[1] - p1[1])
+
+#             # if abs(deltat1 - 25) <25 * PRECISION and abs(deltat2 - 25) < 25 * PRECISION: 
+#             if p0[1] > 700 and p2[1] > 700:# this is a criterion of height : if you decrease the weight of the robot (by taking away the battery for example), it might not work as expected. This is the best criterion for caracterising a step.)
+#                     # if abs(amplitude1 - amplitude2)/ (amplitude1 + amplitude2) <0.2:# <0.1
+#                 if calculate_mean_rooted_derivative(p0[:-1],p2[:-1],fr_coordinates) > 5.5:
+#                     p+=1
+#                     print("pattern found !! the robot was walking : ", p0,p1,p2,abs(amplitude1 - amplitude2)/ (amplitude1 + amplitude2),deltat1, deltat2 ,
+#                       "\n mean absolute derivative : ",calculate_mean_rooted_derivative(p0[:-1],p2[:-1],fr_coordinates),"\n" )
+#     print(p)
+
+
+def find_patterns(merged_mins_maxes_coordinates, coordinates, p0_spike,p2_spike,MRD_value ) :
     pattern_to_fit = ["max","min","max"]
     p = 0
     for i in range(len(merged_mins_maxes_coordinates)-2): 
@@ -141,18 +195,19 @@ def find_pattern(merged_mins_maxes_coordinates,fr_coordinates) :
             amplitude1 = abs(p1[1] - p0[1])
             amplitude2 = abs(p2[1] - p1[1])
 
-            if abs(deltat1 - 25) <25 * PRECISION and abs(deltat2 - 25) < 25 * PRECISION: 
-                if p0[1] > 500 and p2[1] > 500:# this is a criterion of height : if you decrease the weight of the robot (by taking away the battery for example), it might not work as expected. This is the best criterion for caracterising a step.)
-                    if abs(amplitude1 - amplitude2)/ (amplitude1 + amplitude2) <0.2:# <0.1
-                        if calculate_mean_rooted_derivative(p0[:-1],p2[:-1],fr_coordinates) > 4:
-                            p+=1
-                            print("pattern found !! the robot was walking : ", p0,p1,p2,abs(amplitude1 - amplitude2)/ (amplitude1 + amplitude2),deltat1, deltat2 ,
-                              "\n mean absolute derivative : ",calculate_mean_rooted_derivative(p0[:-1],p2[:-1],fr_coordinates),"\n" )
+            # if abs(deltat1 - 25) <25 * PRECISION and abs(deltat2 - 25) < 25 * PRECISION: 
+            if p0[1] > p0_spike and p2[1] > p2_spike :# this is a criterion of height : if you decrease the weight of the robot (by taking away the battery for example), it might not work as expected. This is the best criterion for caracterising a step.)
+                # if abs(amplitude1 - amplitude2)/ (amplitude1 + amplitude2) <0.2:# <0.1
+                if calculate_mean_rooted_derivative(p0[:-1],p2[:-1],coordinates) > MRD_value:
+                    p+=1
+                    print("pattern found !! the robot was walking : ", p0,p1,p2,abs(amplitude1 - amplitude2)/ (amplitude1 + amplitude2),deltat1, deltat2 ,
+                      "\n mean absolute derivative : ",calculate_mean_rooted_derivative(p0[:-1],p2[:-1],coordinates),"\n" )
     print(p)
 
-def find_a_pattern(merged_mins_maxes_coordinates,fr_coordinates) : 
 
-    PRECISION = 0.5
+
+def find_a_pattern(merged_mins_maxes_coordinates,coordinates, p0_spike,p2_spike, MRD_value) : 
+    PRECISION = 0.5 
     pattern_to_fit = ["max","min","max"]
     p = 0
     for i in range(len(merged_mins_maxes_coordinates)-2): 
@@ -168,15 +223,13 @@ def find_a_pattern(merged_mins_maxes_coordinates,fr_coordinates) :
 
             amplitude1 = abs(p1[1] - p0[1])
             amplitude2 = abs(p2[1] - p1[1])
-
-            if abs(deltat1 - 25) <25 * PRECISION and abs(deltat2 - 25) < 25 * PRECISION: 
-                if p0[1] > 500 and p2[1] > 500:# this is a criterion of height : if you decrease the weight of the robot (by taking away the battery for example), it might not work as expected. This is the best criterion for caracterising a step.)
-                    if abs(amplitude1 - amplitude2)/ (amplitude1 + amplitude2) <0.2:# <0.1
-                        if calculate_mean_rooted_derivative(p0[:-1],p2[:-1],fr_coordinates) > 4:
-                            p+=1
-                            print("pattern found !! the robot was walking : ", p0,p1,p2,abs(amplitude1 - amplitude2)/ (amplitude1 + amplitude2),deltat1, deltat2 ,
-                              "\n mean absolute derivative : ",calculate_mean_rooted_derivative(p0[:-1],p2[:-1],fr_coordinates),"\n" )
-                            return True, p0,p1,p2
+            if abs(deltat1 - 25) <25 * PRECISION and abs(deltat2 - 25) < 25 * PRECISION: # when detecting in live, this criteria is important. (there can appear local maxes/mins that don't appear usually)
+                if p0[1] > p0_spike and p2[1] > p2_spike:# this is a criterion of height : if you decrease the weight of the robot (by taking away the battery for example), it might not work as expected. This is the best criterion for caracterising a step.)
+                    if calculate_mean_rooted_derivative(p0[:-1],p2[:-1],coordinates) > MRD_value:
+                        # p+=1
+                        print("pattern found !! the robot was walking : ", p0,p1,p2,abs(amplitude1 - amplitude2)/ (amplitude1 + amplitude2),deltat1, deltat2 ,
+                          "\n mean absolute derivative : ",calculate_mean_rooted_derivative(p0[:-1],p2[:-1],coordinates),"\n" )
+                        return True, p0,p1,p2
     return False ,None,None,None
                             
 #builds an ordered list (along time axis) of maxes and mins 

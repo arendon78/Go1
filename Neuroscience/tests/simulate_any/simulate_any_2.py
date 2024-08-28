@@ -5,7 +5,7 @@ import statistics
 import json
 import numpy as np
 
-from sim.Counter_4_bits_sim import instance_and_input
+from sim.Counter_1_bit_sim import instance_and_input
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../'))
 sys.path.append(project_root)
@@ -14,7 +14,7 @@ from Neuroscience.structures.Excitatory_Neuron import  Excitatory_Neuron
 from Neuroscience.structures.Inhibitory_Neuron import Inhibitory_Neuron
 
 res = 0.1                       # Set the resolution
-sim_time = 1000           # Set the simulation time
+sim_time = 10000          # Set the simulation time
 
 instance,inputs = instance_and_input(sim_time)
 name = instance.name

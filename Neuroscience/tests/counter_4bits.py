@@ -18,7 +18,7 @@ from Neuroscience.structures.Activity_Detector import Activity_Detector
 
 
 res = 0.1                       #Set the resolution
-sim_time = 60000                #Set the simulation time
+sim_time = 20000               #Set the simulation time
 x = 120                  # number of neurons in this simulation
 
 DELAY = Activity_Detector.DELAY

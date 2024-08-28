@@ -21,7 +21,7 @@ ACT_POT = Abstract_Neuron.Act_Pot_volt
 # Path to the JSON file
 file_path = './datas'
 
-name = '/Counter_4_bits'
+name = '/Counter_1_bit'
 
 # Open and load JSON file
 with open(file_path + name + ".json", 'r') as file:
@@ -104,6 +104,9 @@ class NeuralNetwork(Scene):
                 0
             ])
         n_neurons_per_pack = len(data_json["type"])
+
+        step_label = Text(f"Step: 0", font_size=24, color=WHITE).to_corner(UL)
+        self.add(step_label)
 
         self.camera.frame_width = self.camera.frame_width * n_neurons_per_pack/31
         self.camera.frame_height = self.camera.frame_height * n_neurons_per_pack/31
@@ -278,10 +281,11 @@ class NeuralNetwork(Scene):
             for i in range(l):
                 # if i/l *100 in [i *10 for i in range(10)]:
                     # print("loading... ", i/l * 100," % \n")
+                
                 if len(time_neuron_to_fire[i]) == 0 : 
                     None
                 else : 
-                    
+                    step_label.become(Text(f"Step: {i}", font_size=24, color=WHITE).to_corner(UL))
                     for el in time_neuron_to_fire[i]:
 
                         neuron_number = el[0]

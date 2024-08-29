@@ -9,6 +9,8 @@ from utils import *
 from foot_trajectory import *
 
 from Neuroscience.structures.Excitatory_Neuron import Excitatory_Neuron 
+from Neuroscience.structures.Controller import Controller
+from Neuroscience.structures.Tunable_Oscillator import Tunable_Oscillator
 
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../'))
@@ -19,7 +21,11 @@ sys.path.append('../../lib/python/amd64')
 import robot_interface as sdk 
 
 def compute_neurons(trajectories,controllers, watchers,V):
-    SIM_TIME = 1000
+    
+    SIM_TIME = 700
+    #originally it was at 1000
+    # SIM_TIME = 480
+
     N_STEPS = len(trajectories['FR'])
     parts = ['FR','FL','RR','RL']
 
@@ -109,35 +115,32 @@ def compute_neurons(trajectories,controllers, watchers,V):
     #computation loop
 
     print(len(trajectories['FR']),"steps to simulate")
-    for part in ['FR','FL','RR','RL']:
+    internal_times = {part : 0 for part in parts}
+
+    for i in range(len(trajectories['FR'])): 
+
+        coords = {'FR': trajectories['FR'][i],
+            'FL': trajectories['FL'][i],
+            'RR': trajectories['RR'][i],
+            'RL': trajectories['RL'][i]
+        }
+        print(i)
+        # for part in parts : 
         
-        internal_time = 0
+        
+        # print(internal_time)
+        x = coords[part][0]
+        y = coords[part][1]
+        z = 0
+        hip = theta_hip(x,y,z)
+        thigh = theta_thigh(x,y,z)
+        calf = theta_calf(x,y,z)
 
-        for i in range(len(trajectories['FR'])): 
-
-            coords = {'FR': trajectories['FR'][i],
-                'FL': trajectories['FL'][i],
-                'RR': trajectories['RR'][i],
-                'RL': trajectories['RL'][i]
-            }
-
-
-            print(i)
-            # for part in parts : 
-
+        for part in ['FR','FL','RR','RL']:
             
-            
-            # print(internal_time)
-            x = coords[part][0]
-            y = coords[part][1]
-            z = 0
-
-            hip = theta_hip(x,y,z)
-            thigh = theta_thigh(x,y,z)
-            calf = theta_calf(x,y,z)
 
             # #0
-            inside_oscillator_hip = controllers[part][0].create_oscillators(hip)
+            inside_oscillator_hip = controllers[part][0].create_oscillators(hip)[0]
             # old version
             # controllers[part][0].pass_inputs(1)
             #new version 
@@ -147,13 +150,13 @@ def compute_neurons(trajectories,controllers, watchers,V):
             else : 
                 controllers[part][0].pass_inputs(0)
             # print("first controller to be simualted")
-            controllers[part][0].simulate(internal_time, data_json[part][0][1])
+            controllers[part][0].simulate(internal_times[part], data_json[part][0][1])
             # print(data_json[part][0][1][i])
             # print("size : ", np.size(data_json[part][0][1]))
             frequency_parts[part][0].append(watchers[part][0].frequency_ratio())
 
             #1
-            inside_oscillator_thigh = controllers[part][1].create_oscillators(thigh)
+            inside_oscillator_thigh = controllers[part][1].create_oscillators(thigh)[0]
             # old version
             # controllers[part][1].pass_inputs(1)
             #new version
@@ -163,11 +166,11 @@ def compute_neurons(trajectories,controllers, watchers,V):
                 controllers[part][1].pass_inputs(0)
 
             # print("2cd controller to be simualted")
-            controllers[part][1].simulate(internal_time,data_json[part][1][1])
+            controllers[part][1].simulate(internal_times[part],data_json[part][1][1])
             frequency_parts[part][1].append(watchers[part][1].frequency_ratio())
            
             #2
-            inside_oscillator_calf = controllers[part][2].create_oscillators(calf)
+            inside_oscillator_calf = controllers[part][2].create_oscillators(calf)[0]
             # old version
             # controllers[part][2].pass_inputs(1)
             #new version 
@@ -176,15 +179,14 @@ def compute_neurons(trajectories,controllers, watchers,V):
             else : 
                 controllers[part][2].pass_inputs(0)
             # print("third")
-            controllers[part][2].simulate(internal_time,data_json[part][2][1])
+            controllers[part][2].simulate(internal_times[part],data_json[part][2][1])
             frequency_parts[part][2].append(watchers[part][2].frequency_ratio())
             
 
-            internal_time+=1
+            internal_times[part]+=1
             #simulate them for a reasonable time
-            # problem : simulates all the neurons. should only simulate one neuron at a time (the one that is active)
             for j in range(SIM_TIME) : 
-                # print("internal_time : ",internal_time)
+                # print("internal_times[part] : ",internal_times[part])
 
                 inside_oscillator[part][0].append(inside_oscillator_hip)
                 inside_oscillator[part][1].append(inside_oscillator_thigh)
@@ -192,19 +194,19 @@ def compute_neurons(trajectories,controllers, watchers,V):
 
                 watchers[part][0].update_firing_rate(j)
                 controllers[part][0].pass_inputs(0)
-                None if j == 0 else controllers[part][0].simulate(internal_time,data_json[part][0][1])
+                None if j == 0 else controllers[part][0].simulate(internal_times[part],data_json[part][0][1])
                 frequency_parts[part][0].append(watchers[part][0].frequency_ratio())
                 command[part][0].append(hip)
 
                 watchers[part][1].update_firing_rate(j)
                 controllers[part][1].pass_inputs(0)
-                None if j == 0 else  controllers[part][1].simulate(internal_time,data_json[part][1][1])
+                None if j == 0 else  controllers[part][1].simulate(internal_times[part],data_json[part][1][1])
                 frequency_parts[part][1].append(watchers[part][1].frequency_ratio())
                 command[part][1].append(thigh)
 
                 watchers[part][2].update_firing_rate(j)
                 controllers[part][2].pass_inputs(0)
-                None if j == 0 else controllers[part][2].simulate(internal_time,data_json[part][2][1])
+                None if j == 0 else controllers[part][2].simulate(internal_times[part],data_json[part][2][1])
                 frequency_parts[part][2].append(watchers[part][2].frequency_ratio())
                 command[part][2].append(calf)
 
@@ -212,7 +214,7 @@ def compute_neurons(trajectories,controllers, watchers,V):
                 if j ==0 : 
                     None 
                 else : 
-                    internal_time +=1
+                    internal_times[part] +=1
 
             neuron_hip = watchers[part][0].frequency_ratio  ()
             neuron_thigh = watchers[part][1].frequency_ratio()
@@ -224,13 +226,15 @@ def compute_neurons(trajectories,controllers, watchers,V):
             command_coords[part].append((hip,thigh,calf))
     # Display the neuron activities using matplotlib
 
-    
+    # making sure the response of the neural network to a same entry gives the same output
+    assert (frequency_parts['FR'] == frequency_parts['RL'])
+    assert (frequency_parts['RR'] == frequency_parts['FL'])    
 
     # saving the datas.
 
     for part in parts : 
         for n in range(3):
-            for i in range(16): 
+            for i in range(Controller.N_REPEAT * Tunable_Oscillator.len ): 
                 data_json[part][n][1][i] = data_json[part][n][1][i].tolist()
                 if i == 0: 
                     data_json[part][n][0] = data_json[part][n][0].matrix.tolist() 

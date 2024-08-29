@@ -10,10 +10,25 @@ from Neuroscience.structures.Organ import Organ
 from Neuroscience.structures.Tunable_Oscillator import Tunable_Oscillator
 
 
-class Controller(Organ): 
+class Controller(Organ):
+    """
+## Detailed Description
+Controls a list of Tunable Oscillator.
 
-    ## use DEFINE value such as SHOULD, KNEE...
+### Attributes
+- **oscillators** (List\<TunableOscillators\>):  
+  The list of the oscillators that it is controlling.
 
+- **main_list** (List\<command, (freq1,...,freqN_REPEAT)\>):  
+  Contains the associated frequencies to each command (static attribute).
+
+### Methods
+- **build_combinations_raw(lower_bound, upper_bound):**  
+  Returns a list containing all the possible combinations of frequencies and their image.
+    """ 
+
+
+    main_list= []
 
     frequencies = [
             0,
@@ -23,13 +38,11 @@ class Controller(Organ):
             # 5.9880239520958085,
             6.005384137502588,
             9.00900900900901
-        ]
+        ] # the unit here is spike/thousand steps of simulation.
+            # hence the theorical minimum interval of convergence is the interval between two of the spikes :around 600 steps
+            # another way to decrease the response would be not to use the slowly-firing neurons. We would know the frequence sooner but we would have less hoicechoice of neurons to rebuild the command, hence we would have less precision. 
     N_REPEAT = 4
 
-
-
-
-    # value - offset 
 
     def pass_inputs(self,input):  
         for os in self.oscillators : 
@@ -42,8 +55,8 @@ class Controller(Organ):
     def find_combination_index(self, ratio):
         distance = 2
         index = 0
-        for i in range(len(self.main_list)):
-            new_d = abs(ratio - self.main_list[i][0])
+        for i in range(len(Controller.main_list)):
+            new_d = abs(ratio - Controller.main_list[i][0])
             if new_d<distance:
                 index = i
                 distance = new_d
@@ -52,10 +65,10 @@ class Controller(Organ):
 
     def find_combination(self, ratio):
         i, d = self.find_combination_index(ratio)
-        return self.main_list[i][1],self.main_list[i][0]
+        return Controller.main_list[i][1],Controller.main_list[i][0]
 
 
-    def build_combinations(self, lower_bound=-2, upper_bound=2):
+    def build_combinations_raw(self, lower_bound=-2, upper_bound=2):
         new_center = (upper_bound + lower_bound)/2
         amplitude = (upper_bound - lower_bound)/2
 
@@ -95,10 +108,7 @@ class Controller(Organ):
         normalized_results_with_triples = []
 
         for value, triple in sorted_results_with_triples:
-            # print("value : ", value)
-            # Normaliser à [0, 1]
-            # if value <0 : print("value ! ",value)
-            # print("value : ", value)
+
             raw_ratio = value / max_sum_frequency
             normalized_ratio = raw_ratio * amplitude
             
@@ -113,6 +123,57 @@ class Controller(Organ):
         return normalized_results_with_triples
     
 
+    def f(e) : 
+        """
+        counts the number of elements of the same sign as the command
+        """
+        f = e[0]
+        c =  0
+        for n in e[1] : 
+            if n * f > 0 :
+                c+=1
+        return c
+    
+
+    def build_combinations(self): 
+        """
+        the purpose of this function is to drastically reduce the number of elements in the Controller.main_list; It achieves two things 
+        -get rid of doublons
+        -select only the elements that maximises a certain function(here f)
+        f is as it is to ensure that for negative movements we use mostly Inhibitory neurons and Excitatory movements for positive movements
+        """
+
+        Controller.main_list = self.build_combinations_raw()
+
+
+        setA = set() # 
+
+        for i in range(len(Controller.main_list)):
+            setA.add(Controller.main_list[i][0])
+
+        listA = list(setA)
+        index_dict = {value: idx for idx, value in enumerate(listA)}
+
+        for i in range(len(listA)) : 
+            listA[i] = [listA[i],0,0]
+
+        #we are looking for the elements (a, (b,c)) of equal a and of maximum value f(b,c) in a linear time. that's why we use the dictionnary for constant complexity operations
+
+        for i in range(len(Controller.main_list)):
+            e = Controller.main_list[i]
+            corresp_index = index_dict[e[0]]# retrieve index in constant time
+            val = Controller.f(e) # see above
+            if val >= listA[corresp_index][1] : 
+                 listA[corresp_index][1] = val
+                 listA[corresp_index][2] = e 
+
+        new_l = []
+        for i in range(len(listA)): 
+            new_l.append(listA[i][2])
+
+        set_l = set(new_l)
+        print(len(new_l))
+        return new_l
     
     def create_oscillators(self,ratio):
 
@@ -149,15 +210,19 @@ class Controller(Organ):
 
             i+=1
         # self.pass_inputs(1)
-        return true_val
+        return true_val,tuple
             
 
-    def __init__(self, res):
+    def __init__(self, res, use_old_combinations = False):
         super().__init__()
         self.name = "Controller"
         self.res = res
         self.oscillators = [Tunable_Oscillator(res = self.res) for i in range (self.N_REPEAT)]
-        self.main_list = self.build_combinations()
+        if Controller.main_list == [] : 
+            if use_old_combinations : 
+                Controller.main_list = self.build_combinations_raw()
+            else: 
+                Controller.main_list = self.build_combinations()
         self.brain = [neuron for oscillator in self.oscillators for neuron in oscillator.brain]
 
-        print("len :  \n",len(self.brain))
+        # print("len :  \n",len(self.brain))

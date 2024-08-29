@@ -1,0 +1,122 @@
+\hypertarget{classCounter__1__bit_1_1Counter__1__bit}{}\doxysection{Counter\+\_\+1\+\_\+bit.\+Counter\+\_\+1\+\_\+bit Class Reference}
+\label{classCounter__1__bit_1_1Counter__1__bit}\index{Counter\_1\_bit.Counter\_1\_bit@{Counter\_1\_bit.Counter\_1\_bit}}
+
+
+Inheritance diagram for Counter\+\_\+1\+\_\+bit.\+Counter\+\_\+1\+\_\+bit\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=205pt]{classCounter__1__bit_1_1Counter__1__bit__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Counter\+\_\+1\+\_\+bit.\+Counter\+\_\+1\+\_\+bit\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=205pt]{classCounter__1__bit_1_1Counter__1__bit__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{classCounter__1__bit_1_1Counter__1__bit_a70a1f1bf1b7b0c53c150d0f39ca87093}{pass\+\_\+inputs}} (self, inputs, k)
+\item 
+def \mbox{\hyperlink{classCounter__1__bit_1_1Counter__1__bit_a3b1ea71e8e603700882e19293bcc2378}{\+\_\+\+\_\+init\+\_\+\+\_\+}} (self, res)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classCounter__1__bit_1_1Counter__1__bit_a95867f1b8335932900113cc3879d00c8}\label{classCounter__1__bit_1_1Counter__1__bit_a95867f1b8335932900113cc3879d00c8}} 
+{\bfseries name}
+\item 
+\mbox{\Hypertarget{classCounter__1__bit_1_1Counter__1__bit_aa0e3c3d082f6108b3e4cf831cf13458e}\label{classCounter__1__bit_1_1Counter__1__bit_aa0e3c3d082f6108b3e4cf831cf13458e}} 
+{\bfseries T0}
+\item 
+\mbox{\Hypertarget{classCounter__1__bit_1_1Counter__1__bit_a9b8a2db6cc45b4888e84aad1179fe610}\label{classCounter__1__bit_1_1Counter__1__bit_a9b8a2db6cc45b4888e84aad1179fe610}} 
+{\bfseries neuron\+C\+\_\+1}
+\item 
+\mbox{\Hypertarget{classCounter__1__bit_1_1Counter__1__bit_aa15ad4741a0a3f8a7a6239360b93624d}\label{classCounter__1__bit_1_1Counter__1__bit_aa15ad4741a0a3f8a7a6239360b93624d}} 
+{\bfseries neuron\+C\+\_\+2}
+\item 
+\mbox{\Hypertarget{classCounter__1__bit_1_1Counter__1__bit_aadbe61f25c09ff41224f8b7a1da9d796}\label{classCounter__1__bit_1_1Counter__1__bit_aadbe61f25c09ff41224f8b7a1da9d796}} 
+{\bfseries output\+\_\+neurons}
+\item 
+\mbox{\Hypertarget{classCounter__1__bit_1_1Counter__1__bit_add8d029f10a0d87d26569c1240ddd216}\label{classCounter__1__bit_1_1Counter__1__bit_add8d029f10a0d87d26569c1240ddd216}} 
+{\bfseries brain}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}@brief A 1-bit counter modeled using neural structures.
+
+This class implements a 1-bit counter using a neural model with a Flip-Flop T and two excitatory neurons.
+
+@section Components
+- **Flip-Flop T:** A toggle flip-flop providing the core functionality of the counter.
+- **Excitatory Neurons:** Two neurons (`neuronC_1` and `neuronC_2`) that generate a pulse train to drive the flip-flop.
+
+@section Neural Connections
+- **neuronC_1 -> T0.brain[0], T0.brain[7], neuronC_2:** Connects the first neuron to the flip-flop and the second neuron.
+- **neuronC_2 -> neuronC_1:** Reciprocally connects the second neuron to the first.
+
+@section Output
+The counter's output neuron is the Q output of the Flip-Flop T, accessed via `self.output_neurons`.
+
+@param res Configuration parameter required to initialize the neural components.
+
+@code
+# Example usage:
+counter = Counter_1_bit(res)
+counter.pass_inputs(inputs, k)
+@endcode
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classCounter__1__bit_1_1Counter__1__bit_a3b1ea71e8e603700882e19293bcc2378}\label{classCounter__1__bit_1_1Counter__1__bit_a3b1ea71e8e603700882e19293bcc2378}} 
+\index{Counter\_1\_bit.Counter\_1\_bit@{Counter\_1\_bit.Counter\_1\_bit}!\_\_init\_\_@{\_\_init\_\_}}
+\index{\_\_init\_\_@{\_\_init\_\_}!Counter\_1\_bit.Counter\_1\_bit@{Counter\_1\_bit.Counter\_1\_bit}}
+\doxysubsubsection{\texorpdfstring{\_\_init\_\_()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily def Counter\+\_\+1\+\_\+bit.\+Counter\+\_\+1\+\_\+bit.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{res }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}@brief Initializes the 1-bit counter with a Flip-Flop T and necessary neurons.
+
+@param res Resolution or configuration parameter required to initialize the neural components.
+
+@section Components
+- **Flip-Flop T:** A toggle flip-flop providing the core functionality of the counter.
+- **Excitatory Neurons:** Two neurons (`neuronC_1` and `neuronC_2`) that generate a pulse train to drive the flip-flop.
+
+@section Neural Connections
+- **neuronC_1 -> T0.brain[0], T0.brain[7], neuronC_2:** Connects the first neuron to the flip-flop and the second neuron.
+- **neuronC_2 -> neuronC_1:** Reciprocally connects the second neuron to the first.
+
+@section Output
+The counter's output neuron is the Q output of the Flip-Flop T, accessed via `self.output_neurons`.
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classCounter__1__bit_1_1Counter__1__bit_a70a1f1bf1b7b0c53c150d0f39ca87093}\label{classCounter__1__bit_1_1Counter__1__bit_a70a1f1bf1b7b0c53c150d0f39ca87093}} 
+\index{Counter\_1\_bit.Counter\_1\_bit@{Counter\_1\_bit.Counter\_1\_bit}!pass\_inputs@{pass\_inputs}}
+\index{pass\_inputs@{pass\_inputs}!Counter\_1\_bit.Counter\_1\_bit@{Counter\_1\_bit.Counter\_1\_bit}}
+\doxysubsubsection{\texorpdfstring{pass\_inputs()}{pass\_inputs()}}
+{\footnotesize\ttfamily def Counter\+\_\+1\+\_\+bit.\+Counter\+\_\+1\+\_\+bit.\+pass\+\_\+inputs (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{inputs,  }\item[{}]{k }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}@brief Passes inputs to the Flip-Flop T and the neurons within the Counter_1_bit.
+
+This method is responsible for forwarding the inputs to the respective components
+of the 1-bit counter. It updates the states of the Flip-Flop T and the neurons
+based on the provided inputs.
+
+@param inputs A list of input values for each time step. Each element of the list
+              is expected to be a list of inputs corresponding to the neural network.
+@param k The current time step index for which the inputs are being processed.
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Neuroscience/structures/Counter\+\_\+1\+\_\+bit.\+py\end{DoxyCompactItemize}

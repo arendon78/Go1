@@ -6,11 +6,12 @@ import numpy as np
 
 
 class Tunable_Oscillator(Organ) :
-
-    
+    #default length (length of the brain)
+    # should be updated if you change the number of neurons
+    len = 4
 
     def __init__ (self, neuron0=None, neuron1=None, neuron2_Excitatory=None,neuron2_Inhibitory=None,res = None):
-
+        
         super().__init__()
         self.name = "Tunable_Oscillator"
 

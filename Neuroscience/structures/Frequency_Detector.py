@@ -11,27 +11,12 @@ from Neuroscience.structures.Excitatory_Neuron import Excitatory_Neuron
 from Neuroscience.structures.Inhibitory_Neuron import Inhibitory_Neuron
 
 class Frequency_Detector : 
-    SOULDER_EXTENSION = 0
-    SHOULDER_ABDUCTION = 1
-    ELBOW = 2
-
-
-    range0 = 1.8
-    offset0 = 0.5
-
-    range1=4.7
-    offset1 = 0.7
-
-    range2=2.3
-    offset2= 3.0
-
-    motions = [(range0,offset0), (range1,offset1),(range2,offset2)]
 
     max_frequency = 9.00900900900901
 
 #new version -------------------
 
-    def __init__(self, res, list_neurons=[], controller=None,delta_t = 700, spike_detector = False ):
+    def __init__(self, res, list_neurons=[], controller=None,delta_t = 690, spike_detector = False ):
         self.name = "Frequency_Detector"
         self.previous_to_watch = []
         if controller:
@@ -128,7 +113,7 @@ class Frequency_Detector :
         return sum_freq
 
 
-    def frequency_ratio(self, lower_bound=-2, upper_bound=2):
+    def frequency_ratio(self, lower_bound=-2, upper_bound=2 ):
         new_center = (upper_bound + lower_bound)/2
         amplitude = (upper_bound - lower_bound)/2
 

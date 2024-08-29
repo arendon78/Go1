@@ -1,0 +1,137 @@
+\hypertarget{classController_1_1Controller}{}\doxysection{Controller.\+Controller Class Reference}
+\label{classController_1_1Controller}\index{Controller.Controller@{Controller.Controller}}
+
+
+Inheritance diagram for Controller.\+Controller\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=195pt]{classController_1_1Controller__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Controller.\+Controller\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=195pt]{classController_1_1Controller__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classController_1_1Controller_a0c035c02098611c877a357175ee2fe87}\label{classController_1_1Controller_a0c035c02098611c877a357175ee2fe87}} 
+def {\bfseries pass\+\_\+inputs} (self, input)
+\item 
+\mbox{\Hypertarget{classController_1_1Controller_ad4fa480b7fe00da34ec9bf7fce2ccac5}\label{classController_1_1Controller_ad4fa480b7fe00da34ec9bf7fce2ccac5}} 
+def {\bfseries find\+\_\+combination\+\_\+index} (self, ratio)
+\item 
+\mbox{\Hypertarget{classController_1_1Controller_a7855c83f280a1142f14cb721bc1e77da}\label{classController_1_1Controller_a7855c83f280a1142f14cb721bc1e77da}} 
+def {\bfseries find\+\_\+combination} (self, ratio)
+\item 
+\mbox{\Hypertarget{classController_1_1Controller_ace661efef7a1b394b4ef0e27bcd64be3}\label{classController_1_1Controller_ace661efef7a1b394b4ef0e27bcd64be3}} 
+def {\bfseries build\+\_\+combinations\+\_\+raw} (self, lower\+\_\+bound=-\/2, upper\+\_\+bound=2)
+\item 
+def \mbox{\hyperlink{classController_1_1Controller_af8656f4e8a0eb60a0572c149f67c0c66}{f}} (e)
+\item 
+def \mbox{\hyperlink{classController_1_1Controller_a9dbaee98a9a1dcdda5b60df0565e5123}{build\+\_\+combinations}} (self)
+\item 
+\mbox{\Hypertarget{classController_1_1Controller_a7e613e76a3f23151d895c1bbebfcf006}\label{classController_1_1Controller_a7e613e76a3f23151d895c1bbebfcf006}} 
+def {\bfseries create\+\_\+oscillators} (self, ratio)
+\item 
+\mbox{\Hypertarget{classController_1_1Controller_a51cb1bf40d4263421c29dd0d15e48e67}\label{classController_1_1Controller_a51cb1bf40d4263421c29dd0d15e48e67}} 
+def {\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, res, use\+\_\+old\+\_\+combinations=False)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classController_1_1Controller_a2620db990d4faa05e12aba97680e6f9e}\label{classController_1_1Controller_a2620db990d4faa05e12aba97680e6f9e}} 
+{\bfseries name}
+\item 
+\mbox{\Hypertarget{classController_1_1Controller_abff7785641160af305a355973892fb9f}\label{classController_1_1Controller_abff7785641160af305a355973892fb9f}} 
+{\bfseries res}
+\item 
+\mbox{\Hypertarget{classController_1_1Controller_ae0cfacdaab6ebb4782ea6d841f9a4a09}\label{classController_1_1Controller_ae0cfacdaab6ebb4782ea6d841f9a4a09}} 
+{\bfseries oscillators}
+\item 
+\mbox{\Hypertarget{classController_1_1Controller_a837863420556185cf3c6865067915f28}\label{classController_1_1Controller_a837863420556185cf3c6865067915f28}} 
+{\bfseries brain}
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classController_1_1Controller_acf61dc1345586ae07d3b62c8e590edc9}\label{classController_1_1Controller_acf61dc1345586ae07d3b62c8e590edc9}} 
+list {\bfseries main\+\_\+list} = \mbox{[}$\,$\mbox{]}
+\item 
+list {\bfseries frequencies}
+\item 
+\mbox{\Hypertarget{classController_1_1Controller_a5cc4058af669715923f676064b180419}\label{classController_1_1Controller_a5cc4058af669715923f676064b180419}} 
+int {\bfseries N\+\_\+\+REPEAT} = 4
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}## Detailed Description
+Controls a list of Tunable Oscillator.
+
+### Attributes
+- **oscillators** (List\<TunableOscillators\>):  
+The list of the oscillators that it is controlling.
+
+- **main_list** (List\<command, (freq1,...,freqN_REPEAT)\>):  
+Contains the associated frequencies to each command (static attribute).
+
+### Methods
+- **build_combinations_raw(lower_bound, upper_bound):**  
+Returns a list containing all the possible combinations of frequencies and their image.
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classController_1_1Controller_a9dbaee98a9a1dcdda5b60df0565e5123}\label{classController_1_1Controller_a9dbaee98a9a1dcdda5b60df0565e5123}} 
+\index{Controller.Controller@{Controller.Controller}!build\_combinations@{build\_combinations}}
+\index{build\_combinations@{build\_combinations}!Controller.Controller@{Controller.Controller}}
+\doxysubsubsection{\texorpdfstring{build\_combinations()}{build\_combinations()}}
+{\footnotesize\ttfamily def Controller.\+Controller.\+build\+\_\+combinations (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}the purpose of this function is to drastically reduce the number of elements in the Controller.main_list; It achieves two things 
+-get rid of doublons
+-select only the elements that maximises a certain function(here f)
+f is as it is to ensure that for negative movements we use mostly Inhibitory neurons and Excitatory movements for positive movements
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classController_1_1Controller_af8656f4e8a0eb60a0572c149f67c0c66}\label{classController_1_1Controller_af8656f4e8a0eb60a0572c149f67c0c66}} 
+\index{Controller.Controller@{Controller.Controller}!f@{f}}
+\index{f@{f}!Controller.Controller@{Controller.Controller}}
+\doxysubsubsection{\texorpdfstring{f()}{f()}}
+{\footnotesize\ttfamily def Controller.\+Controller.\+f (\begin{DoxyParamCaption}\item[{}]{e }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}counts the number of elements of the same sign as the command
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classController_1_1Controller_ad32e555b900b765f9451258d9edb5dbb}\label{classController_1_1Controller_ad32e555b900b765f9451258d9edb5dbb}} 
+\index{Controller.Controller@{Controller.Controller}!frequencies@{frequencies}}
+\index{frequencies@{frequencies}!Controller.Controller@{Controller.Controller}}
+\doxysubsubsection{\texorpdfstring{frequencies}{frequencies}}
+{\footnotesize\ttfamily list Controller.\+Controller.\+frequencies\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=  [}
+\DoxyCodeLine{            0,}
+\DoxyCodeLine{            3.003003003003003,}
+\DoxyCodeLine{            3.6032217041119123,}
+\DoxyCodeLine{            4.504504504504505,}
+\DoxyCodeLine{            \textcolor{comment}{\# 5.9880239520958085,}}
+\DoxyCodeLine{            6.005384137502588,}
+\DoxyCodeLine{            9.00900900900901}
+\DoxyCodeLine{        ]}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Neuroscience/structures/Controller.\+py\end{DoxyCompactItemize}

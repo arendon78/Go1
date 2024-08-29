@@ -10,12 +10,13 @@ sys.path.append(project_root)
 
 from Neuroscience.structures.Controller import Controller
 from Neuroscience.structures.Frequency_Detector import Frequency_Detector
+# from Neuroscience.structures.Frequency_Detector_new import Frequency_Detector
 
 res = 0.1
 sim_time = 10000
-N_REPEAT = 4
+N_REPEAT = Controller.N_REPEAT
 
-ctrl = Controller(res)
+ctrl = Controller(res,use_old_combinations=False)
 V = [[np.zeros([sim_time, 1]) for _ in range(sim_time)] for _ in range(16)]
 F = [[] for _ in range(N_REPEAT)]
 
@@ -24,63 +25,14 @@ inputs = np.zeros([sim_time,1])
 inputs[1]=1
 inputs[sim_time//2] = 1
 
-ctrl.create_oscillators(0)
+# ctrl.create_oscillators(0)
+print(ctrl.oscillators)
 watch = Frequency_Detector(res ,controller = ctrl)
 
 k=0
-# while k < sim_time :
-#     if k<sim_time//2:
-#         watch.update_firing_rate(k)
-
-#         if k == 0: 
-#             ctrl.pass_inputs(1)
-#         else: 
-#             ctrl.pass_inputs(0)
-
-#         ctrl.simulate(k,V)
-
-#         for i in range(0,N_REPEAT):
-#             F[i].append( watch.get_freq(i))
-        
-#     if k == sim_time//2 : 
-#         ctrl.create_oscillators(0.0001)
-#         ctrl.pass_inputs(1)
-
-#     if k>=sim_time//2:
-#         watch.update_firing_rate(k)
-#         if k != sim_time//2:
-#             ctrl.pass_inputs(0)
-        
-#         ctrl.simulate(k,V)
-
-#         for i in range(0,N_REPEAT):
-#             F[i].append( watch.get_freq(i))
-#         # print("frequency detector : ",watch.frequency_ratio())
-
-#     k+=1
-
-t=0
-
-# old 
-# while t<10:
-#     for i in range(1000):
-#         watch.update_firing_rate(k)
-
-#         if i == 0: 
-#             ctrl.create_oscillators(t*0.1)
-#             ctrl.pass_inputs(1)
-            
-#         else: 
-#             ctrl.pass_inputs(0)
-
-#         ctrl.simulate(k,V)
-
-#         for i in range(0,N_REPEAT):
-#             F[i].append( watch.get_freq(i))
-#         k+=1
-#     t+=1
-
+t= 0
 #new
+
 ctrl.pass_inputs(1)
 while t<10:
     print(t*0.05)
@@ -95,11 +47,27 @@ while t<10:
 
 
 
-        for i in range(0,N_REPEAT):
-            F[i].append( watch.get_freq(i))
+        for j in range(0,N_REPEAT):
+            F[j].append( watch.get_freq(j))
         k+=1
     t+=1
 
+# while t<4:
+#     print(t*0.66)
+#     print(ctrl.create_oscillators(t*0.66))
+#     ctrl.pass_inputs(1)
+#     for i in range(2500):
+#         watch.update_firing_rate(k)
+#         ctrl.simulate(k,V)
+#         ctrl.pass_inputs(0)
+
+
+
+
+#         for j in range(0,N_REPEAT):
+#             F[j].append( watch.get_freq(j))
+#         k+=1
+#     t+=1
 
 # Plot the results in a single figure with subplots
 fig, axs = plt.subplots(6, 5, figsize=(15, 10))  # Create a grid of 7 rows x 3 columns

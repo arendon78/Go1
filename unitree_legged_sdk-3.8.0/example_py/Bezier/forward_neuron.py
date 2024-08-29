@@ -35,6 +35,9 @@ if __name__ == '__main__':
     parts = ['FR','FL','RR','RL'] 
     # generation of the foot trajectory 
 
+    # NUM_POINTS_BEZIER = 2
+    # NUM_POINTS_STANCE = 2
+
     NUM_POINTS_BEZIER = 50
     NUM_POINTS_STANCE = 50
 
@@ -96,9 +99,9 @@ if __name__ == '__main__':
 
     res = 0.1
 
-    controllers = { part : [Controller(res),
-                            Controller(res),
-                            Controller(res)]
+    controllers = { part : [Controller(res,use_old_combinations=False),
+                            Controller(res,use_old_combinations=False),
+                            Controller(res,use_old_combinations=False)]
                     for part in parts }
     
     # associates a controller to each articulation
@@ -114,7 +117,7 @@ if __name__ == '__main__':
                 for part in parts }
 
     #simulates the neurons on the trajectory
-    compute_simulation = False
+    compute_simulation = True
 
 
     if (compute_simulation):

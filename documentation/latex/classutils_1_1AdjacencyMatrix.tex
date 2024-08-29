@@ -1,0 +1,69 @@
+\hypertarget{classutils_1_1AdjacencyMatrix}{}\doxysection{utils.\+Adjacency\+Matrix Class Reference}
+\label{classutils_1_1AdjacencyMatrix}\index{utils.AdjacencyMatrix@{utils.AdjacencyMatrix}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classutils_1_1AdjacencyMatrix_ad3120379883ed19361bde5367e56ccc6}\label{classutils_1_1AdjacencyMatrix_ad3120379883ed19361bde5367e56ccc6}} 
+def {\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, size=0)
+\item 
+\mbox{\Hypertarget{classutils_1_1AdjacencyMatrix_a7482074d356f57baafdfe11f2b07f8a8}\label{classutils_1_1AdjacencyMatrix_a7482074d356f57baafdfe11f2b07f8a8}} 
+def {\bfseries instanciate\+\_\+matrix} (adjacency\+\_\+matrix)
+\item 
+\mbox{\Hypertarget{classutils_1_1AdjacencyMatrix_a0cd4cddb69c2037c6fb33939f3d8c5a4}\label{classutils_1_1AdjacencyMatrix_a0cd4cddb69c2037c6fb33939f3d8c5a4}} 
+def {\bfseries add\+\_\+vertex} (self)
+\item 
+\mbox{\Hypertarget{classutils_1_1AdjacencyMatrix_a98151f90b13c68a3b5f0d4fbe772a66c}\label{classutils_1_1AdjacencyMatrix_a98151f90b13c68a3b5f0d4fbe772a66c}} 
+def {\bfseries remove\+\_\+vertex} (self, vertex)
+\item 
+\mbox{\Hypertarget{classutils_1_1AdjacencyMatrix_a485f87ebea2d509f25d38a5a5c580202}\label{classutils_1_1AdjacencyMatrix_a485f87ebea2d509f25d38a5a5c580202}} 
+def {\bfseries add\+\_\+edge} (self, v1, v2)
+\item 
+\mbox{\Hypertarget{classutils_1_1AdjacencyMatrix_af3ed6126c83293b3730da1a6bd8e06ef}\label{classutils_1_1AdjacencyMatrix_af3ed6126c83293b3730da1a6bd8e06ef}} 
+def {\bfseries remove\+\_\+edge} (self, v1, v2)
+\item 
+\mbox{\Hypertarget{classutils_1_1AdjacencyMatrix_ab67731a23214b94c81358fdc9cbab20b}\label{classutils_1_1AdjacencyMatrix_ab67731a23214b94c81358fdc9cbab20b}} 
+def {\bfseries save} (self, filename)
+\item 
+\mbox{\Hypertarget{classutils_1_1AdjacencyMatrix_a7329ac44d5a69d913626caa58a7be01a}\label{classutils_1_1AdjacencyMatrix_a7329ac44d5a69d913626caa58a7be01a}} 
+def {\bfseries load} (self, filename)
+\item 
+\mbox{\Hypertarget{classutils_1_1AdjacencyMatrix_af08186578d8015843183d3637d9dd028}\label{classutils_1_1AdjacencyMatrix_af08186578d8015843183d3637d9dd028}} 
+def {\bfseries count\+\_\+nonzeros} (self)
+\item 
+\mbox{\Hypertarget{classutils_1_1AdjacencyMatrix_ad5aa13c85788dc2f45cc656e5af81291}\label{classutils_1_1AdjacencyMatrix_ad5aa13c85788dc2f45cc656e5af81291}} 
+def {\bfseries pretty\+\_\+print} (self)
+\item 
+\mbox{\Hypertarget{classutils_1_1AdjacencyMatrix_a6b50dbcceb6c1f9946dfb987f78e131e}\label{classutils_1_1AdjacencyMatrix_a6b50dbcceb6c1f9946dfb987f78e131e}} 
+def {\bfseries draw\+\_\+graph} (self, name=\char`\"{}Directed Graph\char`\"{})
+\item 
+def \mbox{\hyperlink{classutils_1_1AdjacencyMatrix_a827a7bac0f8bb82e9055cdff612056ef}{plot\+\_\+force\+\_\+directed\+\_\+graph}} (self, node\+\_\+types, graph\+\_\+name=\char`\"{}Graph\char`\"{})
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classutils_1_1AdjacencyMatrix_aa359ff9fbedf257fb2f13f6bdee35c86}\label{classutils_1_1AdjacencyMatrix_aa359ff9fbedf257fb2f13f6bdee35c86}} 
+{\bfseries matrix}
+\item 
+\mbox{\Hypertarget{classutils_1_1AdjacencyMatrix_a6eecd481559d6595b69160f6942b98f0}\label{classutils_1_1AdjacencyMatrix_a6eecd481559d6595b69160f6942b98f0}} 
+{\bfseries size}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classutils_1_1AdjacencyMatrix_a827a7bac0f8bb82e9055cdff612056ef}\label{classutils_1_1AdjacencyMatrix_a827a7bac0f8bb82e9055cdff612056ef}} 
+\index{utils.AdjacencyMatrix@{utils.AdjacencyMatrix}!plot\_force\_directed\_graph@{plot\_force\_directed\_graph}}
+\index{plot\_force\_directed\_graph@{plot\_force\_directed\_graph}!utils.AdjacencyMatrix@{utils.AdjacencyMatrix}}
+\doxysubsubsection{\texorpdfstring{plot\_force\_directed\_graph()}{plot\_force\_directed\_graph()}}
+{\footnotesize\ttfamily def utils.\+Adjacency\+Matrix.\+plot\+\_\+force\+\_\+directed\+\_\+graph (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{node\+\_\+types,  }\item[{}]{graph\+\_\+name = {\ttfamily \char`\"{}Graph\char`\"{}} }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Affiche un graphe force-directed à partir de la matrice d'adjacence de l'instance.
+
+Paramètres :
+node_types (list of str): Liste des types de nœuds ('Excitatory' ou 'Inhibitory').
+graph_name (str) : Le nom du graphe pour le titre de la visualisation.
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+utils.\+py\end{DoxyCompactItemize}

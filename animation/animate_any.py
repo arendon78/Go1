@@ -21,7 +21,7 @@ ACT_POT = Abstract_Neuron.Act_Pot_volt
 # Path to the JSON file
 file_path = './datas'
 
-name = '/Counter_1_bit'
+name = '/Counter_4_bits'
 
 # Open and load JSON file
 with open(file_path + name + ".json", 'r') as file:

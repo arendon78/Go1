@@ -1,0 +1,282 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neuroscience.structures.Flip_FLop_T &#8212; src  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for Neuroscience.structures.Flip_FLop_T</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">project_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;../../&#39;</span><span class="p">))</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">project_root</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">Neuroscience.structures.Gate_NAND</span> <span class="kn">import</span> <span class="n">Gate_NAND</span>
+<span class="kn">from</span> <span class="nn">Neuroscience.structures.Excitatory_Neuron</span> <span class="kn">import</span> <span class="n">Excitatory_Neuron</span>
+<span class="kn">from</span> <span class="nn">Neuroscience.structures.Inhibitory_Neuron</span> <span class="kn">import</span> <span class="n">Inhibitory_Neuron</span>
+<span class="kn">from</span> <span class="nn">Neuroscience.structures.Organ</span> <span class="kn">import</span> <span class="n">Organ</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<div class="viewcode-block" id="Flip_Flop_T"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Flip_FLop_T.html#Neuroscience.structures.Flip_FLop_T.Flip_Flop_T">[docs]</a><span class="k">class</span> <span class="nc">Flip_Flop_T</span><span class="p">(</span><span class="n">Organ</span><span class="p">)</span> <span class="p">:</span> 
+
+<div class="viewcode-block" id="Flip_Flop_T.print"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Flip_FLop_T.html#Neuroscience.structures.Flip_FLop_T.Flip_Flop_T.print">[docs]</a>    <span class="k">def</span> <span class="nf">print</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">brain</span> <span class="p">:</span>
+            <span class="n">n</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Flip_Flop_T.pass_inputs_oscillators"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Flip_FLop_T.html#Neuroscience.structures.Flip_FLop_T.Flip_Flop_T.pass_inputs_oscillators">[docs]</a>    <span class="k">def</span> <span class="nf">pass_inputs_oscillators</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+        <span class="c1"># Set inputs for the oscillators on each 5th dendrite of each NAND gate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fst_NAND</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># neuron1_5.inputs[1]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scd_NAND</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># neuron2_5.inputs[1]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thrd_NAND</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># neuron3_5.inputs[1]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fth_NAND</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># neuron4_5.inputs[1]</span></div>
+
+<div class="viewcode-block" id="Flip_Flop_T.pass_inputs_selfputs"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Flip_FLop_T.html#Neuroscience.structures.Flip_FLop_T.Flip_Flop_T.pass_inputs_selfputs">[docs]</a>    <span class="k">def</span> <span class="nf">pass_inputs_selfputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inputs</span><span class="p">,</span><span class="n">k</span><span class="p">):</span>
+        <span class="c1"># Set selfputs for NAND gates 1 and 2 (neurons 1_1 and 2_1)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fst_NAND</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># neuron1_1.inputs[2]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scd_NAND</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># neuron2_1.inputs[2]</span></div>
+
+<div class="viewcode-block" id="Flip_Flop_T.pass_inputs"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Flip_FLop_T.html#Neuroscience.structures.Flip_FLop_T.Flip_Flop_T.pass_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">pass_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inputs</span><span class="p">,</span><span class="n">k</span><span class="p">):</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">pass_inputs_oscillators</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span><span class="n">k</span><span class="p">)</span>
+        <span class="c1"># Set selfputs for NAND gates 1 and 2 (neurons 1_1 and 2_1)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pass_inputs_selfputs</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span><span class="n">k</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">res</span><span class="p">):</span> 
+
+        
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Flip_Flop&quot;</span>
+
+    <span class="c1">#1st NAND Gate -----------------------</span>
+
+        <span class="n">n1_0</span> <span class="o">=</span> <span class="n">Excitatory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="n">n1_0</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mf">6.5</span><span class="p">,</span><span class="mf">6.5</span><span class="p">,</span><span class="mf">6.5</span><span class="p">])</span>
+        <span class="n">n1_1</span> <span class="o">=</span> <span class="n">Excitatory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">n1_1</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">])</span>
+        <span class="n">n1_2</span> <span class="o">=</span> <span class="n">Inhibitory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">n1_2</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">])</span>
+        <span class="n">n1_3</span> <span class="o">=</span> <span class="n">Inhibitory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">n1_3</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">])</span>
+        <span class="n">n1_4</span> <span class="o">=</span> <span class="n">Excitatory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">n1_4</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">])</span>
+        <span class="n">n1_5</span> <span class="o">=</span> <span class="n">Excitatory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">n1_5</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">])</span>
+        <span class="n">n1_6</span> <span class="o">=</span> <span class="n">Excitatory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">n1_6</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">fst_NAND</span> <span class="o">=</span> <span class="n">Gate_NAND</span><span class="p">(</span><span class="n">n1_0</span><span class="p">,</span><span class="n">n1_1</span><span class="p">,</span><span class="n">n1_2</span><span class="p">,</span><span class="n">n1_3</span><span class="p">,</span><span class="n">n1_4</span><span class="p">,</span><span class="n">n1_5</span><span class="p">,</span><span class="n">n1_6</span><span class="p">,</span><span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="p">)</span>
+        
+    <span class="c1">#2nd NAND Gate -----------------------</span>
+
+        <span class="n">n2_0</span> <span class="o">=</span> <span class="n">Excitatory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="n">n2_0</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mf">6.5</span><span class="p">,</span><span class="mf">6.5</span><span class="p">,</span><span class="mf">6.5</span><span class="p">])</span>
+        <span class="n">n2_1</span> <span class="o">=</span> <span class="n">Excitatory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">n2_1</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">])</span>
+        <span class="n">n2_2</span> <span class="o">=</span> <span class="n">Inhibitory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span>  <span class="p">)</span>
+        <span class="n">n2_2</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">])</span>
+        <span class="n">n2_3</span> <span class="o">=</span> <span class="n">Inhibitory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">n2_3</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">])</span>
+        <span class="n">n2_4</span> <span class="o">=</span> <span class="n">Excitatory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">n2_4</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">])</span>
+        <span class="n">n2_5</span> <span class="o">=</span> <span class="n">Excitatory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">n2_5</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">])</span>
+        <span class="n">n2_6</span> <span class="o">=</span> <span class="n">Excitatory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">n2_6</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">scd_NAND</span> <span class="o">=</span> <span class="n">Gate_NAND</span><span class="p">(</span><span class="n">n2_0</span><span class="p">,</span><span class="n">n2_1</span><span class="p">,</span><span class="n">n2_2</span><span class="p">,</span><span class="n">n2_3</span><span class="p">,</span><span class="n">n2_4</span><span class="p">,</span><span class="n">n2_5</span><span class="p">,</span><span class="n">n2_6</span><span class="p">,</span><span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="p">)</span>
+
+    
+        <span class="bp">self</span><span class="o">.</span><span class="n">scd_NAND</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">num_dendrites</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scd_NAND</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">num_axon_terminals</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scd_NAND</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scd_NAND</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scd_NAND</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mf">6.5</span><span class="p">,</span><span class="mf">6.5</span><span class="p">,</span><span class="mf">6.5</span><span class="p">])</span>
+
+    <span class="c1">#3rd NAND Gate -----------------------</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thrd_NAND</span> <span class="o">=</span> <span class="n">Gate_NAND</span><span class="p">(</span><span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="p">)</span>
+    
+        <span class="n">delay_neuron</span> <span class="o">=</span> <span class="n">Excitatory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># Neuron to provide a delay between NAND gates 3 and 4</span>
+        <span class="n">delay_neuron</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">])</span>
+
+        <span class="c1"># delay_neuron2 = Excitatory_Neuron(res, 1, 1) # Neuron to provide a delay between NAND gates 3 and 4</span>
+        <span class="c1"># delay_neuron2.set_weights([15])</span>
+
+    <span class="c1">#4th NAND Gate -----------------------</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fth_NAND</span> <span class="o">=</span> <span class="n">Gate_NAND</span><span class="p">(</span><span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="p">)</span>
+        
+    <span class="c1">#original connection : that work but degenerates at some point :/</span>
+    <span class="c1"># #connection</span>
+    <span class="c1">#     self.fst_NAND.connect(6, self.thrd_NAND.brain[0])    # Output of First NAND gate (neuron1_7) to input of Second NAND gate (neuron2_1)</span>
+    <span class="c1">#     self.scd_NAND.connect(6, self.fth_NAND.brain[0])    # Output of Second NAND gate (neuron2_7) to input of Fourth NAND gate (neuron4_1)</span>
+    <span class="c1">#     self.thrd_NAND.connect(6, delay_neuron)  # Self-connection for delay in Third NAND gate (neuron3_7 to neuron3_8)</span>
+    <span class="c1">#     delay_neuron.connect_with_neuron(self.scd_NAND.brain[0])   # Delayed output of Third NAND gate (neuron3_8) to input of Second NAND gate (neuron2_2)</span>
+    <span class="c1">#     delay_neuron.connect_with_neuron(self.fth_NAND.brain[0])   # Delayed output of Third NAND gate (neuron3_8) to input of Fourth NAND gate (neuron4_2)</span>
+    <span class="c1">#     self.fth_NAND.connect(6, self.fst_NAND.brain[0])    # Output of Fourth NAND gate (neuron4_7) to input of First NAND gate (neuron1_1)</span>
+    <span class="c1">#     self.fth_NAND.connect(6, self.thrd_NAND.brain[0])   # Output of Fourth NAND gate (neuron4_7) to input of Third NAND gate (neuron3_1)</span>
+
+
+    <span class="c1">#connection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fst_NAND</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">thrd_NAND</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>    <span class="c1"># Output of First NAND gate (neuron1_7) to input of Second NAND gate (neuron2_1)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scd_NAND</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fth_NAND</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>    <span class="c1"># Output of Second NAND gate (neuron2_7) to input of Fourth NAND gate (neuron4_1)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thrd_NAND</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">delay_neuron</span><span class="p">)</span>  <span class="c1"># Self-connection for delay in Third NAND gate (neuron3_7 to neuron3_8)</span>
+        <span class="c1"># self.thrd_NAND.connect(6, self.scd_NAND.brain[0])</span>
+        <span class="c1"># self.thrd_NAND.connect(6, self.fth_NAND.brain[0])</span>
+        <span class="c1"># delay_neuron1.connect_with_neuron(delay_neuron2)</span>
+        <span class="n">delay_neuron</span><span class="o">.</span><span class="n">connect_with_neuron</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scd_NAND</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>   <span class="c1"># Delayed output of Third NAND gate (neuron3_8) to input of Second NAND gate (neuron2_2)</span>
+        <span class="n">delay_neuron</span><span class="o">.</span><span class="n">connect_with_neuron</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fth_NAND</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>   <span class="c1"># Delayed output of Third NAND gate (neuron3_8) to input of Fourth NAND gate (neuron4_2)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fth_NAND</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fst_NAND</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>    <span class="c1"># Output of Fourth NAND gate (neuron4_7) to input of First NAND gate (neuron1_1)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fth_NAND</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">thrd_NAND</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>   <span class="c1"># Output of Fourth NAND gate (neuron4_7) to input of Third NAND gate (neuron3_1)</span>
+
+
+
+    <span class="c1">#append ton brain</span>
+        <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">fst_NAND</span><span class="o">.</span><span class="n">brain</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">scd_NAND</span><span class="o">.</span><span class="n">brain</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">thrd_NAND</span><span class="o">.</span><span class="n">brain</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fth_NAND</span><span class="o">.</span><span class="n">brain</span> <span class="p">]:</span>
+            <span class="k">for</span> <span class="n">neuron</span> <span class="ow">in</span> <span class="n">el</span><span class="p">:</span> 
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_to_brain</span><span class="p">(</span><span class="n">neuron</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_to_brain</span><span class="p">(</span><span class="n">delay_neuron</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_neurons</span> <span class="o">=</span> <span class="p">[</span><span class="n">delay_neuron</span><span class="p">]</span></div>
+        <span class="c1"># self.add_to_brain(delay_neuron2)</span>
+        <span class="c1"># [print(el.name) for el in self.brain]</span>
+
+
+
+<span class="c1">#brain = [</span>
+<span class="c1"># n1_0,   n2_0,   n3_0,   n4_0,    </span>
+<span class="c1"># n1_1,   n2_1,   n3_1,   n4_1,    </span>
+<span class="c1"># n1_2,   n2_2,   n3_2,   n4_2,    </span>
+<span class="c1"># n1_3,   n2_3,   n3_3,   n4_3,    </span>
+<span class="c1"># n1_4,   n2_4,   n3_4,   n4_4,    </span>
+<span class="c1"># n1_5,   n2_5,   n3_5,   n4_5,    </span>
+<span class="c1"># n1_6,   n2_6,   n3_6,   n4_6,    </span>
+<span class="c1"># </span>
+<span class="c1"># delay neuron]</span>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">src</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Abstract_Neuron.html">Neuroscience.structures.Abstract_Neuron</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Activity_Detector.html">Neuroscience.structures.Activity_Detector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Controller.html">Neuroscience.structures.Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Counter_1_bit.html">Neuroscience.structures.Counter_1_bit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Counter_2_bits.html">Neuroscience.structures.Counter_2_bits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Counter_3_bits.html">Neuroscience.structures.Counter_3_bits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Counter_4_bits.html">Neuroscience.structures.Counter_4_bits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Excitatory_Neuron.html">Neuroscience.structures.Excitatory_Neuron</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Flip_FLop_T.html">Neuroscience.structures.Flip_FLop_T</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Frequency_Detector.html">Neuroscience.structures.Frequency_Detector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Frequency_Detector_new.html">Neuroscience.structures.Frequency_Detector_new</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Gate_NAND.html">Neuroscience.structures.Gate_NAND</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/forces.utils_forces.html">forces.utils_forces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/index.html">Welcome to Your Project’s documentation!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html">unitree_legged_sdk.example_py.Bezier.Foot_Sensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.error_calculation.html">unitree_legged_sdk.example_py.Bezier.error_calculation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.foot_trajectory.html">unitree_legged_sdk.example_py.Bezier.foot_trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.forward_neuron.html">unitree_legged_sdk.example_py.Bezier.forward_neuron</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.lie_down_procedure.html">unitree_legged_sdk.example_py.Bezier.lie_down_procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.main_loop.html">unitree_legged_sdk.example_py.Bezier.main_loop</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.main_loop_v2.html">unitree_legged_sdk.example_py.Bezier.main_loop_v2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.plot_neurons.html">unitree_legged_sdk.example_py.Bezier.plot_neurons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/utils.html">utils</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Author.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

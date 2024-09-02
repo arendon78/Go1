@@ -39,16 +39,40 @@
 
 <span class="kn">from</span> <span class="nn">Neuroscience.structures.Abstract_Neuron</span> <span class="kn">import</span> <span class="n">Abstract_Neuron</span>
 
-<span class="c1"># Definition of class Inhibitory_Neuron, inherits from AbstractNeuron</span>
 <div class="viewcode-block" id="Inhibitory_Neuron"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Inhibitory_Neuron.html#Neuroscience.structures.Inhibitory_Neuron.Inhibitory_Neuron">[docs]</a><span class="k">class</span> <span class="nc">Inhibitory_Neuron</span><span class="p">(</span><span class="n">Abstract_Neuron</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class representing an inhibitory neuron in a neural network.</span>
+
+<span class="sd">    The `Inhibitory_Neuron` class inherits from `Abstract_Neuron` and is used to simulate the behavior </span>
+<span class="sd">    of neurons that primarily inhibit other neurons. This class includes specific methods for setting </span>
+<span class="sd">    axon terminals, propagating outputs to connected neurons, and printing neuron details.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    type : str</span>
+<span class="sd">        The type of the neuron, initialized as &quot;Inhibitory&quot;.</span>
+<span class="sd">    </span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of the neuron, initialized as &quot;Inhibitory_Neuron&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Inhibitory_Neuron.set_axon_terminals"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Inhibitory_Neuron.html#Neuroscience.structures.Inhibitory_Neuron.Inhibitory_Neuron.set_axon_terminals">[docs]</a>    <span class="k">def</span> <span class="nf">set_axon_terminals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Turn all axon terminals on</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Activates all axon terminals of the neuron with an inhibitory signal.</span>
+
+<span class="sd">        This method sets all axon terminals to output a value of -1, indicating that the neuron is actively </span>
+<span class="sd">        sending inhibitory signals.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_axon_terminals</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">axon_terminals</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span></div>
 
 <div class="viewcode-block" id="Inhibitory_Neuron.propagate_outputs"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Inhibitory_Neuron.html#Neuroscience.structures.Inhibitory_Neuron.Inhibitory_Neuron.propagate_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">propagate_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Update inputs from connected neurons</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Propagates outputs to connected neurons based on the neuron&#39;s current state.</span>
+
+<span class="sd">        If the neuron has reached its maximum active potential, it sends an inhibitory signal (value of -1) </span>
+<span class="sd">        to all connected neurons. Otherwise, it sends a signal of 0.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">axon_terminals</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_active_potential</span><span class="p">:</span>
                 <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
@@ -56,14 +80,29 @@
                 <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">0</span></div>
 
 <div class="viewcode-block" id="Inhibitory_Neuron.print"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Inhibitory_Neuron.html#Neuroscience.structures.Inhibitory_Neuron.Inhibitory_Neuron.print">[docs]</a>    <span class="k">def</span> <span class="nf">print</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prints details about the inhibitory neuron, including the number of dendrites and axon terminals.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Inhibitory Neuron&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dendrites : &quot;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dendrites : &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;axon terminals : &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_axon_terminals</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">instance_count</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">instance_count</span><span class="o">=</span> <span class="n">instance_count</span><span class="p">)</span><span class="c1"># calls the constructor of AbstractNeuron class (prevents duplicated code)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s2">&quot;Inhibitory&quot;</span>  
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Inhibitory_Neuron&quot;</span>   </div>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">instance_count</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes an instance of `Inhibitory_Neuron`.</span>
+
+<span class="sd">        :param res: The resolution of the simulation, affecting time steps.</span>
+<span class="sd">        :type res: int</span>
+<span class="sd">        :param inputs: Number of dendrites (input connections) for the neuron.</span>
+<span class="sd">        :type inputs: int</span>
+<span class="sd">        :param outputs: Number of axon terminals (output connections) for the neuron.</span>
+<span class="sd">        :type outputs: int</span>
+<span class="sd">        :param instance_count: A string to distinguish different instances, default is an empty string.</span>
+<span class="sd">        :type instance_count: str, optional</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">instance_count</span><span class="o">=</span><span class="n">instance_count</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s2">&quot;Inhibitory&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Inhibitory_Neuron&quot;</span></div>
 </pre></div>
 
           </div>
@@ -99,8 +138,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/animation.animate_any.html">animation.animate_any</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/forces.utils_forces.html">forces.utils_forces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/index.html">Welcome to Your Project’s documentation!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/index.html">Welcome to the Walking Neural Project !</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html">unitree_legged_sdk.example_py.Bezier.Foot_Sensor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>
@@ -112,11 +153,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.main_loop_v2.html">unitree_legged_sdk.example_py.Bezier.main_loop_v2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.plot_neurons.html">unitree_legged_sdk.example_py.Bezier.plot_neurons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/utils.html">utils</a></li>
 </ul>
 

@@ -39,105 +39,271 @@
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Neuroscience.structures.Abstract_Neuron.</span></span><span class="sig-name descname"><span class="pre">Abstract_Neuron</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Neuroscience/structures/Abstract_Neuron.html#Abstract_Neuron"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ" title="Neuroscience.structures.Organ.Organ"><code class="xref py py-class docutils literal notranslate"><span class="pre">Neuroscience.structures.Organ.Organ</span></code></a></p>
+<p>A class representing an abstract neuron model used in computational neuroscience.</p>
+<p>The <cite>Abstract_Neuron</cite> class simulates the behavior of a neuron, focusing on synaptic potentials,
+membrane potential dynamics, and action potentials. It can be used as a building block for more
+complex neural network structures.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.Act_Pot_time">
 <span class="sig-name descname"><span class="pre">Act_Pot_time</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">50</span></em><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.Act_Pot_time" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Duration of an action potential pulse (in simulation steps), including the refractory period.</p>
+<p>.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.Act_Pot_volt">
 <span class="sig-name descname"><span class="pre">Act_Pot_volt</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">86.9</span></em><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.Act_Pot_volt" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Peak voltage (mV) during an action potential.</p>
+<p>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.EPSP">
 <span class="sig-name descname"><span class="pre">EPSP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Neuroscience/structures/Abstract_Neuron.html#Abstract_Neuron.EPSP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.EPSP" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Calculates the Excitatory Post-Synaptic Potential (EPSP) for a given dendrite.</p>
+<p>This method simulates the potential that will be added up, and if the threshold is reached (15 mV),
+it fires the neuron.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<em>int</em>) – Index of the dendrite receiving the EPSP.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Time step at which the EPSP is calculated.</p></li>
+<li><p><strong>weight</strong> (<em>float</em>) – Synaptic weight associated with the dendrite.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The voltage change due to the EPSP at the specified dendrite.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p>.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.EPSP_time">
 <span class="sig-name descname"><span class="pre">EPSP_time</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">150</span></em><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.EPSP_time" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="simple">
+<dt>Duration (in simulation steps) of an Excitatory Post-Synaptic Potential (EPSP), including</dt><dd><p>charge, stable response, and discharge phases.</p>
+</dd>
+</dl>
+<p>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.IPSP">
 <span class="sig-name descname"><span class="pre">IPSP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Neuroscience/structures/Abstract_Neuron.html#Abstract_Neuron.IPSP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.IPSP" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Calculates the Inhibitory Post-Synaptic Potential (IPSP) for a given dendrite.</p>
+<p>This method simulates the potential that will be subtracted, and if the threshold is reached (15 mV),
+it fires the neuron.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<em>int</em>) – Index of the dendrite receiving the IPSP.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Time step at which the IPSP is calculated.</p></li>
+<li><p><strong>weight</strong> (<em>float</em>) – Synaptic weight associated with the dendrite.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The voltage change due to the IPSP at the specified dendrite.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p>.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.IPSP_time">
 <span class="sig-name descname"><span class="pre">IPSP_time</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">150</span></em><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.IPSP_time" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="simple">
+<dt>Duration (in simulation steps) of an Inhibitory Post-Synaptic Potential (IPSP), including</dt><dd><p>charge, stable response, and discharge phases.</p>
+</dd>
+</dl>
+<p>.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.Thres_Act_Pot_volt">
 <span class="sig-name descname"><span class="pre">Thres_Act_Pot_volt</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">14.9</span></em><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.Thres_Act_Pot_volt" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Threshold voltage (mV) required to fire the neuron.</p>
+<p>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.active_potential">
 <span class="sig-name descname"><span class="pre">active_potential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Neuroscience/structures/Abstract_Neuron.html#Abstract_Neuron.active_potential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.active_potential" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Simulates the action potential over the time period <cite>t</cite>.</p>
+<p>This method includes both the action potential and the refractory period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>float</em>) – Time step for which the action potential is being calculated.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The membrane potential at time <cite>t</cite> during the action potential.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.assign_input">
 <span class="sig-name descname"><span class="pre">assign_input</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Neuroscience/structures/Abstract_Neuron.html#Abstract_Neuron.assign_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.assign_input" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Assigns an available dendrite to a connecting neuron.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The index of the assigned dendrite. Returns -1 if no dendrite is available.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+<p>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.connect_with_neuron">
 <span class="sig-name descname"><span class="pre">connect_with_neuron</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_neuron</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Neuroscience/structures/Abstract_Neuron.html#Abstract_Neuron.connect_with_neuron"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.connect_with_neuron" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Establishes a connection between this neuron and a target neuron.</p>
+<p>This is done by linking an axon terminal to the target neuron’s dendrite.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>target_neuron</strong> (<a class="reference internal" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron" title="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron"><em>Abstract_Neuron</em></a>) – The target neuron to connect to.</p>
+</dd>
+</dl>
+<p>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.get_voltage">
 <span class="sig-name descname"><span class="pre">get_voltage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Neuroscience/structures/Abstract_Neuron.html#Abstract_Neuron.get_voltage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.get_voltage" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Gets the current voltage values for each dendrite.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>An array of voltage values for each dendrite.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+</dl>
+<p>.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.instanciation_counter">
 <span class="sig-name descname"><span class="pre">instanciation_counter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.instanciation_counter" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>A class-level counter that tracks the number of Abstract_Neuron instances created.</p>
+<p>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.is_connected">
 <span class="sig-name descname"><span class="pre">is_connected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Neuroscience/structures/Abstract_Neuron.html#Abstract_Neuron.is_connected"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.is_connected" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Checks if this neuron is already connected to the given neuron <cite>n</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n</strong> (<a class="reference internal" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron" title="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron"><em>Abstract_Neuron</em></a>) – The neuron to check connection with.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if connected, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+<p>.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.membrane_potential">
 <span class="sig-name descname"><span class="pre">membrane_potential</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.membrane_potential" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="simple">
+<dt>The membrane potential of the neuron, initially set to zero. The neuron fires when this potential</dt><dd><p>exceeds the threshold voltage.</p>
+</dd>
+</dl>
+<p>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.present_inputs">
 <span class="sig-name descname"><span class="pre">present_inputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Neuroscience/structures/Abstract_Neuron.html#Abstract_Neuron.present_inputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.present_inputs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Processes incoming inputs at the current time step.</p>
+<p>This method checks if an active potential is occurring, and if not, updates the neuron’s state
+based on the inputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>list of int</em>) – List of inputs for each dendrite. Values should be 1 for excitatory input,
+-1 for inhibitory input, or 0 for no input.</p>
+</dd>
+</dl>
+<p>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.res">
+<span class="sig-name descname"><span class="pre">res</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.1</span></em><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.res" title="Permalink to this definition">¶</a></dt>
+<dd><p>The resolution of the simulation, affecting the time steps.</p>
+<p>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.reset_PSP">
 <span class="sig-name descname"><span class="pre">reset_PSP</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Neuroscience/structures/Abstract_Neuron.html#Abstract_Neuron.reset_PSP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.reset_PSP" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Resets all Post-Synaptic Potentials (PSPs) to their default (inactive) states.</p>
+<p>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.reset_axon_terminals">
 <span class="sig-name descname"><span class="pre">reset_axon_terminals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Neuroscience/structures/Abstract_Neuron.html#Abstract_Neuron.reset_axon_terminals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.reset_axon_terminals" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Turns off all axon terminals, indicating no active signaling.</p>
+<p>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.set_weights">
 <span class="sig-name descname"><span class="pre">set_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Neuroscience/structures/Abstract_Neuron.html#Abstract_Neuron.set_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.set_weights" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Sets the synaptic weights for each dendrite.</p>
+<p>The weights must be such that the output voltage remains within physiological limits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>values</strong> (<em>list of float</em>) – List of weights to be set for each dendrite.</p>
+</dd>
+</dl>
+<p>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.spatial_summation">
 <span class="sig-name descname"><span class="pre">spatial_summation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Neuroscience/structures/Abstract_Neuron.html#Abstract_Neuron.spatial_summation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.spatial_summation" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Performs spatial summation on all dendrites of the neuron.</p>
+<p>This method updates the membrane potential based on the combined inputs from all active synapses.
+If the membrane potential exceeds the threshold, the neuron fires an action potential.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The updated membrane potential after spatial summation.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+<p>.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.tau">
 <span class="sig-name descname"><span class="pre">tau</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0857</span></em><a class="headerlink" href="#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.tau" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="simple">
+<dt>Time constant (ms) used in the exponential functions for charging and discharging potentials.</dt><dd><p>This influences the duration of EPSPs and IPSPs.</p>
+</dd>
+</dl>
+<p>.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -177,15 +343,18 @@
 <li class="toctree-l1"><a class="reference internal" href="Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="animation.animate_any.html">animation.animate_any</a></li>
+<li class="toctree-l1"><a class="reference internal" href="animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="forces.utils_forces.html">forces.utils_forces</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Welcome to Your Project’s documentation!</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Welcome to the Walking Neural Project !</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Activity_Detector.html">Neuroscience.structures.Activity_Detector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Controller.html">Neuroscience.structures.Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.lie_down_procedure.html">unitree_legged_sdk.example_py.Bezier.lie_down_procedure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Excitatory_Neuron.html">Neuroscience.structures.Excitatory_Neuron</a></li>
+<li class="toctree-l2"><a class="reference internal" href="animation.animate_any.html">animation.animate_any</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.forward_neuron.html">unitree_legged_sdk.example_py.Bezier.forward_neuron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Frequency_Detector_new.html">Neuroscience.structures.Frequency_Detector_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
@@ -196,8 +365,6 @@
 <li class="toctree-l2"><a class="reference internal" href="utils.html">utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Frequency_Detector.html">Neuroscience.structures.Frequency_Detector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Gate_NAND.html">Neuroscience.structures.Gate_NAND</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.foot_trajectory.html">unitree_legged_sdk.example_py.Bezier.foot_trajectory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Counter_3_bits.html">Neuroscience.structures.Counter_3_bits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="forces.utils_forces.html">forces.utils_forces</a></li>
@@ -209,8 +376,6 @@
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Counter_4_bits.html">Neuroscience.structures.Counter_4_bits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Flip_FLop_T.html">Neuroscience.structures.Flip_FLop_T</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Neuroscience.structures.Abstract_Neuron</a></li>
 </ul>
 </li>
@@ -225,11 +390,6 @@
 <li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.main_loop_v2.html">unitree_legged_sdk.example_py.Bezier.main_loop_v2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.plot_neurons.html">unitree_legged_sdk.example_py.Bezier.plot_neurons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">utils</a></li>
 </ul>
 

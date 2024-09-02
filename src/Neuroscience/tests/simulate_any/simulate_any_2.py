@@ -5,7 +5,11 @@ import statistics
 import json
 import numpy as np
 
+
+
 from sim.Counter_4_bits_sim import instance_and_input
+
+
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../'))
 sys.path.append(project_root)
@@ -13,15 +17,20 @@ sys.path.append(project_root)
 from Neuroscience.structures.Excitatory_Neuron import  Excitatory_Neuron
 from Neuroscience.structures.Inhibitory_Neuron import Inhibitory_Neuron
 
+
+
+#this module allows you to simulate any neural network, And save the neural activity of all the neurons into a file.
+# all you have to do is export the right instance_and_input(sim_time) function that returns the instance you want to simulate and the inputs you give it.
+
 res = 0.1                       # Set the resolution
-sim_time = 20000          # Set the simulation time
+sim_time = 80000          # Set the simulation time
 
 instance,inputs = instance_and_input(sim_time)
 name = instance.name
 
 print(instance)
 
-json_path = "../../../animation/datas/" + name + ".json" # path of the location to save
+json_path = "../../../animation/datas/" + name + ".json" # path of the location saved
 
 
 instance.update_adjacency_matrix()

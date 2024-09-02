@@ -38,7 +38,32 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="unitree_legged_sdk.example_py.Bezier.error_calculation.error">
 <span class="sig-prename descclassname"><span class="pre">unitree_legged_sdk.example_py.Bezier.error_calculation.</span></span><span class="sig-name descname"><span class="pre">error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oscillator_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq_command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/unitree_legged_sdk/example_py/Bezier/error_calculation.html#error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unitree_legged_sdk.example_py.Bezier.error_calculation.error" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Computes various error metrics between the oscillator data and the frequency command.</p>
+<p>This function calculates the Maximum Absolute Error (Max AE), Mean Absolute Error (MAE),
+Mean Squared Error (MSE), and Relative Mean Absolute Error (Relative MAE) between the
+observed oscillator data and the expected frequency command.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>oscillator_data</strong> (<em>list of float</em>) – A list containing the observed oscillator frequencies.</p></li>
+<li><p><strong>freq_command</strong> (<em>list of float</em>) – A list containing the commanded (expected) frequencies.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>maximum_error</strong> (<em>float</em>) – The maximum absolute error between the oscillator data and the frequency command.</p></li>
+<li><p><strong>result_MAE</strong> (<em>float</em>) – The mean absolute error (MAE) between the oscillator data and the frequency command.</p></li>
+<li><p><strong>result_MSE</strong> (<em>float</em>) – The mean squared error (MSE) between the oscillator data and the frequency command.</p></li>
+<li><p><strong>relative_MAE</strong> (<em>float</em>) – The relative mean absolute error (Relative MAE), which is the MAE normalized by the amplitude
+of the frequency command.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>AssertionError</strong> – If the length of <cite>oscillator_data</cite> and <cite>freq_command</cite> are not equal.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 
@@ -76,15 +101,18 @@
 <li class="toctree-l1"><a class="reference internal" href="Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="animation.animate_any.html">animation.animate_any</a></li>
+<li class="toctree-l1"><a class="reference internal" href="animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="forces.utils_forces.html">forces.utils_forces</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Welcome to Your Project’s documentation!</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Welcome to the Walking Neural Project !</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Activity_Detector.html">Neuroscience.structures.Activity_Detector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Controller.html">Neuroscience.structures.Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.lie_down_procedure.html">unitree_legged_sdk.example_py.Bezier.lie_down_procedure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Excitatory_Neuron.html">Neuroscience.structures.Excitatory_Neuron</a></li>
+<li class="toctree-l2"><a class="reference internal" href="animation.animate_any.html">animation.animate_any</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.forward_neuron.html">unitree_legged_sdk.example_py.Bezier.forward_neuron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Frequency_Detector_new.html">Neuroscience.structures.Frequency_Detector_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
@@ -95,8 +123,6 @@
 <li class="toctree-l2"><a class="reference internal" href="utils.html">utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Frequency_Detector.html">Neuroscience.structures.Frequency_Detector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Gate_NAND.html">Neuroscience.structures.Gate_NAND</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.foot_trajectory.html">unitree_legged_sdk.example_py.Bezier.foot_trajectory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Counter_3_bits.html">Neuroscience.structures.Counter_3_bits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="forces.utils_forces.html">forces.utils_forces</a></li>
@@ -108,8 +134,6 @@
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Counter_4_bits.html">Neuroscience.structures.Counter_4_bits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Flip_FLop_T.html">Neuroscience.structures.Flip_FLop_T</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Abstract_Neuron.html">Neuroscience.structures.Abstract_Neuron</a></li>
 </ul>
 </li>
@@ -124,11 +148,6 @@
 <li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.main_loop_v2.html">unitree_legged_sdk.example_py.Bezier.main_loop_v2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.plot_neurons.html">unitree_legged_sdk.example_py.Bezier.plot_neurons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">utils</a></li>
 </ul>
 
@@ -136,7 +155,7 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-  <li><a href="index.html">Welcome to Your Project’s documentation!</a><ul>
+  <li><a href="index.html">Welcome to the Walking Neural Project !</a><ul>
       <li>Previous: <a href="unitree_legged_sdk.example_py.Bezier.plot_neurons.html" title="previous chapter">unitree_legged_sdk.example_py.Bezier.plot_neurons</a></li>
       <li>Next: <a href="utils.html" title="next chapter">utils</a></li>
   </ul></li>

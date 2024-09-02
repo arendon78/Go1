@@ -1,16 +1,17 @@
-Welcome to Your Project's documentation!
+Welcome to the Walking Neural Project !
 =========================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
 
+   animation.display_neural_network_2
    Neuroscience.structures.Activity_Detector
    Neuroscience.structures.Tunable_Oscillator
-   unitree_legged_sdk.example_py.old_examples.example_velocity
    unitree_legged_sdk.example_py.Bezier.computation_neuron
    Neuroscience.structures.Controller
    unitree_legged_sdk.example_py.Bezier.lie_down_procedure
    Neuroscience.structures.Excitatory_Neuron
+   animation.animate_any
    unitree_legged_sdk.example_py.Bezier.forward_neuron
    Neuroscience.structures.Frequency_Detector_new
    unitree_legged_sdk.example_py.Bezier.stand_up_procedure
@@ -21,8 +22,6 @@ Welcome to Your Project's documentation!
    utils
    Neuroscience.structures.Frequency_Detector
    Neuroscience.structures.Gate_NAND
-   unitree_legged_sdk.example_py.old_examples.example_walk
-   unitree_legged_sdk.example_py.old_examples.example_position
    unitree_legged_sdk.example_py.Bezier.foot_trajectory
    Neuroscience.structures.Counter_3_bits
    forces.utils_forces
@@ -34,6 +33,4 @@ Welcome to Your Project's documentation!
    Neuroscience.structures.Counter_4_bits
    Neuroscience.structures.Inhibitory_Neuron
    Neuroscience.structures.Flip_FLop_T
-   unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete
-   unitree_legged_sdk.example_py.old_examples.example_torque
    Neuroscience.structures.Abstract_Neuron

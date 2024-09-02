@@ -37,7 +37,44 @@
 <span class="n">STAND_UP_TIME</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="n">INIT_TIME</span> <span class="o">=</span> <span class="mi">10</span>
 
-<div class="viewcode-block" id="stand_up_procedure"><a class="viewcode-back" href="../../../../source/unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html#unitree_legged_sdk.example_py.Bezier.stand_up_procedure.stand_up_procedure">[docs]</a><span class="k">def</span> <span class="nf">stand_up_procedure</span><span class="p">(</span><span class="n">motiontime</span><span class="p">,</span><span class="n">qInit</span><span class="p">,</span><span class="n">state</span><span class="p">,</span><span class="n">qDes</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">stand_up_1</span><span class="p">,</span><span class="n">rate_count</span><span class="p">,</span><span class="n">Kp</span><span class="p">,</span><span class="n">Kd</span><span class="p">)</span> <span class="p">:</span> 
+<div class="viewcode-block" id="stand_up_procedure"><a class="viewcode-back" href="../../../../source/unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html#unitree_legged_sdk.example_py.Bezier.stand_up_procedure.stand_up_procedure">[docs]</a><span class="k">def</span> <span class="nf">stand_up_procedure</span><span class="p">(</span><span class="n">motiontime</span><span class="p">,</span><span class="n">qInit</span><span class="p">,</span><span class="n">state</span><span class="p">,</span><span class="n">qDes</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">stand_up_1</span><span class="p">,</span><span class="n">rate_count</span><span class="p">,</span><span class="n">Kp</span><span class="p">,</span><span class="n">Kd</span><span class="p">)</span> <span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handles the procedure for the robot to stand up, interpolating joint angles from initial to desired positions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    motiontime : int</span>
+<span class="sd">        The current time step in the motion sequence.</span>
+<span class="sd">    </span>
+<span class="sd">    qInit : dict</span>
+<span class="sd">        A dictionary containing the initial joint angles for each part (limb).</span>
+<span class="sd">    </span>
+<span class="sd">    state : object</span>
+<span class="sd">        The current state of the robot, including motor states.</span>
+<span class="sd">    </span>
+<span class="sd">    qDes : dict</span>
+<span class="sd">        A dictionary containing the desired joint angles for each part.</span>
+<span class="sd">    </span>
+<span class="sd">    d : dict</span>
+<span class="sd">        A dictionary mapping joint names to their corresponding indices in the robot&#39;s state data.</span>
+<span class="sd">    </span>
+<span class="sd">    stand_up_1 : dict</span>
+<span class="sd">        A dictionary containing the target joint angles for each part when the robot is fully standing.</span>
+<span class="sd">    </span>
+<span class="sd">    rate_count : int</span>
+<span class="sd">        A counter used to calculate the interpolation rate.</span>
+<span class="sd">    </span>
+<span class="sd">    Kp : list</span>
+<span class="sd">        Proportional gain values for the robot&#39;s joint controllers.</span>
+<span class="sd">    </span>
+<span class="sd">    Kd : list</span>
+<span class="sd">        Derivative gain values for the robot&#39;s joint controllers.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        Updated values of motiontime, qInit, state, qDes, d, stand_up_1, rate_count, Kp, and Kd.</span>
+<span class="sd">    &quot;&quot;&quot;</span> 
     <span class="k">if</span><span class="p">(</span> <span class="n">motiontime</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">):</span>
 
         <span class="k">if</span><span class="p">(</span> <span class="n">motiontime</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">motiontime</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">):</span>
@@ -52,7 +89,8 @@
             <span class="n">rate_count</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">rate</span> <span class="o">=</span> <span class="n">rate_count</span><span class="o">/</span><span class="p">(</span><span class="n">STAND_UP_TIME</span><span class="o">//</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">100</span><span class="p">)</span>                     <span class="c1"># needs count to 500</span>
             <span class="n">Kp</span> <span class="o">=</span> <span class="p">[</span><span class="mi">75</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">75</span><span class="p">]</span>
-            <span class="n">Kd</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+            <span class="n">Kd</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+            <span class="c1"># Kd = [5, 5, 5]</span>
             
             <span class="k">if</span> <span class="p">(</span><span class="n">motiontime</span> <span class="o">&lt;=</span><span class="p">(</span><span class="n">STAND_UP_TIME</span><span class="o">+</span><span class="n">INIT_TIME</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">):</span>
                 <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span> <span class="p">:</span> 
@@ -107,8 +145,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/animation.animate_any.html">animation.animate_any</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/forces.utils_forces.html">forces.utils_forces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/index.html">Welcome to Your Project’s documentation!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/index.html">Welcome to the Walking Neural Project !</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html">unitree_legged_sdk.example_py.Bezier.Foot_Sensor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>
@@ -120,11 +160,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.main_loop_v2.html">unitree_legged_sdk.example_py.Bezier.main_loop_v2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.plot_neurons.html">unitree_legged_sdk.example_py.Bezier.plot_neurons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/utils.html">utils</a></li>
 </ul>
 

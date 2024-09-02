@@ -38,6 +38,29 @@ import robot_interface as sdk
 
 
 def main_loop_v2(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up_1,stand_up_2,stand_up_3):
+    """
+    The main control loop for managing the robot's movement, including standing up, walking, and lying down.
+
+    Parameters
+    ----------
+    trajectories : dict
+        A dictionary containing the movement trajectories for each limb (FR, FL, RR, RL).
+    
+    trajectory : list
+        A list of control points used to generate the foot trajectory.
+    
+    TOTAL_OFFSET : int
+        The total offset applied to the trajectories for phase-shifting limb movements.
+    
+    neurons_coords : dict
+        Precomputed neuron coordinates used to simulate the robot's movement.
+    
+    parts : list of str
+        A list of parts (limbs) being controlled, including 'FR' (Front Right), 'FL' (Front Left), 'RR' (Rear Right), and 'RL' (Rear Left).
+    
+    stand_up_1, stand_up_2, stand_up_3 : dict
+        Dictionaries containing the joint angle trajectories for the robot's standing up procedure.
+    """
 
     json_path = './data/forces_copy.json'# mock data
     with open(json_path, 'r') as json_file:# mock data

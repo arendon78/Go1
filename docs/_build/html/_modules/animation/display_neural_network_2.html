@@ -1,0 +1,670 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>animation.display_neural_network_2 &#8212; src  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for animation.display_neural_network_2</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">manim</span> <span class="k">as</span> <span class="nn">m</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span> 
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">import</span> <span class="nn">json</span> 
+
+<span class="n">project_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;../&#39;</span><span class="p">))</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">project_root</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">Neuroscience.structures.Abstract_Neuron</span> <span class="kn">import</span> <span class="n">Abstract_Neuron</span>
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<span class="n">ACT_POT</span> <span class="o">=</span> <span class="n">Abstract_Neuron</span><span class="o">.</span><span class="n">Act_Pot_volt</span>
+
+<span class="c1"># Path to the JSON file</span>
+<span class="n">file_path</span> <span class="o">=</span> <span class="s1">&#39;/unitree_legged_sdk/example_py/Bezier/data/neuron_activity.json&#39;</span>
+
+
+<span class="n">file_abs_path</span> <span class="o">=</span> <span class="n">project_root</span> <span class="o">+</span> <span class="n">file_path</span>
+
+<span class="c1"># Open and load JSON file</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_abs_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="n">data_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+<span class="c1"># import successful</span>
+<span class="c1"># print(data_json)</span>
+
+<span class="c1">#reconstruct the network using the json structure </span>
+<span class="n">adjacency_matrices</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;FR&#39;</span><span class="p">,</span><span class="s1">&#39;FL&#39;</span><span class="p">,</span><span class="s1">&#39;RR&#39;</span><span class="p">,</span><span class="s1">&#39;RL&#39;</span><span class="p">]</span>
+<span class="c1"># print(data_json[&#39;FR&#39;][&#39;0&#39;][0])</span>
+
+<span class="c1"># for part in parts : </span>
+<span class="c1">#     for n in [0,1,2]:</span>
+<div class="viewcode-block" id="directed_to_undirected"><a class="viewcode-back" href="../../source/animation.display_neural_network_2.html#animation.display_neural_network_2.directed_to_undirected">[docs]</a><span class="k">def</span> <span class="nf">directed_to_undirected</span><span class="p">(</span><span class="n">adj_matrix</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a directed adjacency matrix to an undirected one.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adj_matrix : list of list of int</span>
+<span class="sd">        The directed adjacency matrix.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    undirected_matrix : np.ndarray</span>
+<span class="sd">        The undirected adjacency matrix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Convert the input to a numpy array for easier manipulation</span>
+    <span class="n">adj_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">adj_matrix</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">adj_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="c1"># Initialize the undirected adjacency matrix</span>
+    <span class="n">undirected_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">adj_matrix</span><span class="p">)</span>
+    
+    <span class="c1"># Iterate over the upper triangle of the matrix</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+            <span class="c1"># Apply OR operation between corresponding elements</span>
+            <span class="c1"># in the upper and lower triangles</span>
+            <span class="n">undirected_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">adj_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">|</span> <span class="n">adj_matrix</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+            <span class="n">undirected_matrix</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">undirected_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+    
+    <span class="c1"># Include the diagonal elements from the original matrix</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">undirected_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">adj_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">undirected_matrix</span></div>
+
+<div class="viewcode-block" id="pretty_print"><a class="viewcode-back" href="../../source/animation.display_neural_network_2.html#animation.display_neural_network_2.pretty_print">[docs]</a><span class="k">def</span> <span class="nf">pretty_print</span><span class="p">(</span><span class="n">matrix</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Displays the adjacency matrix using Seaborn&#39;s heatmap.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    matrix : list of list of int</span>
+<span class="sd">        The adjacency matrix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Adjacency Matrix&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Vertex&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Vertex&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="draw_graph"><a class="viewcode-back" href="../../source/animation.display_neural_network_2.html#animation.display_neural_network_2.draw_graph">[docs]</a><span class="k">def</span> <span class="nf">draw_graph</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Directed Graph&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Draws a directed graph using NetworkX.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    matrix : list of list of int</span>
+<span class="sd">        The adjacency matrix representing the graph.</span>
+<span class="sd">    name : str, optional</span>
+<span class="sd">        The title of the graph. Default is &quot;Directed Graph&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+    <span class="c1"># Add nodes</span>
+    <span class="n">num_vertices</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_vertices</span><span class="p">))</span>
+    <span class="c1"># Add edges</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_vertices</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_vertices</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>  <span class="c1"># positions for all nodes</span>
+    <span class="c1"># Draw the nodes and edges</span>
+    <span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">700</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;skyblue&#39;</span><span class="p">,</span> <span class="n">arrows</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Neuron"><a class="viewcode-back" href="../../source/animation.display_neural_network_2.html#animation.display_neural_network_2.Neuron">[docs]</a><span class="k">class</span> <span class="nc">Neuron</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">VMobject</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to represent a single neuron in the neural network visualization.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    radius : float</span>
+<span class="sd">        The radius of the neuron&#39;s visual representation.</span>
+<span class="sd">    color : m.Color</span>
+<span class="sd">        The color of the neuron.</span>
+<span class="sd">    original_color : m.Color</span>
+<span class="sd">        The original color of the neuron.</span>
+<span class="sd">    original_radius : float</span>
+<span class="sd">        The original radius of the neuron.</span>
+<span class="sd">    circle : m.Circle</span>
+<span class="sd">        The visual representation of the neuron.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">m</span><span class="o">.</span><span class="n">BLUE</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">color</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">original_color</span> <span class="o">=</span> <span class="n">color</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">original_radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">circle</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">,</span> <span class="n">fill_opacity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">circle</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="Neuron.activate"><a class="viewcode-back" href="../../source/animation.display_neural_network_2.html#animation.display_neural_network_2.Neuron.activate">[docs]</a>    <span class="k">def</span> <span class="nf">activate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">circle</span><span class="o">.</span><span class="n">set_fill</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">YELLOW</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="Neuron.deactivate"><a class="viewcode-back" href="../../source/animation.display_neural_network_2.html#animation.display_neural_network_2.Neuron.deactivate">[docs]</a>    <span class="k">def</span> <span class="nf">deactivate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">circle</span><span class="o">.</span><span class="n">set_fill</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="NeuralNetwork"><a class="viewcode-back" href="../../source/animation.display_neural_network_2.html#animation.display_neural_network_2.NeuralNetwork">[docs]</a><span class="k">class</span> <span class="nc">NeuralNetwork</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">Scene</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to visualize a neural network using Manim.</span>
+
+<span class="sd">    This class constructs a visual representation of a neural network based on</span>
+<span class="sd">    the data provided in the JSON file. It handles the placement of neurons,</span>
+<span class="sd">    the drawing of connections, and the animation of neuron activations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="NeuralNetwork.construct"><a class="viewcode-back" href="../../source/animation.display_neural_network_2.html#animation.display_neural_network_2.NeuralNetwork.construct">[docs]</a>    <span class="k">def</span> <span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructs the neural network visualization, applies forces to neurons,</span>
+<span class="sd">        and animates their activations.</span>
+<span class="sd">        &quot;&quot;&quot;</span> 
+        <span class="n">neurons</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">n_neurons_per_pack</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="mi">4</span><span class="o">*</span><span class="mi">3</span> <span class="c1">#3 articulations each with 4 tunable oscillators each containing 4 neurons</span>
+        <span class="n">packs</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="mf">0.7</span>
+        <span class="n">pack_centers</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;FR&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>  
+            <span class="s1">&#39;FL&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>   
+            <span class="s1">&#39;RR&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> 
+            <span class="s1">&#39;RL&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>  
+        <span class="p">}</span>
+
+        <span class="c1"># Create neurons in packs and store them by pack</span>
+        <span class="n">neurons_by_pack</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span> <span class="p">:</span> 
+            <span class="n">center</span> <span class="o">=</span> <span class="n">pack_centers</span><span class="p">[</span><span class="n">part</span><span class="p">]</span>
+            <span class="n">pack_neurons</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">previous_offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+                    <span class="mi">0</span><span class="p">,</span>
+                    <span class="mi">0</span><span class="p">,</span>
+                    <span class="mi">0</span>
+                <span class="p">])</span>
+            <span class="n">n_neurons_per_pack</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">data_json</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="n">n</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span><span class="s1">&#39;1&#39;</span><span class="p">,</span><span class="s1">&#39;2&#39;</span><span class="p">]])</span>
+            <span class="n">adjacency_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_neurons_per_pack</span><span class="p">,</span> <span class="n">n_neurons_per_pack</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_neurons_per_pack</span><span class="p">):</span>
+                <span class="n">pre_off_x</span> <span class="o">=</span> <span class="n">previous_offset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">pre_off_y</span> <span class="o">=</span> <span class="n">previous_offset</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="c1"># neurons are created inside the circle close to one another in a random way</span>
+                <span class="n">offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+                    <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="o">-</span><span class="n">pre_off_x</span> <span class="o">-</span> <span class="mf">0.1</span><span class="p">,</span><span class="o">-</span><span class="n">radius</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">pre_off_x</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">,</span><span class="n">radius</span><span class="p">)),</span>
+                    <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="o">-</span><span class="n">pre_off_y</span> <span class="o">-</span> <span class="mf">0.1</span><span class="p">,</span><span class="o">-</span><span class="n">radius</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">pre_off_y</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">,</span><span class="n">radius</span><span class="p">)),</span>
+                    <span class="mi">0</span>
+                <span class="p">])</span>
+                <span class="c1"># neuron color</span>
+                <span class="c1">#access to the list of neuron types stored in the json</span>
+                <span class="k">if</span> <span class="n">data_json</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">//</span><span class="mi">16</span><span class="p">)][</span><span class="mi">2</span><span class="p">][</span><span class="n">i</span><span class="o">%</span><span class="mi">16</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span> 
+                    <span class="n">current_color</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">RED</span>
+                <span class="k">else</span> <span class="p">:</span> 
+                    <span class="n">current_color</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">BLUE</span>
+
+
+                <span class="c1">#adds neuron to the scene</span>
+                <span class="n">neuron</span> <span class="o">=</span> <span class="n">Neuron</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="n">current_color</span><span class="p">)</span>
+                <span class="n">neuron</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">center</span> <span class="o">+</span> <span class="n">offset</span><span class="p">)</span>
+                <span class="n">previous_offset</span> <span class="o">=</span> <span class="n">offset</span>
+                <span class="n">pack_neurons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neuron</span><span class="p">)</span>
+                <span class="n">neurons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neuron</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">neuron</span><span class="p">)</span>
+            
+            <span class="c1"># Create adjacency matrix for current pack</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span><span class="s1">&#39;1&#39;</span><span class="p">,</span><span class="s1">&#39;2&#39;</span><span class="p">]:</span>
+                <span class="n">current_matrix</span> <span class="o">=</span> <span class="n">data_json</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="n">n</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">current_np_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">current_matrix</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">current_matrix</span><span class="p">)):</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">current_matrix</span><span class="p">)):</span>
+                        <span class="n">index</span> <span class="o">=</span> <span class="n">current_np_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">index</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> 
+                            <span class="n">adjacency_matrix</span><span class="p">[</span> <span class="nb">len</span><span class="p">(</span><span class="n">current_matrix</span><span class="p">)</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">current_matrix</span><span class="p">)</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">index</span>
+            
+            <span class="n">neurons_by_pack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pack_neurons</span><span class="p">)</span>
+            <span class="n">adjacency_matrices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">adjacency_matrix</span><span class="p">)</span>
+        
+        <span class="c1"># Function to apply repulsion and spring forces within each pack</span>
+        <span class="k">def</span> <span class="nf">apply_forces</span><span class="p">(</span><span class="n">neurons_pack</span><span class="p">,</span> <span class="n">adjacency_matrix</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Applies repulsion and spring forces within each pack of neurons.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            neurons_pack : list of Neuron</span>
+<span class="sd">                The list of neurons in the pack.</span>
+<span class="sd">            adjacency_matrix : np.ndarray</span>
+<span class="sd">                The adjacency matrix representing connections between neurons.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">undirected_matrix</span> <span class="o">=</span> <span class="n">directed_to_undirected</span><span class="p">(</span><span class="n">adjacency_matrix</span><span class="p">)</span>
+            <span class="n">spring_constant</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">rest_length</span> <span class="o">=</span> <span class="mf">0.2</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>  <span class="c1"># Number of iterations</span>
+                <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">neuron</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">neurons_pack</span><span class="p">):</span>
+                    <span class="n">force</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+                    
+                    <span class="c1"># Repulsion force (Coulomb&#39;s Law)</span>
+                    <span class="k">for</span> <span class="n">other_idx</span><span class="p">,</span> <span class="n">other</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">neurons_pack</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">neuron</span> <span class="o">!=</span> <span class="n">other</span><span class="p">:</span>
+                            <span class="n">diff</span> <span class="o">=</span> <span class="n">neuron</span><span class="o">.</span><span class="n">get_center</span><span class="p">()</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">get_center</span><span class="p">()</span>
+                            <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">:</span>
+                                <span class="n">distance</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># Avoid division by zero</span>
+                            <span class="n">force</span> <span class="o">+=</span> <span class="mf">2.5</span><span class="o">*</span><span class="n">diff</span> <span class="o">/</span> <span class="p">(</span><span class="n">distance</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+                    <span class="c1"># Spring force (Hooke&#39;s Law)</span>
+                    
+                    <span class="k">for</span> <span class="n">other_idx</span><span class="p">,</span> <span class="n">connected</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">undirected_matrix</span><span class="p">[</span><span class="n">idx</span><span class="p">]):</span>
+                        <span class="k">if</span> <span class="n">connected</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="n">other</span> <span class="o">=</span> <span class="n">neurons_pack</span><span class="p">[</span><span class="n">other_idx</span><span class="p">]</span>
+                            <span class="n">diff</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">get_center</span><span class="p">()</span> <span class="o">-</span> <span class="n">neuron</span><span class="o">.</span><span class="n">get_center</span><span class="p">()</span>
+                            <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span>
+                            <span class="n">displacement</span> <span class="o">=</span> <span class="n">distance</span> <span class="o">-</span> <span class="n">rest_length</span>
+                            <span class="n">spring_force</span> <span class="o">=</span> <span class="n">spring_constant</span> <span class="o">*</span> <span class="n">displacement</span>
+                            <span class="n">force</span> <span class="o">+=</span> <span class="p">(</span><span class="n">diff</span> <span class="o">/</span> <span class="n">distance</span><span class="p">)</span> <span class="o">*</span> <span class="n">spring_force</span>  <span class="c1"># Normalize and apply spring force</span>
+
+                    <span class="c1"># Update position based on the net force</span>
+                    <span class="n">new_position</span> <span class="o">=</span> <span class="n">neuron</span><span class="o">.</span><span class="n">get_center</span><span class="p">()</span> <span class="o">+</span> <span class="n">force</span> <span class="o">*</span> <span class="mf">0.1</span>  <span class="c1"># Adjust the 0.01 factor for step size</span>
+                    <span class="n">neuron</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">new_position</span><span class="p">)</span>
+                
+                <span class="c1"># logging statement for each iteration</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Forces applied within pack </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Function to avoid overlap by nudging neurons slightly apart</span>
+        <span class="k">def</span> <span class="nf">avoid_overlap</span><span class="p">(</span><span class="n">neurons_pack</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Avoids overlap by nudging neurons slightly apart.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            neurons_pack : list of Neuron</span>
+<span class="sd">                The list of neurons in the pack.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>  <span class="c1"># Number of iterations for overlap avoidance</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">neurons_pack</span><span class="p">)):</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">neurons_pack</span><span class="p">)):</span>
+                        <span class="n">neuron_a</span> <span class="o">=</span> <span class="n">neurons_pack</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                        <span class="n">neuron_b</span> <span class="o">=</span> <span class="n">neurons_pack</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                        <span class="n">diff</span> <span class="o">=</span> <span class="n">neuron_a</span><span class="o">.</span><span class="n">get_center</span><span class="p">()</span> <span class="o">-</span> <span class="n">neuron_b</span><span class="o">.</span><span class="n">get_center</span><span class="p">()</span>
+                        <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span>
+                        <span class="n">min_distance</span> <span class="o">=</span> <span class="mf">0.2</span>  <span class="c1"># Minimum acceptable distance between neurons</span>
+                        <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;</span> <span class="n">min_distance</span><span class="p">:</span>
+                            <span class="c1"># Move neurons apart slightly</span>
+                            <span class="n">correction</span> <span class="o">=</span> <span class="p">(</span><span class="n">diff</span> <span class="o">/</span> <span class="n">distance</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">min_distance</span> <span class="o">-</span> <span class="n">distance</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+                            <span class="n">neuron_a</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">neuron_a</span><span class="o">.</span><span class="n">get_center</span><span class="p">()</span> <span class="o">+</span> <span class="n">correction</span><span class="p">)</span>
+                            <span class="n">neuron_b</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">neuron_b</span><span class="o">.</span><span class="n">get_center</span><span class="p">()</span> <span class="o">-</span> <span class="n">correction</span><span class="p">)</span>
+
+        <span class="c1"># Function to apply centripetal force towards pack center</span>
+        <span class="k">def</span> <span class="nf">apply_centripetal_force</span><span class="p">(</span><span class="n">neurons_pack</span><span class="p">,</span> <span class="n">center</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Applies centripetal force towards the pack center.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            neurons_pack : list of Neuron</span>
+<span class="sd">                The list of neurons in the pack.</span>
+<span class="sd">            center : np.ndarray</span>
+<span class="sd">                The center towards which the centripetal force is applied.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">150</span><span class="p">):</span>  <span class="c1"># Number of iterations for centripetal force</span>
+                <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">neuron</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">neurons_pack</span><span class="p">):</span>
+                    <span class="n">force</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+                    <span class="c1"># Centripetal force towards pack center</span>
+                    <span class="n">center_diff</span> <span class="o">=</span> <span class="n">center</span> <span class="o">-</span> <span class="n">neuron</span><span class="o">.</span><span class="n">get_center</span><span class="p">()</span>
+                    <span class="n">force</span> <span class="o">+=</span> <span class="n">center_diff</span> <span class="o">*</span> <span class="mf">1.9</span>      <span class="c1"># Adjust the 2 factor for centripetal strength</span>
+                    
+                    <span class="c1"># Update position based on the net force</span>
+                    <span class="n">new_position</span> <span class="o">=</span> <span class="n">neuron</span><span class="o">.</span><span class="n">get_center</span><span class="p">()</span> <span class="o">+</span> <span class="n">force</span> <span class="o">*</span> <span class="mf">0.01</span>  <span class="c1"># Adjust the 0.01 factor for step size</span>
+                    <span class="n">neuron</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">new_position</span><span class="p">)</span>
+                
+                <span class="c1"># logging statement for each iteration</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Centripetal force applied to pack centered at </span><span class="si">{</span><span class="n">center</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Apply repulsion and spring forces for each pack</span>
+        <span class="k">for</span> <span class="n">pack_neurons</span><span class="p">,</span> <span class="n">adjacency_matrix</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">neurons_by_pack</span><span class="p">,</span> <span class="n">adjacency_matrices</span><span class="p">):</span>
+            <span class="n">apply_forces</span><span class="p">(</span><span class="n">pack_neurons</span><span class="p">,</span> <span class="n">adjacency_matrix</span><span class="p">)</span>
+<span class="c1"># </span>
+        <span class="c1"># Apply overlap avoidance for each pack</span>
+        <span class="k">for</span> <span class="n">pack_neurons</span> <span class="ow">in</span> <span class="n">neurons_by_pack</span><span class="p">:</span>
+            <span class="n">avoid_overlap</span><span class="p">(</span><span class="n">pack_neurons</span><span class="p">)</span>
+<span class="c1"># </span>
+        <span class="c1"># Apply centripetal forces for each pack</span>
+        <span class="k">for</span> <span class="n">pack_neurons</span><span class="p">,</span> <span class="n">center</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">neurons_by_pack</span><span class="p">,</span> <span class="p">[</span><span class="n">pack_centers</span><span class="p">[</span><span class="n">part</span><span class="p">]</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">]):</span>
+            <span class="n">apply_centripetal_force</span><span class="p">(</span><span class="n">pack_neurons</span><span class="p">,</span> <span class="n">center</span><span class="p">)</span>
+
+        <span class="c1"># Plot the edges based on the adjacency matrices</span>
+        <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">pack_neurons</span><span class="p">,</span> <span class="n">adjacency_matrix</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">neurons_by_pack</span><span class="p">,</span> <span class="n">adjacency_matrices</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_neurons_per_pack</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_neurons_per_pack</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">adjacency_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">edge</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">Line</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">pack_neurons</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_center</span><span class="p">(),</span> <span class="n">end</span><span class="o">=</span><span class="n">pack_neurons</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">get_center</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="n">m</span><span class="o">.</span><span class="n">WHITE</span><span class="p">,</span> <span class="n">stroke_width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+                        <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">FadeIn</span><span class="p">(</span><span class="n">neuron</span><span class="p">)</span> <span class="k">for</span> <span class="n">neuron</span> <span class="ow">in</span> <span class="n">neurons</span><span class="p">],</span> <span class="o">*</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Function to calculate mean distances between neurons</span>
+        <span class="k">def</span> <span class="nf">calculate_mean_distances</span><span class="p">(</span><span class="n">neurons_by_pack</span><span class="p">,</span> <span class="n">adjacency_matrices</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Calculates mean distances between connected and unconnected neurons.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            neurons_by_pack : list of Neuron</span>
+<span class="sd">                The list of neurons in the pack.</span>
+<span class="sd">            adjacency_matrices : list of np.ndarray</span>
+<span class="sd">                The list of adjacency matrices for each pack.</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            mean_connected : float</span>
+<span class="sd">                The mean distance between connected neurons.</span>
+<span class="sd">            mean_unconnected : float</span>
+<span class="sd">                The mean distance between unconnected neurons.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">connected_distances</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">unconnected_distances</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">pack_neurons</span><span class="p">,</span> <span class="n">adjacency_matrix</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">neurons_by_pack</span><span class="p">,</span> <span class="n">adjacency_matrices</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_neurons_per_pack</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_neurons_per_pack</span><span class="p">):</span>
+                        <span class="n">pos_i</span> <span class="o">=</span> <span class="n">pack_neurons</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_center</span><span class="p">()</span>
+                        <span class="n">pos_j</span> <span class="o">=</span> <span class="n">pack_neurons</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">get_center</span><span class="p">()</span>
+                        <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">pos_i</span> <span class="o">-</span> <span class="n">pos_j</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">adjacency_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="n">connected_distances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">unconnected_distances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span>
+
+            <span class="n">mean_connected</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">connected_distances</span><span class="p">)</span> <span class="k">if</span> <span class="n">connected_distances</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="n">mean_unconnected</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">unconnected_distances</span><span class="p">)</span> <span class="k">if</span> <span class="n">unconnected_distances</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="n">mean_connected</span><span class="p">,</span> <span class="n">mean_unconnected</span>
+
+        <span class="c1"># Calculate and print mean distances</span>
+        <span class="n">mean_connected</span><span class="p">,</span> <span class="n">mean_unconnected</span> <span class="o">=</span> <span class="n">calculate_mean_distances</span><span class="p">(</span><span class="n">neurons_by_pack</span><span class="p">,</span> <span class="n">adjacency_matrices</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean distance between connected neurons: </span><span class="si">{</span><span class="n">mean_connected</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean distance between unconnected neurons: </span><span class="si">{</span><span class="n">mean_unconnected</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+        
+        <span class="k">def</span> <span class="nf">map_data_to_neuron</span><span class="p">(</span><span class="n">part</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">k</span><span class="p">,</span> <span class="n">neurons_by_pack</span><span class="p">)</span> <span class="p">:</span> 
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Maps data to the corresponding neuron in the visualization.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            part : str</span>
+<span class="sd">                The part of the system (&#39;FR&#39;, &#39;FL&#39;, etc.).</span>
+<span class="sd">            n : int</span>
+<span class="sd">                The index of the neuron group.</span>
+<span class="sd">            k : int</span>
+<span class="sd">                The index of the neuron within the group.</span>
+<span class="sd">            neurons_by_pack : list of Neuron</span>
+<span class="sd">                The list of neurons in the pack.</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            Neuron</span>
+<span class="sd">                The neuron object corresponding to the provided data.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1">#corresponds to activity of neuron data_json[part][n][1][k]</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">partt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parts</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">partt</span> <span class="o">==</span> <span class="n">part</span> <span class="p">:</span>
+                    <span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="k">if</span> <span class="n">index</span> <span class="o">==-</span><span class="mi">1</span> <span class="p">:</span> 
+                <span class="k">return</span> <span class="s2">&quot;wrong part passed as argument&quot;</span>
+
+            <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="c1"># print(index,16*n + k)</span>
+            <span class="k">return</span> <span class="n">neurons_by_pack</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">16</span><span class="o">*</span><span class="n">n</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span>
+        
+        <span class="k">def</span> <span class="nf">map_neuron_to_data</span><span class="p">(</span><span class="n">part_index</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span> 
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Maps a neuron in the visualization to its data.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            part_index : int</span>
+<span class="sd">                The index of the part in the parts list.</span>
+<span class="sd">            i : int</span>
+<span class="sd">                The index of the neuron.</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            tuple</span>
+<span class="sd">                A tuple containing the part, neuron group index, neuron index, and the corresponding data.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1">#corresponds to neuron neurons_by_pack[part_index][i]</span>
+            <span class="n">part</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="n">part_index</span><span class="p">]</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">i</span><span class="o">//</span><span class="mi">16</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">i</span><span class="o">%</span><span class="mi">16</span>
+    
+            <span class="c1">#returns the activity of such neuron</span>
+            <span class="k">return</span> <span class="n">part</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">data_json</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="n">n</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">k</span><span class="p">]</span>
+
+
+        <span class="k">def</span> <span class="nf">activation</span><span class="p">(</span><span class="n">time_neuron_to_fire</span><span class="p">,</span> <span class="n">neurons_by_pack</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Animates neuron activations over time.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            time_neuron_to_fire : list of list of list</span>
+<span class="sd">                A time-indexed structure containing neurons that fire at each step.</span>
+<span class="sd">            neurons_by_pack : list of Neuron</span>
+<span class="sd">                The list of neurons in the pack.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">active_color</span> <span class="o">=</span> <span class="s2">&quot;yellow&quot;</span>  <span class="c1"># Choose a distinct color</span>
+            <span class="n">active_scale_factor</span> <span class="o">=</span> <span class="mf">1.5</span>  <span class="c1"># Scale factor for active neurons</span>
+
+            <span class="n">active_color</span>
+            <span class="n">l</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_neuron_to_fire</span><span class="p">)</span>
+            
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">i</span><span class="o">/</span><span class="n">l</span> <span class="o">*</span><span class="mi">100</span> <span class="ow">in</span> <span class="p">[</span><span class="n">i</span> <span class="o">*</span><span class="mi">10</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;loading... &quot;</span><span class="p">,</span> <span class="n">i</span><span class="o">/</span><span class="n">l</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span><span class="s2">&quot; % </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_neuron_to_fire</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span> 
+                    <span class="kc">None</span>
+                <span class="k">else</span> <span class="p">:</span> 
+                    
+                    <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">time_neuron_to_fire</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                        <span class="n">part</span> <span class="o">=</span> <span class="n">el</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">n</span> <span class="o">=</span> <span class="n">el</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">neuron_number</span> <span class="o">=</span> <span class="n">el</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+                        <span class="c1"># Map the neuron number to the neuron object</span>
+                        <span class="n">n_to_activate</span> <span class="o">=</span> <span class="n">map_data_to_neuron</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">neuron_number</span><span class="p">,</span> <span class="n">neurons_by_pack</span><span class="p">)</span>
+                        <span class="n">new_radius</span> <span class="o">=</span> <span class="n">n_to_activate</span><span class="o">.</span><span class="n">original_radius</span> <span class="o">*</span> <span class="n">active_scale_factor</span>
+
+                        <span class="n">n_to_activate</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">new_radius</span>
+                        <span class="n">n_to_activate</span><span class="o">.</span><span class="n">circle</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span> <span class="n">new_radius</span>
+                        <span class="n">n_to_activate</span><span class="o">.</span><span class="n">circle</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span> <span class="n">new_radius</span>
+                        <span class="n">n_to_activate</span><span class="o">.</span><span class="n">circle</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="n">active_color</span><span class="p">)</span>
+
+                    <span class="c1">#generates the animation</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.017</span><span class="p">)</span><span class="c1"># for 60fps 1 frame is 0,016666667s</span>
+                    <span class="c1">#self.wait(0,07)# for 15fps ( lower quality ) frame is 0,066666667</span>
+
+                    <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">time_neuron_to_fire</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">:</span> 
+
+                        <span class="n">part</span> <span class="o">=</span> <span class="n">el</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">n</span> <span class="o">=</span> <span class="n">el</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">neuron_number</span> <span class="o">=</span> <span class="n">el</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+                        <span class="c1"># Map the neuron number to the neuron object</span>
+                        <span class="n">n_to_activate</span> <span class="o">=</span> <span class="n">map_data_to_neuron</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">neuron_number</span><span class="p">,</span> <span class="n">neurons_by_pack</span><span class="p">)</span>
+                        <span class="n">new_radius</span> <span class="o">=</span> <span class="n">n_to_activate</span><span class="o">.</span><span class="n">original_radius</span> <span class="o">*</span> <span class="n">active_scale_factor</span>
+                        
+
+                        <span class="n">n_to_activate</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">n_to_activate</span><span class="o">.</span><span class="n">original_radius</span>
+                        <span class="n">n_to_activate</span><span class="o">.</span><span class="n">circle</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_to_activate</span><span class="o">.</span><span class="n">original_radius</span>
+                        <span class="n">n_to_activate</span><span class="o">.</span><span class="n">circle</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_to_activate</span><span class="o">.</span><span class="n">original_radius</span>
+                        <span class="n">n_to_activate</span><span class="o">.</span><span class="n">circle</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="n">n_to_activate</span><span class="o">.</span><span class="n">original_color</span><span class="p">)</span>
+
+
+        <span class="c1">#creation of a data structure where each index is on step of simulation, containing a list of the neurons which fired at this step.</span>
+        <span class="n">time_neuron_to_fire</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_json</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="n">n</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]))]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;len outside : &quot;</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">time_neuron_to_fire</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;len outside : other &quot;</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">time_neuron_to_fire</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span> <span class="p">:</span> 
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span><span class="s1">&#39;1&#39;</span><span class="p">,</span><span class="s1">&#39;2&#39;</span><span class="p">]:</span> 
+                <span class="k">for</span> <span class="n">neuron_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_json</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="n">n</span><span class="p">][</span><span class="mi">1</span><span class="p">])):</span>
+                    <span class="n">neuron_potiential_list</span> <span class="o">=</span> <span class="n">data_json</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="n">n</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">neuron_index</span><span class="p">]</span>
+                    <span class="n">l</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">neuron_potiential_list</span><span class="p">)</span>
+                    <span class="n">k</span><span class="o">=</span><span class="mi">0</span>
+                    <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">neuron_potiential_list</span><span class="p">:</span> 
+                        <span class="c1"># if k &gt; l//10: #only computes the beginning of the simulation</span>
+                        <span class="c1">#     break                      </span>
+                        <span class="k">if</span> <span class="n">ACT_POT</span> <span class="o">-</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.07</span><span class="p">:</span>
+                            <span class="c1"># we avoid to plot the oscillating part, just the output neuron</span>
+                            <span class="k">if</span> <span class="n">neuron_index</span> <span class="ow">in</span> <span class="p">[</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">4</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">i</span><span class="o">%</span><span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_json</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="n">n</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span><span class="o">//</span><span class="mi">2</span><span class="p">)]:</span><span class="c1"># selects [2,3,6,7,10,11,14,15] in [0,...,15]</span>
+                                <span class="n">time_neuron_to_fire</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">part</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">neuron_index</span><span class="p">])</span>
+                        <span class="n">k</span><span class="o">+=</span><span class="mi">1</span>
+
+
+
+        <span class="n">activation</span><span class="p">(</span> <span class="n">time_neuron_to_fire</span><span class="p">,</span> <span class="n">neurons_by_pack</span><span class="p">)</span>    </div></div>
+
+
+        
+
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">scene</span> <span class="o">=</span> <span class="n">NeuralNetwork</span><span class="p">()</span>
+    <span class="n">scene</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">src</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Abstract_Neuron.html">Neuroscience.structures.Abstract_Neuron</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Activity_Detector.html">Neuroscience.structures.Activity_Detector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Controller.html">Neuroscience.structures.Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Counter_1_bit.html">Neuroscience.structures.Counter_1_bit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Counter_2_bits.html">Neuroscience.structures.Counter_2_bits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Counter_3_bits.html">Neuroscience.structures.Counter_3_bits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Counter_4_bits.html">Neuroscience.structures.Counter_4_bits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Excitatory_Neuron.html">Neuroscience.structures.Excitatory_Neuron</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Flip_FLop_T.html">Neuroscience.structures.Flip_FLop_T</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Frequency_Detector.html">Neuroscience.structures.Frequency_Detector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Frequency_Detector_new.html">Neuroscience.structures.Frequency_Detector_new</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Gate_NAND.html">Neuroscience.structures.Gate_NAND</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/animation.animate_any.html">animation.animate_any</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/forces.utils_forces.html">forces.utils_forces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/index.html">Welcome to the Walking Neural Project !</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html">unitree_legged_sdk.example_py.Bezier.Foot_Sensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.Bezier.error_calculation.html">unitree_legged_sdk.example_py.Bezier.error_calculation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.Bezier.foot_trajectory.html">unitree_legged_sdk.example_py.Bezier.foot_trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.Bezier.forward_neuron.html">unitree_legged_sdk.example_py.Bezier.forward_neuron</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.Bezier.lie_down_procedure.html">unitree_legged_sdk.example_py.Bezier.lie_down_procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.Bezier.main_loop.html">unitree_legged_sdk.example_py.Bezier.main_loop</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.Bezier.main_loop_v2.html">unitree_legged_sdk.example_py.Bezier.main_loop_v2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.Bezier.plot_neurons.html">unitree_legged_sdk.example_py.Bezier.plot_neurons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/utils.html">utils</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Author.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

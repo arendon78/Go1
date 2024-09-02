@@ -3,12 +3,13 @@ import matplotlib.pyplot as plt
 import os 
 import sys
 
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../'))
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
 sys.path.append(project_root)
 
 
-from Neuroscience.structures.Tunable_Oscillator import Tunable_Oscillator
+# from Neuroscience.structures.Tunable_Oscillator import Tunable_Oscillator
 from Neuroscience.structures.Frequency_Detector import Frequency_Detector
+from Neuroscience.structures.Tunable_Oscillator import Tunable_Oscillator
 
 res = 0.1
 

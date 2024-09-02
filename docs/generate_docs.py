@@ -33,10 +33,10 @@ def generate_rst_files(src_dir, output_dir, exclude_dirs):
 def update_index_rst(output_dir):
     index_path = os.path.join(output_dir, "index.rst")
     with open(index_path, "w") as index_file:
-        index_file.write("Welcome to Your Project's documentation!\n")
+        index_file.write("Welcome to the Walking Neural Project !\n")
         index_file.write("=========================================\n\n")
         index_file.write(".. toctree::\n")
-        index_file.write("   :maxdepth: 2\n\n")
+        index_file.write("   :maxdepth: 4\n\n")
         
         # Add each .rst file to the toctree
         for root, dirs, files in os.walk(output_dir):

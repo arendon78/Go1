@@ -15,7 +15,7 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="forces.utils_forces" href="forces.utils_forces.html" />
+    <link rel="next" title="animation.animate_any" href="animation.animate_any.html" />
     <link rel="prev" title="Neuroscience.structures.Organ" href="Neuroscience.structures.Organ.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -39,20 +39,85 @@
 <dt class="sig sig-object py" id="Neuroscience.structures.Tunable_Oscillator.Tunable_Oscillator">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Neuroscience.structures.Tunable_Oscillator.</span></span><span class="sig-name descname"><span class="pre">Tunable_Oscillator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neuron0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neuron1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neuron2_Excitatory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neuron2_Inhibitory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Neuroscience/structures/Tunable_Oscillator.html#Tunable_Oscillator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Neuroscience.structures.Tunable_Oscillator.Tunable_Oscillator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ" title="Neuroscience.structures.Organ.Organ"><code class="xref py py-class docutils literal notranslate"><span class="pre">Neuroscience.structures.Organ.Organ</span></code></a></p>
+<p>A class representing a tunable neural oscillator composed of excitatory and inhibitory neurons.</p>
+<p>The <cite>Tunable_Oscillator</cite> class models a neural oscillator whose output can be tuned by adjusting the weights
+of the excitatory and inhibitory neurons. This class extends the <cite>Organ</cite> class and can be used to simulate
+rhythmic neural activity in a neural network.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Neuroscience.structures.Tunable_Oscillator.Tunable_Oscillator.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#Neuroscience.structures.Tunable_Oscillator.Tunable_Oscillator.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the oscillator, initialized as “Tunable_Oscillator”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Neuroscience.structures.Tunable_Oscillator.Tunable_Oscillator.to_watch">
+<span class="sig-name descname"><span class="pre">to_watch</span></span><a class="headerlink" href="#Neuroscience.structures.Tunable_Oscillator.Tunable_Oscillator.to_watch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates which neuron to monitor for output, where 1 corresponds to the excitatory neuron and 0 to the inhibitory neuron.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Neuroscience.structures.Tunable_Oscillator.Tunable_Oscillator.input_neuron">
+<span class="sig-name descname"><span class="pre">input_neuron</span></span><a class="headerlink" href="#Neuroscience.structures.Tunable_Oscillator.Tunable_Oscillator.input_neuron" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list containing the input neuron(s) of the oscillator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of Abstract_Neuron</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Neuroscience.structures.Tunable_Oscillator.Tunable_Oscillator.output_neuron">
+<span class="sig-name descname"><span class="pre">output_neuron</span></span><a class="headerlink" href="#Neuroscience.structures.Tunable_Oscillator.Tunable_Oscillator.output_neuron" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list containing the output neurons of the oscillator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of Abstract_Neuron</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="Neuroscience.structures.Tunable_Oscillator.Tunable_Oscillator.change_to_watch_neuron">
 <span class="sig-name descname"><span class="pre">change_to_watch_neuron</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sign</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Neuroscience/structures/Tunable_Oscillator.html#Tunable_Oscillator.change_to_watch_neuron"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Neuroscience.structures.Tunable_Oscillator.Tunable_Oscillator.change_to_watch_neuron" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Changes the neuron being monitored based on the sign.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sign</strong> (<em>int</em>) – Determines which neuron to monitor; positive for excitatory, negative for inhibitory.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Neuroscience.structures.Tunable_Oscillator.Tunable_Oscillator.len">
 <span class="sig-name descname"><span class="pre">len</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#Neuroscience.structures.Tunable_Oscillator.Tunable_Oscillator.len" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The default number of neurons in the oscillator. This should be updated if the number of neurons changes.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Neuroscience.structures.Tunable_Oscillator.Tunable_Oscillator.tune_oscillator">
 <span class="sig-name descname"><span class="pre">tune_oscillator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Neuroscience/structures/Tunable_Oscillator.html#Tunable_Oscillator.tune_oscillator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Neuroscience.structures.Tunable_Oscillator.Tunable_Oscillator.tune_oscillator" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tunes the oscillator by setting the weights of the output neurons based on the sign.</p>
+<p>The output neuron corresponding to the sign is activated with the specified weights, while the other output neuron is deactivated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>list_weights</strong> (<em>list of float</em>) – The list of weights to be set for the active output neuron.</p></li>
+<li><p><strong>sign</strong> (<em>int</em>) – Determines which neuron to activate; positive for excitatory, negative for inhibitory.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -92,15 +157,18 @@
 <li class="toctree-l1"><a class="reference internal" href="Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Neuroscience.structures.Tunable_Oscillator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="animation.animate_any.html">animation.animate_any</a></li>
+<li class="toctree-l1"><a class="reference internal" href="animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="forces.utils_forces.html">forces.utils_forces</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Welcome to Your Project’s documentation!</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Welcome to the Walking Neural Project !</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Activity_Detector.html">Neuroscience.structures.Activity_Detector</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Neuroscience.structures.Tunable_Oscillator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Controller.html">Neuroscience.structures.Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.lie_down_procedure.html">unitree_legged_sdk.example_py.Bezier.lie_down_procedure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Excitatory_Neuron.html">Neuroscience.structures.Excitatory_Neuron</a></li>
+<li class="toctree-l2"><a class="reference internal" href="animation.animate_any.html">animation.animate_any</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.forward_neuron.html">unitree_legged_sdk.example_py.Bezier.forward_neuron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Frequency_Detector_new.html">Neuroscience.structures.Frequency_Detector_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
@@ -111,8 +179,6 @@
 <li class="toctree-l2"><a class="reference internal" href="utils.html">utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Frequency_Detector.html">Neuroscience.structures.Frequency_Detector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Gate_NAND.html">Neuroscience.structures.Gate_NAND</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.foot_trajectory.html">unitree_legged_sdk.example_py.Bezier.foot_trajectory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Counter_3_bits.html">Neuroscience.structures.Counter_3_bits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="forces.utils_forces.html">forces.utils_forces</a></li>
@@ -124,8 +190,6 @@
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Counter_4_bits.html">Neuroscience.structures.Counter_4_bits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Flip_FLop_T.html">Neuroscience.structures.Flip_FLop_T</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Abstract_Neuron.html">Neuroscience.structures.Abstract_Neuron</a></li>
 </ul>
 </li>
@@ -140,11 +204,6 @@
 <li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.main_loop_v2.html">unitree_legged_sdk.example_py.Bezier.main_loop_v2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.plot_neurons.html">unitree_legged_sdk.example_py.Bezier.plot_neurons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">utils</a></li>
 </ul>
 
@@ -153,7 +212,7 @@
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
       <li>Previous: <a href="Neuroscience.structures.Organ.html" title="previous chapter">Neuroscience.structures.Organ</a></li>
-      <li>Next: <a href="forces.utils_forces.html" title="next chapter">forces.utils_forces</a></li>
+      <li>Next: <a href="animation.animate_any.html" title="next chapter">animation.animate_any</a></li>
   </ul></li>
 </ul>
 </div>

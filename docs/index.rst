@@ -1,8 +1,8 @@
-Welcome to Your Project's documentation!
+Welcome to the Walking Neural Project Documentation ! 
 =========================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: Contents:
 
    source/Neuroscience.structures.Abstract_Neuron
@@ -20,6 +20,8 @@ Welcome to Your Project's documentation!
    source/Neuroscience.structures.Inhibitory_Neuron
    source/Neuroscience.structures.Organ
    source/Neuroscience.structures.Tunable_Oscillator
+   source/animation.animate_any
+   source/animation.display_neural_network_2
    source/forces.utils_forces
    source/index
    source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits
@@ -33,9 +35,4 @@ Welcome to Your Project's documentation!
    source/unitree_legged_sdk.example_py.Bezier.main_loop_v2
    source/unitree_legged_sdk.example_py.Bezier.plot_neurons
    source/unitree_legged_sdk.example_py.Bezier.stand_up_procedure
-   source/unitree_legged_sdk.example_py.old_examples.example_position
-   source/unitree_legged_sdk.example_py.old_examples.example_torque
-   source/unitree_legged_sdk.example_py.old_examples.example_velocity
-   source/unitree_legged_sdk.example_py.old_examples.example_walk
-   source/unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete
    source/utils

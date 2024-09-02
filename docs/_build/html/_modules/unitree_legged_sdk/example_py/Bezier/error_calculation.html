@@ -31,26 +31,61 @@
           <div class="body" role="main">
             
   <h1>Source code for unitree_legged_sdk.example_py.Bezier.error_calculation</h1><div class="highlight"><pre>
-<span></span>    
-<div class="viewcode-block" id="error"><a class="viewcode-back" href="../../../../source/unitree_legged_sdk.example_py.Bezier.error_calculation.html#unitree_legged_sdk.example_py.Bezier.error_calculation.error">[docs]</a><span class="k">def</span> <span class="nf">error</span> <span class="p">(</span><span class="n">oscillator_data</span><span class="p">,</span><span class="n">freq_command</span><span class="p">):</span>
-<span class="c1">#computing MAE and MSE</span>
+<div class="viewcode-block" id="error"><a class="viewcode-back" href="../../../../source/unitree_legged_sdk.example_py.Bezier.error_calculation.html#unitree_legged_sdk.example_py.Bezier.error_calculation.error">[docs]</a><span></span><span class="k">def</span> <span class="nf">error</span><span class="p">(</span><span class="n">oscillator_data</span><span class="p">,</span> <span class="n">freq_command</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes various error metrics between the oscillator data and the frequency command.</span>
 
-    <span class="n">n</span><span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">oscillator_data</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">oscillator_data</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">freq_command</span><span class="p">))</span>
+<span class="sd">    This function calculates the Maximum Absolute Error (Max AE), Mean Absolute Error (MAE),</span>
+<span class="sd">    Mean Squared Error (MSE), and Relative Mean Absolute Error (Relative MAE) between the</span>
+<span class="sd">    observed oscillator data and the expected frequency command.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    oscillator_data : list of float</span>
+<span class="sd">        A list containing the observed oscillator frequencies.</span>
+<span class="sd">    </span>
+<span class="sd">    freq_command : list of float</span>
+<span class="sd">        A list containing the commanded (expected) frequencies.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    maximum_error : float</span>
+<span class="sd">        The maximum absolute error between the oscillator data and the frequency command.</span>
+<span class="sd">    </span>
+<span class="sd">    result_MAE : float</span>
+<span class="sd">        The mean absolute error (MAE) between the oscillator data and the frequency command.</span>
+<span class="sd">    </span>
+<span class="sd">    result_MSE : float</span>
+<span class="sd">        The mean squared error (MSE) between the oscillator data and the frequency command.</span>
+<span class="sd">    </span>
+<span class="sd">    relative_MAE : float</span>
+<span class="sd">        The relative mean absolute error (Relative MAE), which is the MAE normalized by the amplitude</span>
+<span class="sd">        of the frequency command.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    AssertionError</span>
+<span class="sd">        If the length of `oscillator_data` and `freq_command` are not equal.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">oscillator_data</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">oscillator_data</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">freq_command</span><span class="p">)),</span> <span class="s2">&quot;oscillator_data and freq_command must have the same length&quot;</span>
+    
     <span class="n">sum_absolute_error</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">squarred_error</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">squared_error</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">maximum_error</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span> 
-        <span class="n">absolute_error</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">oscillator_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">freq_command</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">absolute_error</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">oscillator_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">freq_command</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
         <span class="n">sum_absolute_error</span> <span class="o">+=</span> <span class="n">absolute_error</span>
-        <span class="k">if</span> <span class="n">absolute_error</span><span class="o">&gt;</span> <span class="n">maximum_error</span> <span class="p">:</span> 
+        <span class="k">if</span> <span class="n">absolute_error</span> <span class="o">&gt;</span> <span class="n">maximum_error</span><span class="p">:</span>
             <span class="n">maximum_error</span> <span class="o">=</span> <span class="n">absolute_error</span>
         
-        <span class="n">squarred_error</span><span class="o">+=</span> <span class="p">(</span><span class="n">oscillator_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">freq_command</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="n">oscillator_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">freq_command</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">squared_error</span> <span class="o">+=</span> <span class="p">(</span><span class="n">oscillator_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">freq_command</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
         
     <span class="n">amplitude</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">freq_command</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">freq_command</span><span class="p">)</span>
     <span class="n">result_MAE</span> <span class="o">=</span> <span class="n">sum_absolute_error</span> <span class="o">/</span> <span class="n">n</span>
-    <span class="n">result_MSE</span> <span class="o">=</span> <span class="n">squarred_error</span> <span class="o">/</span> <span class="n">n</span>
+    <span class="n">result_MSE</span> <span class="o">=</span> <span class="n">squared_error</span> <span class="o">/</span> <span class="n">n</span>
     <span class="n">relative_MAE</span> <span class="o">=</span> <span class="n">result_MAE</span> <span class="o">/</span> <span class="n">amplitude</span>
 
     <span class="k">return</span> <span class="n">maximum_error</span><span class="p">,</span> <span class="n">result_MAE</span><span class="p">,</span> <span class="n">result_MSE</span><span class="p">,</span> <span class="n">relative_MAE</span></div>
@@ -89,8 +124,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/animation.animate_any.html">animation.animate_any</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/forces.utils_forces.html">forces.utils_forces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/index.html">Welcome to Your Project’s documentation!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/index.html">Welcome to the Walking Neural Project !</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html">unitree_legged_sdk.example_py.Bezier.Foot_Sensor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>
@@ -102,11 +139,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.main_loop_v2.html">unitree_legged_sdk.example_py.Bezier.main_loop_v2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.plot_neurons.html">unitree_legged_sdk.example_py.Bezier.plot_neurons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/utils.html">utils</a></li>
 </ul>
 

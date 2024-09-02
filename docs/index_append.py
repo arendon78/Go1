@@ -16,10 +16,10 @@ def update_index_rst(source_dir, index_rst_path):
 
     # Write the entries to index.rst
     with open(index_rst_path, 'w') as index_file:
-        index_file.write("Welcome to Your Project's documentation!\n")
+        index_file.write("Welcome to the Walking Neural Documentation ! \n")
         index_file.write("=========================================\n\n")
         index_file.write(".. toctree::\n")
-        index_file.write("   :maxdepth: 2\n")
+        index_file.write("   :maxdepth: 4\n")
         index_file.write("   :caption: Contents:\n\n")
         
         for rst_file in rst_files:

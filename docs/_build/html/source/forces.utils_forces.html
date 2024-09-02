@@ -15,8 +15,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Welcome to Your Project’s documentation!" href="index.html" />
-    <link rel="prev" title="Neuroscience.structures.Tunable_Oscillator" href="Neuroscience.structures.Tunable_Oscillator.html" />
+    <link rel="next" title="Welcome to the Walking Neural Project !" href="index.html" />
+    <link rel="prev" title="animation.display_neural_network_2" href="animation.display_neural_network_2.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -38,47 +38,177 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="forces.utils_forces.build_merge">
 <span class="sig-prename descclassname"><span class="pre">forces.utils_forces.</span></span><span class="sig-name descname"><span class="pre">build_merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">local_maxes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_mins</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/forces/utils_forces.html#build_merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#forces.utils_forces.build_merge" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Builds an ordered list of maxima and minima along the time axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>local_maxes</strong> (<em>list of tuples</em>) – The list of local maxima.</p></li>
+<li><p><strong>local_mins</strong> (<em>list of tuples</em>) – The list of local minima.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A merged list of minima and maxima ordered by time.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of tuples</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="forces.utils_forces.calculate_derivative">
 <span class="sig-prename descclassname"><span class="pre">forces.utils_forces.</span></span><span class="sig-name descname"><span class="pre">calculate_derivative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/forces/utils_forces.html#calculate_derivative"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#forces.utils_forces.calculate_derivative" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Calculates the derivative (slope) between two points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p1</strong> (<em>tuple of float</em>) – The first point (x1, y1).</p></li>
+<li><p><strong>p2</strong> (<em>tuple of float</em>) – The second point (x2, y2).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The slope between the two points.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="forces.utils_forces.calculate_mean_rooted_derivative">
 <span class="sig-prename descclassname"><span class="pre">forces.utils_forces.</span></span><span class="sig-name descname"><span class="pre">calculate_mean_rooted_derivative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/forces/utils_forces.html#calculate_mean_rooted_derivative"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#forces.utils_forces.calculate_mean_rooted_derivative" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Calculates the mean rooted derivative between two points within a list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p1</strong> (<em>tuple of float</em>) – The first point (x1, y1).</p></li>
+<li><p><strong>p2</strong> (<em>tuple of float</em>) – The second point (x2, y2).</p></li>
+<li><p><strong>l</strong> (<em>list of tuples</em>) – The list of points to search within.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The mean rooted derivative between p1 and p2.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="forces.utils_forces.find_a_pattern">
 <span class="sig-prename descclassname"><span class="pre">forces.utils_forces.</span></span><span class="sig-name descname"><span class="pre">find_a_pattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">merged_mins_maxes_coordinates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p0_spike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2_spike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MRD_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/forces/utils_forces.html#find_a_pattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#forces.utils_forces.find_a_pattern" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Finds a specific pattern in the list of merged minima and maxima coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>merged_mins_maxes_coordinates</strong> (<em>list of tuples</em>) – The list of merged minima and maxima coordinates.</p></li>
+<li><p><strong>coordinates</strong> (<em>list of tuples</em>) – The list of original coordinates.</p></li>
+<li><p><strong>p0_spike</strong> (<em>float</em>) – The threshold for the first peak.</p></li>
+<li><p><strong>p2_spike</strong> (<em>float</em>) – The threshold for the second peak.</p></li>
+<li><p><strong>MRD_value</strong> (<em>float</em>) – The minimum mean rooted derivative value to qualify as a pattern.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tuple indicating whether a pattern was found, and the points involved in the pattern.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple (bool, tuple, tuple, tuple)</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="forces.utils_forces.find_patterns">
 <span class="sig-prename descclassname"><span class="pre">forces.utils_forces.</span></span><span class="sig-name descname"><span class="pre">find_patterns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">merged_mins_maxes_coordinates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p0_spike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2_spike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MRD_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/forces/utils_forces.html#find_patterns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#forces.utils_forces.find_patterns" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Finds specific patterns in the list of merged minima and maxima coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>merged_mins_maxes_coordinates</strong> (<em>list of tuples</em>) – The list of merged minima and maxima coordinates.</p></li>
+<li><p><strong>coordinates</strong> (<em>list of tuples</em>) – The list of original coordinates.</p></li>
+<li><p><strong>p0_spike</strong> (<em>float</em>) – The threshold for the first peak.</p></li>
+<li><p><strong>p2_spike</strong> (<em>float</em>) – The threshold for the second peak.</p></li>
+<li><p><strong>MRD_value</strong> (<em>float</em>) – The minimum mean rooted derivative value to qualify as a pattern.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="forces.utils_forces.find_value">
 <span class="sig-prename descclassname"><span class="pre">forces.utils_forces.</span></span><span class="sig-name descname"><span class="pre">find_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/forces/utils_forces.html#find_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#forces.utils_forces.find_value" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Finds the value at a specific time within a list of points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>float</em>) – The time to search for.</p></li>
+<li><p><strong>list</strong> (<em>list of tuples</em>) – The list of points to search within.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The point corresponding to the given time, or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple or None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="forces.utils_forces.gradient_ascent">
 <span class="sig-prename descclassname"><span class="pre">forces.utils_forces.</span></span><span class="sig-name descname"><span class="pre">gradient_ascent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_point_derivative</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/forces/utils_forces.html#gradient_ascent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#forces.utils_forces.gradient_ascent" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Performs gradient ascent to find a local maximum in the list of points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>list_point_derivative</strong> (<em>list of tuples</em>) – A list of points with their derivatives.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The point corresponding to the local maximum found.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="forces.utils_forces.gradient_descent">
 <span class="sig-prename descclassname"><span class="pre">forces.utils_forces.</span></span><span class="sig-name descname"><span class="pre">gradient_descent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_point_derivative</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/forces/utils_forces.html#gradient_descent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#forces.utils_forces.gradient_descent" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Performs gradient descent to find a local minimum in the list of points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>list_point_derivative</strong> (<em>list of tuples</em>) – A list of points with their derivatives.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The point corresponding to the local minimum found.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="forces.utils_forces.monte_carlo_gradient">
 <span class="sig-prename descclassname"><span class="pre">forces.utils_forces.</span></span><span class="sig-name descname"><span class="pre">monte_carlo_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">direction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/forces/utils_forces.html#monte_carlo_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#forces.utils_forces.monte_carlo_gradient" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Performs Monte Carlo gradient ascent or descent to find local extrema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>direction</strong> (<em>int</em>) – The direction to search in; negative for descent, positive for ascent.</p></li>
+<li><p><strong>l</strong> (<em>list of tuples</em>) – The list of points to search within.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of local maxima or minima found.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of tuples</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 
@@ -116,15 +246,18 @@
 <li class="toctree-l1"><a class="reference internal" href="Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="animation.animate_any.html">animation.animate_any</a></li>
+<li class="toctree-l1"><a class="reference internal" href="animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">forces.utils_forces</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Welcome to Your Project’s documentation!</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Welcome to the Walking Neural Project !</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Activity_Detector.html">Neuroscience.structures.Activity_Detector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Controller.html">Neuroscience.structures.Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.lie_down_procedure.html">unitree_legged_sdk.example_py.Bezier.lie_down_procedure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Excitatory_Neuron.html">Neuroscience.structures.Excitatory_Neuron</a></li>
+<li class="toctree-l2"><a class="reference internal" href="animation.animate_any.html">animation.animate_any</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.forward_neuron.html">unitree_legged_sdk.example_py.Bezier.forward_neuron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Frequency_Detector_new.html">Neuroscience.structures.Frequency_Detector_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
@@ -135,8 +268,6 @@
 <li class="toctree-l2"><a class="reference internal" href="utils.html">utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Frequency_Detector.html">Neuroscience.structures.Frequency_Detector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Gate_NAND.html">Neuroscience.structures.Gate_NAND</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.foot_trajectory.html">unitree_legged_sdk.example_py.Bezier.foot_trajectory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Counter_3_bits.html">Neuroscience.structures.Counter_3_bits</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">forces.utils_forces</a></li>
@@ -148,8 +279,6 @@
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Counter_4_bits.html">Neuroscience.structures.Counter_4_bits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Flip_FLop_T.html">Neuroscience.structures.Flip_FLop_T</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Abstract_Neuron.html">Neuroscience.structures.Abstract_Neuron</a></li>
 </ul>
 </li>
@@ -164,11 +293,6 @@
 <li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.main_loop_v2.html">unitree_legged_sdk.example_py.Bezier.main_loop_v2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.plot_neurons.html">unitree_legged_sdk.example_py.Bezier.plot_neurons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">utils</a></li>
 </ul>
 
@@ -176,8 +300,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="Neuroscience.structures.Tunable_Oscillator.html" title="previous chapter">Neuroscience.structures.Tunable_Oscillator</a></li>
-      <li>Next: <a href="index.html" title="next chapter">Welcome to Your Project’s documentation!</a></li>
+      <li>Previous: <a href="animation.display_neural_network_2.html" title="previous chapter">animation.display_neural_network_2</a></li>
+      <li>Next: <a href="index.html" title="next chapter">Welcome to the Walking Neural Project !</a></li>
   </ul></li>
 </ul>
 </div>

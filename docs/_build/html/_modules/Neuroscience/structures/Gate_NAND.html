@@ -41,41 +41,77 @@
 <span class="kn">from</span> <span class="nn">Neuroscience.structures.Excitatory_Neuron</span> <span class="kn">import</span> <span class="n">Excitatory_Neuron</span>
 <span class="kn">from</span> <span class="nn">Neuroscience.structures.Inhibitory_Neuron</span> <span class="kn">import</span> <span class="n">Inhibitory_Neuron</span>
 
-
-
-
 <div class="viewcode-block" id="Gate_NAND"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Gate_NAND.html#Neuroscience.structures.Gate_NAND.Gate_NAND">[docs]</a><span class="k">class</span> <span class="nc">Gate_NAND</span><span class="p">(</span><span class="n">Organ</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class representing a NAND gate constructed using a network of neurons.</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">neuron0</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">neuron1</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">neuron2</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">neuron3</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">neuron4</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">neuron5</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">neuron6</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">res</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
-        <span class="c1">#builds a default NAND Gate</span>
+<span class="sd">    The `Gate_NAND` class models a digital NAND gate using excitatory and inhibitory neurons. It can be </span>
+<span class="sd">    initialized with default neurons or with specific neuron instances. This class extends the `Organ` </span>
+<span class="sd">    class and is part of a neural network simulation.</span>
 
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of the gate, initialized as &quot;NAND_Gate&quot;.</span>
 
+<span class="sd">    brain : list of Abstract_Neuron</span>
+<span class="sd">        The list of neurons that make up the NAND gate.</span>
+
+<span class="sd">    output_neurons : list of Abstract_Neuron</span>
+<span class="sd">        The list containing the output neuron(s) of the NAND gate.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neuron0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">neuron1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">neuron2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">neuron3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">neuron4</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">neuron5</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">neuron6</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes a Gate_NAND instance, either with specific neurons or with default neurons based on the given resolution.</span>
+
+<span class="sd">        :param neuron0: The first neuron in the NAND gate, defaults to None.</span>
+<span class="sd">        :type neuron0: Excitatory_Neuron, optional</span>
+<span class="sd">        :param neuron1: The second neuron in the NAND gate, defaults to None.</span>
+<span class="sd">        :type neuron1: Excitatory_Neuron, optional</span>
+<span class="sd">        :param neuron2: The third neuron in the NAND gate, defaults to None.</span>
+<span class="sd">        :type neuron2: Inhibitory_Neuron, optional</span>
+<span class="sd">        :param neuron3: The fourth neuron in the NAND gate, defaults to None.</span>
+<span class="sd">        :type neuron3: Inhibitory_Neuron, optional</span>
+<span class="sd">        :param neuron4: The fifth neuron in the NAND gate, defaults to None.</span>
+<span class="sd">        :type neuron4: Excitatory_Neuron, optional</span>
+<span class="sd">        :param neuron5: The sixth neuron in the NAND gate, defaults to None.</span>
+<span class="sd">        :type neuron5: Excitatory_Neuron, optional</span>
+<span class="sd">        :param neuron6: The seventh neuron in the NAND gate, defaults to None.</span>
+<span class="sd">        :type neuron6: Excitatory_Neuron, optional</span>
+<span class="sd">        :param res: The resolution for initializing default neurons, required if neurons are not provided, defaults to None.</span>
+<span class="sd">        :type res: int, optional</span>
+<span class="sd">        :param name: The name of the NAND gate, defaults to an empty string.</span>
+<span class="sd">        :type name: str, optional</span>
+
+<span class="sd">        :raises ValueError: If neurons are not provided and resolution is not specified, or if an invalid combination of neurons is provided.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;NAND_Gate&quot;</span>
 
         <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">neuron0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">neuron0</span> <span class="o">=</span> <span class="n">Excitatory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-            <span class="n">neuron0</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mf">7.5</span><span class="p">,</span><span class="mf">7.5</span><span class="p">])</span>
+            <span class="n">neuron0</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mf">7.5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">])</span>
 
             <span class="n">neuron1</span> <span class="o">=</span> <span class="n">Excitatory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="n">neuron1</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">])</span>
 
             <span class="n">neuron2</span> <span class="o">=</span> <span class="n">Inhibitory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">neuron2</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">])</span>
+            <span class="n">neuron2</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">])</span>
 
             <span class="n">neuron3</span> <span class="o">=</span> <span class="n">Inhibitory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="n">neuron3</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">])</span>
 
             <span class="n">neuron4</span> <span class="o">=</span> <span class="n">Excitatory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-            <span class="n">neuron4</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">])</span>
+            <span class="n">neuron4</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">])</span>
 
             <span class="n">neuron5</span> <span class="o">=</span> <span class="n">Excitatory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
             <span class="n">neuron5</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">])</span>
 
             <span class="n">neuron6</span> <span class="o">=</span> <span class="n">Excitatory_Neuron</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">neuron6</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
-        <span class="k">if</span> <span class="n">neuron0</span> <span class="ow">and</span> <span class="n">neuron1</span> <span class="ow">and</span> <span class="n">neuron2</span> <span class="ow">and</span> <span class="n">neuron3</span> <span class="ow">and</span> <span class="n">neuron4</span> <span class="ow">and</span> <span class="n">neuron5</span> <span class="ow">and</span> <span class="n">neuron6</span> <span class="p">:</span>
+            <span class="n">neuron6</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
 
+        <span class="k">if</span> <span class="n">neuron0</span> <span class="ow">and</span> <span class="n">neuron1</span> <span class="ow">and</span> <span class="n">neuron2</span> <span class="ow">and</span> <span class="n">neuron3</span> <span class="ow">and</span> <span class="n">neuron4</span> <span class="ow">and</span> <span class="n">neuron5</span> <span class="ow">and</span> <span class="n">neuron6</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neuron0</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neuron1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neuron2</span><span class="p">)</span>
@@ -98,14 +134,8 @@
 
             <span class="n">neuron4</span><span class="o">.</span><span class="n">taken_inputs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">output_neurons</span> <span class="o">=</span> <span class="p">[</span><span class="n">neuron6</span><span class="p">]</span>
-
-        <span class="k">else</span> <span class="p">:</span> 
+        <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid initialization parameters&quot;</span><span class="p">)</span></div>
-
-    
-
-        
-
 </pre></div>
 
           </div>
@@ -141,8 +171,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/animation.animate_any.html">animation.animate_any</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/forces.utils_forces.html">forces.utils_forces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/index.html">Welcome to Your Project’s documentation!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/index.html">Welcome to the Walking Neural Project !</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html">unitree_legged_sdk.example_py.Bezier.Foot_Sensor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>
@@ -154,11 +186,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.main_loop_v2.html">unitree_legged_sdk.example_py.Bezier.main_loop_v2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.plot_neurons.html">unitree_legged_sdk.example_py.Bezier.plot_neurons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/utils.html">utils</a></li>
 </ul>
 

@@ -11,203 +11,243 @@ from Neuroscience.structures.Tunable_Oscillator import Tunable_Oscillator
 
 
 class Controller(Organ):
+    """
+    A class that controls and manages the configuration of tunable oscillators within a neural network.
 
+    The `Controller` class is responsible for building frequency combinations, managing oscillators, and
+    determining the optimal configuration for neuron activation. It interacts with a set of `Tunable_Oscillator`
+    instances to simulate complex neural behaviors.
 
-    main_list= []
+    Attributes
+    ----------
+    res : int
+        The resolution of the simulation, affecting time steps.
+    
+    oscillators : list of Tunable_Oscillator
+        A list of `Tunable_Oscillator` instances managed by the Controller.
+
+    brain : list of Abstract_Neuron
+        A list of neurons extracted from the oscillators to form the Controller's "brain".
+    """
+
+    main_list = []
+    """
+    A class-level list that stores the precomputed frequency combinations used by the Controller.
+    """
 
     frequencies = [
-            0,
-            3.003003003003003,
-            3.6032217041119123,
-            4.504504504504505,
-            # 5.9880239520958085,
-            6.005384137502588,
-            9.00900900900901
-        ] # the unit here is spike/thousand steps of simulation.
-            # hence the theorical minimum interval of convergence is the interval between two of the spikes :around 600 steps
-            # another way to decrease the response would be not to use the slowly-firing neurons. We would know the frequence sooner but we would have less hoicechoice of neurons to rebuild the command, hence we would have less precision. 
+        0,
+        3.003003003003003,
+        3.6032217041119123,
+        4.504504504504505,
+        6.005384137502588,
+        9.00900900900901
+    ]
+    """
+    A predefined list of frequencies (in spike/thousand steps of simulation) used to configure the oscillators.
+
+    Note: The theoretical minimum interval of convergence is approximately 600 steps.
+    """
+
     N_REPEAT = 4
+    """
+    The number of oscillators to be used in generating frequency combinations.
+    """
 
+    def pass_inputs(self, input):
+        """
+        Passes input values to all oscillators managed by the Controller.
 
-    def pass_inputs(self,input):  
-        for os in self.oscillators : 
+        :param input: The input value to be applied to the oscillators.
+        :type input: float
+        """
+        for os in self.oscillators:
             os.brain[0].inputs[1] = input
 
-    # def simulate(self,k,V):
-        # for i in range (len(self.oscillators)) : 
-                # self.oscillators[i].simulate(k,V[i])
-
     def find_combination_index(self, ratio):
+        """
+        Finds the index of the closest frequency combination to a given ratio.
+
+        :param ratio: The target frequency ratio.
+        :type ratio: float
+        :returns: The index and distance of the closest combination.
+        :rtype: tuple(int, float)
+        """
         distance = 2
         index = 0
         for i in range(len(Controller.main_list)):
             new_d = abs(ratio - Controller.main_list[i][0])
-            if new_d<distance:
+            if new_d < distance:
                 index = i
                 distance = new_d
-        return index,distance 
-
+        return index, distance
 
     def find_combination(self, ratio):
-        i, d = self.find_combination_index(ratio)
-        return Controller.main_list[i][1],Controller.main_list[i][0]
+        """
+        Finds the best frequency combination and its corresponding ratio for a given target ratio.
 
+        :param ratio: The target frequency ratio.
+        :type ratio: float
+        :returns: The best combination and its ratio.
+        :rtype: tuple(list, float)
+        """
+        i, d = self.find_combination_index(ratio)
+        return Controller.main_list[i][1], Controller.main_list[i][0]
 
     def build_combinations_raw(self, lower_bound=-2, upper_bound=2):
-        new_center = (upper_bound + lower_bound)/2
-        amplitude = (upper_bound - lower_bound)/2
+        """
+        Builds raw frequency combinations within a specified range.
 
+        This method generates all possible combinations of frequencies (with repetition) and applies a set 
+        of signs to them. The results are then normalized according to the specified bounds.
+
+        :param lower_bound: The lower bound for normalization, defaults to -2.
+        :type lower_bound: float, optional
+        :param upper_bound: The upper bound for normalization, defaults to 2.
+        :type upper_bound: float, optional
+        :returns: A list of normalized frequency combinations and their associated triples.
+        :rtype: list of tuple(float, tuple)
+        """
+        new_center = (upper_bound + lower_bound) / 2
+        amplitude = (upper_bound - lower_bound) / 2
 
         numbers = self.frequencies
-        
-        # Générer toutes les combinaisons possibles de N_REPEAT nombres (avec répétition)
         comb_of_six_with_repetition = list(product(numbers, repeat=self.N_REPEAT))
-
-        # Ensemble pour stocker les résultats et leurs triplés sans doublon
         results_with_triples = set()
-
-        # Générer toutes les combinaisons de + et - (2^N_REPEAT combinaisons)
         sign_combinations = list(product([1, -1], repeat=self.N_REPEAT))
 
-        # Parcourir chaque combinaison de nombres avec répétition
         for combo in comb_of_six_with_repetition:
-            # Pour chaque combinaison de signes, appliquer les signes aux nombres
             for signs in sign_combinations:
-                # Calculer la somme pondérée par les signes
                 numbers = sum(sign * num for sign, num in zip(signs, combo))
-
-                # Construire le triplé avec les signes appliqués
                 operation_triple = tuple(sign * num for sign, num in zip(signs, combo))
-
-                # Ajouter le résultat et le triplé à l'ensemble
                 results_with_triples.add((numbers, operation_triple))
 
-        # Convertir l'ensemble en une liste triée des résultats avec leurs triplés
         sorted_results_with_triples = sorted(results_with_triples)
-
-        # Normaliser les résultats selon les bornes spécifiées
-        results = [r for r, _ in sorted_results_with_triples]
-        
-        max_sum_frequency = self.frequencies[-1]*self.N_REPEAT
-
+        max_sum_frequency = self.frequencies[-1] * self.N_REPEAT
         normalized_results_with_triples = []
 
         for value, triple in sorted_results_with_triples:
-
             raw_ratio = value / max_sum_frequency
             normalized_ratio = raw_ratio * amplitude
-            
-            # Échelle à [lower_bound, upper_bound]
-            # scaled_value = lower_bound + normalized_value * (upper_bound - lower_bound)
-            
-            # Centrer autour de `center`
             centered_ratio = normalized_ratio + new_center
-
             normalized_results_with_triples.append((centered_ratio, triple))
 
         return normalized_results_with_triples
-    
 
-    def f(e) : 
+    def f(e):
         """
-        counts the number of elements of the same sign as the command
+        Counts the number of elements in the combination that have the same sign as the command.
+
+        :param e: A tuple containing the ratio and combination.
+        :type e: tuple
+        :returns: The count of elements with the same sign as the command.
+        :rtype: int
         """
         f = e[0]
-        c =  0
-        for n in e[1] : 
-            if n * f > 0 :
-                c+=1
+        c = 0
+        for n in e[1]:
+            if n * f > 0:
+                c += 1
         return c
-    
 
-    def build_combinations(self): 
+    def build_combinations(self):
         """
-        the purpose of this function is to drastically reduce the number of elements in the Controller.main_list; It achieves two things 
-        -get rid of doublons
-        -select only the elements that maximises a certain function(here f)
-        f is as it is to ensure that for negative movements we use mostly Inhibitory neurons and Excitatory movements for positive movements
-        """
+        Reduces the number of elements in the Controller's main list by removing duplicates and selecting 
+        elements that maximize a specific function.
 
+        The function `f` is designed to ensure that for negative movements, inhibitory neurons are used 
+        predominantly, and excitatory neurons are used for positive movements.
+
+        :returns: A list of optimized frequency combinations.
+        :rtype: list
+        """
         Controller.main_list = self.build_combinations_raw()
 
-
-        setA = set() # 
-
+        setA = set()
         for i in range(len(Controller.main_list)):
             setA.add(Controller.main_list[i][0])
 
         listA = list(setA)
         index_dict = {value: idx for idx, value in enumerate(listA)}
 
-        for i in range(len(listA)) : 
-            listA[i] = [listA[i],0,0]
-
-        #we are looking for the elements (a, (b,c)) of equal a and of maximum value f(b,c) in a linear time. that's why we use the dictionnary for constant complexity operations
+        for i in range(len(listA)):
+            listA[i] = [listA[i], 0, 0]
 
         for i in range(len(Controller.main_list)):
             e = Controller.main_list[i]
-            corresp_index = index_dict[e[0]]# retrieve index in constant time
-            val = Controller.f(e) # see above
-            if val >= listA[corresp_index][1] : 
-                 listA[corresp_index][1] = val
-                 listA[corresp_index][2] = e 
+            corresp_index = index_dict[e[0]]
+            val = Controller.f(e)
+            if val >= listA[corresp_index][1]:
+                listA[corresp_index][1] = val
+                listA[corresp_index][2] = e
 
         new_l = []
-        for i in range(len(listA)): 
+        for i in range(len(listA)):
             new_l.append(listA[i][2])
 
         set_l = set(new_l)
         print(len(new_l))
         return new_l
-    
-    def create_oscillators(self,ratio):
 
+    def create_oscillators(self, ratio):
+        """
+        Creates and configures oscillators based on the given frequency ratio.
+
+        :param ratio: The target frequency ratio for configuring the oscillators.
+        :type ratio: float
+        :returns: The true value of the ratio and the corresponding frequency combination.
+        :rtype: tuple(float, tuple)
+        """
         tuple, true_val = self.find_combination(ratio)
 
         assert len(tuple) == self.N_REPEAT
         i = 0
         for j in tuple:
-            
-            if j == 0 : 
+            if j == 0:
                 sign = 1
-            else :
-                sign = j//abs(j)
+            else:
+                sign = j // abs(j)
 
             current = self.oscillators[i]
 
             if abs(j) == self.frequencies[0]:
-                current.tune_oscillator([0.015,0.015],sign)#0
+                current.tune_oscillator([0.015, 0.015], sign)
 
-            if abs(j) == self.frequencies[1]: #3.003003003003003
-                current.tune_oscillator([7.5,7.5],sign)
+            if abs(j) == self.frequencies[1]:
+                current.tune_oscillator([7.5, 7.5], sign)
 
-            if abs(j) == self.frequencies[2]:# 3.6032217041119123 
-                current.tune_oscillator([7.65,7.65],sign)
+            if abs(j) == self.frequencies[2]:
+                current.tune_oscillator([7.65, 7.65], sign)
 
-            if abs(j) == self.frequencies[3]: # 4.504504504504505
-                current.tune_oscillator([7.8,7.8],sign)
+            if abs(j) == self.frequencies[3]:
+                current.tune_oscillator([7.8, 7.8], sign)
 
-            if abs(j) == self.frequencies[4]: #6.024096385542169
-                current.tune_oscillator([8.325,8.325],sign)
+            if abs(j) == self.frequencies[4]:
+                current.tune_oscillator([8.325, 8.325], sign)
 
-            if abs(j) == self.frequencies[5]: #9.00900900900901
-                current.tune_oscillator([10.65,10.65],sign)
+            if abs(j) == self.frequencies[5]:
+                current.tune_oscillator([10.65, 10.65], sign)
 
-            i+=1
-        # self.pass_inputs(1)
-        return true_val,tuple
-            
+            i += 1
 
-    def __init__(self, res, use_old_combinations = False):
+        return true_val, tuple
+
+    def __init__(self, res, use_old_combinations=False):
+        """
+        Initializes the Controller instance with specified resolution and oscillator configuration.
+
+        :param res: The resolution of the simulation, affecting time steps.
+        :type res: int
+        :param use_old_combinations: Flag to determine whether to use old frequency combinations, defaults to False.
+        :type use_old_combinations: bool, optional
+        """
         super().__init__()
         self.name = "Controller"
         self.res = res
-        self.oscillators = [Tunable_Oscillator(res = self.res) for i in range (self.N_REPEAT)]
-        if Controller.main_list == [] : 
-            if use_old_combinations : 
+        self.oscillators = [Tunable_Oscillator(res=self.res) for i in range(self.N_REPEAT)]
+        if Controller.main_list == []:
+            if use_old_combinations:
                 Controller.main_list = self.build_combinations_raw()
-            else: 
+            else:
                 Controller.main_list = self.build_combinations()
         self.brain = [neuron for oscillator in self.oscillators for neuron in oscillator.brain]
-
-        # print("len :  \n",len(self.brain))

@@ -1,0 +1,2 @@
+To see a representation of the different neural netwroks developped here, launch src/Neuroscience/tests/adjcency_matrix.py 
+This is shown as an undirected graph. To show a directed graph, you got to modify the plot_force_directed_graph in the src/utils.py module.

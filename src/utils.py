@@ -259,6 +259,7 @@ class AdjacencyMatrix:
         graph_name (str) : Le nom du graphe pour le titre de la visualisation.
         """
         # Créer le graphe dirigé à partir de la matrice d'adjacence
+        #TO SHOW UNDIRECTED,, UNCOMMENT HERE
         G = nx.from_numpy_array(self.matrix)#,create_using=nx.DiGraph)
 
         # Calculer la disposition des nœuds (force-directed)
@@ -269,6 +270,7 @@ class AdjacencyMatrix:
 
         # Dessiner le graphe dirigé avec des flèches pour montrer la direction
         plt.figure(figsize=(10, 10))
+        #TO SHOW UNDIRECTED, UNCOMMENT HERE
         nx.draw(G, pos, with_labels=True, node_size=500, node_color=node_colors,
                 font_size=10, font_color="black", edge_color="gray", width=2,
                 arrows=False)#True, arrowstyle='-|>', arrowsize=10)

@@ -31,33 +31,62 @@
           <div class="body" role="main">
             
   <h1>Source code for unitree_legged_sdk.example_py.Bezier.lie_down_procedure</h1><div class="highlight"><pre>
-<span></span>
-<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="o">*</span> 
-
+<span></span><span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="o">*</span> 
 
 <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;FR&quot;</span><span class="p">,</span><span class="s2">&quot;FL&quot;</span><span class="p">,</span><span class="s2">&quot;RR&quot;</span><span class="p">,</span><span class="s2">&quot;RL&quot;</span><span class="p">]</span>
 
 <span class="n">STAND_UP_TIME</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="n">INIT_TIME</span> <span class="o">=</span> <span class="mi">10</span>
 
-<div class="viewcode-block" id="lie_down_procedure"><a class="viewcode-back" href="../../../../source/unitree_legged_sdk.example_py.Bezier.lie_down_procedure.html#unitree_legged_sdk.example_py.Bezier.lie_down_procedure.lie_down_procedure">[docs]</a><span class="k">def</span> <span class="nf">lie_down_procedure</span><span class="p">(</span><span class="n">new_motion_time</span><span class="p">,</span><span class="n">state</span><span class="p">,</span><span class="n">qInit</span><span class="p">,</span><span class="n">qDes</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">rate_count</span><span class="p">):</span> 
-            
-<span class="c1">#-------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="lie_down_procedure"><a class="viewcode-back" href="../../../../source/unitree_legged_sdk.example_py.Bezier.lie_down_procedure.html#unitree_legged_sdk.example_py.Bezier.lie_down_procedure.lie_down_procedure">[docs]</a><span class="k">def</span> <span class="nf">lie_down_procedure</span><span class="p">(</span><span class="n">new_motion_time</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">qInit</span><span class="p">,</span> <span class="n">qDes</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">rate_count</span><span class="p">):</span> 
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Executes the lie-down procedure for the robot by interpolating motor joint angles </span>
+<span class="sd">    from their initial positions to the desired lying down positions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    new_motion_time : int</span>
+<span class="sd">        The current time step of the motion sequence.</span>
+<span class="sd">    </span>
+<span class="sd">    state : object</span>
+<span class="sd">        The current state of the robot, including motor states.</span>
+<span class="sd">    </span>
+<span class="sd">    qInit : dict</span>
+<span class="sd">        A dictionary storing the initial joint angles for each limb.</span>
+<span class="sd">    </span>
+<span class="sd">    qDes : dict</span>
+<span class="sd">        A dictionary where the desired joint angles for each limb will be stored.</span>
+<span class="sd">    </span>
+<span class="sd">    d : dict</span>
+<span class="sd">        A dictionary mapping each limb&#39;s joint to its corresponding index in the state.</span>
+<span class="sd">    </span>
+<span class="sd">    rate_count : int</span>
+<span class="sd">        A counter used to determine the rate of interpolation.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        The updated `qDes` dictionary containing the interpolated joint angles for the lie-down procedure.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># Capture initial joint positions during the initialization phase</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">new_motion_time</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">new_motion_time</span> <span class="o">&lt;</span> <span class="n">INIT_TIME</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span> <span class="p">:</span> 
+        <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span> 
             <span class="n">qInit</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">motorState</span><span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="n">part</span> <span class="o">+</span> <span class="s1">&#39;_0&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">q</span>
             <span class="n">qInit</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">motorState</span><span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="n">part</span> <span class="o">+</span> <span class="s1">&#39;_1&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">q</span>
             <span class="n">qInit</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">motorState</span><span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="n">part</span> <span class="o">+</span> <span class="s1">&#39;_2&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">q</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">new_motion_time</span> <span class="o">&gt;=</span><span class="n">INIT_TIME</span><span class="p">):</span>
+    
+    <span class="c1"># Interpolate joint positions towards the desired lying down positions</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">new_motion_time</span> <span class="o">&gt;=</span> <span class="n">INIT_TIME</span><span class="p">):</span>
         <span class="n">rate_count</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="n">rate</span> <span class="o">=</span> <span class="n">rate_count</span><span class="o">/</span><span class="n">STAND_UP_TIME</span>            <span class="c1"># needs count to 200</span>
+        <span class="n">rate</span> <span class="o">=</span> <span class="n">rate_count</span> <span class="o">/</span> <span class="n">STAND_UP_TIME</span>  <span class="c1"># Progress rate towards the desired position</span>
         <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span> <span class="p">:</span> 
-            <span class="n">qDes</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">jointLinearInterpolation</span><span class="p">(</span><span class="n">qInit</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">sign</span><span class="o">*</span> <span class="o">-</span><span class="mf">0.3161579668521881</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span> 
+            <span class="n">qDes</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">jointLinearInterpolation</span><span class="p">(</span><span class="n">qInit</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">sign</span> <span class="o">*</span> <span class="o">-</span><span class="mf">0.3161579668521881</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
             <span class="n">qDes</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">jointLinearInterpolation</span><span class="p">(</span><span class="n">qInit</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="mf">1.208921194076538</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
             <span class="n">qDes</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">jointLinearInterpolation</span><span class="p">(</span><span class="n">qInit</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="o">-</span><span class="mf">2.7958271503448486</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
-            <span class="n">sign</span> <span class="o">=</span> <span class="n">sign</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="c1"># until here-----------------------------------</span>
+            <span class="n">sign</span> <span class="o">=</span> <span class="n">sign</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># Alternate sign for opposite limbs</span>
+    
     <span class="k">return</span> <span class="n">qDes</span></div>
 </pre></div>
 
@@ -94,8 +123,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/animation.animate_any.html">animation.animate_any</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/forces.utils_forces.html">forces.utils_forces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/index.html">Welcome to Your Project’s documentation!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/index.html">Welcome to the Walking Neural Project !</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html">unitree_legged_sdk.example_py.Bezier.Foot_Sensor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>
@@ -107,11 +138,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.main_loop_v2.html">unitree_legged_sdk.example_py.Bezier.main_loop_v2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.plot_neurons.html">unitree_legged_sdk.example_py.Bezier.plot_neurons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/utils.html">utils</a></li>
 </ul>
 

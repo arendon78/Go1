@@ -44,206 +44,246 @@
 
 
 <div class="viewcode-block" id="Controller"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Controller.html#Neuroscience.structures.Controller.Controller">[docs]</a><span class="k">class</span> <span class="nc">Controller</span><span class="p">(</span><span class="n">Organ</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class that controls and manages the configuration of tunable oscillators within a neural network.</span>
 
+<span class="sd">    The `Controller` class is responsible for building frequency combinations, managing oscillators, and</span>
+<span class="sd">    determining the optimal configuration for neuron activation. It interacts with a set of `Tunable_Oscillator`</span>
+<span class="sd">    instances to simulate complex neural behaviors.</span>
 
-    <span class="n">main_list</span><span class="o">=</span> <span class="p">[]</span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    res : int</span>
+<span class="sd">        The resolution of the simulation, affecting time steps.</span>
+<span class="sd">    </span>
+<span class="sd">    oscillators : list of Tunable_Oscillator</span>
+<span class="sd">        A list of `Tunable_Oscillator` instances managed by the Controller.</span>
+
+<span class="sd">    brain : list of Abstract_Neuron</span>
+<span class="sd">        A list of neurons extracted from the oscillators to form the Controller&#39;s &quot;brain&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">main_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class-level list that stores the precomputed frequency combinations used by the Controller.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">frequencies</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="mi">0</span><span class="p">,</span>
-            <span class="mf">3.003003003003003</span><span class="p">,</span>
-            <span class="mf">3.6032217041119123</span><span class="p">,</span>
-            <span class="mf">4.504504504504505</span><span class="p">,</span>
-            <span class="c1"># 5.9880239520958085,</span>
-            <span class="mf">6.005384137502588</span><span class="p">,</span>
-            <span class="mf">9.00900900900901</span>
-        <span class="p">]</span> <span class="c1"># the unit here is spike/thousand steps of simulation.</span>
-            <span class="c1"># hence the theorical minimum interval of convergence is the interval between two of the spikes :around 600 steps</span>
-            <span class="c1"># another way to decrease the response would be not to use the slowly-firing neurons. We would know the frequence sooner but we would have less hoicechoice of neurons to rebuild the command, hence we would have less precision. </span>
+        <span class="mi">0</span><span class="p">,</span>
+        <span class="mf">3.003003003003003</span><span class="p">,</span>
+        <span class="mf">3.6032217041119123</span><span class="p">,</span>
+        <span class="mf">4.504504504504505</span><span class="p">,</span>
+        <span class="mf">6.005384137502588</span><span class="p">,</span>
+        <span class="mf">9.00900900900901</span>
+    <span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A predefined list of frequencies (in spike/thousand steps of simulation) used to configure the oscillators.</span>
+
+<span class="sd">    Note: The theoretical minimum interval of convergence is approximately 600 steps.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">N_REPEAT</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The number of oscillators to be used in generating frequency combinations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
+<div class="viewcode-block" id="Controller.pass_inputs"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Controller.html#Neuroscience.structures.Controller.Controller.pass_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">pass_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Passes input values to all oscillators managed by the Controller.</span>
 
-<div class="viewcode-block" id="Controller.pass_inputs"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Controller.html#Neuroscience.structures.Controller.Controller.pass_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">pass_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">input</span><span class="p">):</span>  
-        <span class="k">for</span> <span class="n">os</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">oscillators</span> <span class="p">:</span> 
+<span class="sd">        :param input: The input value to be applied to the oscillators.</span>
+<span class="sd">        :type input: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">os</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">oscillators</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">input</span></div>
 
-    <span class="c1"># def simulate(self,k,V):</span>
-        <span class="c1"># for i in range (len(self.oscillators)) : </span>
-                <span class="c1"># self.oscillators[i].simulate(k,V[i])</span>
-
 <div class="viewcode-block" id="Controller.find_combination_index"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Controller.html#Neuroscience.structures.Controller.Controller.find_combination_index">[docs]</a>    <span class="k">def</span> <span class="nf">find_combination_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ratio</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finds the index of the closest frequency combination to a given ratio.</span>
+
+<span class="sd">        :param ratio: The target frequency ratio.</span>
+<span class="sd">        :type ratio: float</span>
+<span class="sd">        :returns: The index and distance of the closest combination.</span>
+<span class="sd">        :rtype: tuple(int, float)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">distance</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Controller</span><span class="o">.</span><span class="n">main_list</span><span class="p">)):</span>
             <span class="n">new_d</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ratio</span> <span class="o">-</span> <span class="n">Controller</span><span class="o">.</span><span class="n">main_list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
-            <span class="k">if</span> <span class="n">new_d</span><span class="o">&lt;</span><span class="n">distance</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">new_d</span> <span class="o">&lt;</span> <span class="n">distance</span><span class="p">:</span>
                 <span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
                 <span class="n">distance</span> <span class="o">=</span> <span class="n">new_d</span>
-        <span class="k">return</span> <span class="n">index</span><span class="p">,</span><span class="n">distance</span> </div>
-
+        <span class="k">return</span> <span class="n">index</span><span class="p">,</span> <span class="n">distance</span></div>
 
 <div class="viewcode-block" id="Controller.find_combination"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Controller.html#Neuroscience.structures.Controller.Controller.find_combination">[docs]</a>    <span class="k">def</span> <span class="nf">find_combination</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ratio</span><span class="p">):</span>
-        <span class="n">i</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_combination_index</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">Controller</span><span class="o">.</span><span class="n">main_list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">Controller</span><span class="o">.</span><span class="n">main_list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finds the best frequency combination and its corresponding ratio for a given target ratio.</span>
 
+<span class="sd">        :param ratio: The target frequency ratio.</span>
+<span class="sd">        :type ratio: float</span>
+<span class="sd">        :returns: The best combination and its ratio.</span>
+<span class="sd">        :rtype: tuple(list, float)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">i</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_combination_index</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Controller</span><span class="o">.</span><span class="n">main_list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">Controller</span><span class="o">.</span><span class="n">main_list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Controller.build_combinations_raw"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Controller.html#Neuroscience.structures.Controller.Controller.build_combinations_raw">[docs]</a>    <span class="k">def</span> <span class="nf">build_combinations_raw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">upper_bound</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
-        <span class="n">new_center</span> <span class="o">=</span> <span class="p">(</span><span class="n">upper_bound</span> <span class="o">+</span> <span class="n">lower_bound</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
-        <span class="n">amplitude</span> <span class="o">=</span> <span class="p">(</span><span class="n">upper_bound</span> <span class="o">-</span> <span class="n">lower_bound</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds raw frequency combinations within a specified range.</span>
 
+<span class="sd">        This method generates all possible combinations of frequencies (with repetition) and applies a set </span>
+<span class="sd">        of signs to them. The results are then normalized according to the specified bounds.</span>
+
+<span class="sd">        :param lower_bound: The lower bound for normalization, defaults to -2.</span>
+<span class="sd">        :type lower_bound: float, optional</span>
+<span class="sd">        :param upper_bound: The upper bound for normalization, defaults to 2.</span>
+<span class="sd">        :type upper_bound: float, optional</span>
+<span class="sd">        :returns: A list of normalized frequency combinations and their associated triples.</span>
+<span class="sd">        :rtype: list of tuple(float, tuple)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_center</span> <span class="o">=</span> <span class="p">(</span><span class="n">upper_bound</span> <span class="o">+</span> <span class="n">lower_bound</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">amplitude</span> <span class="o">=</span> <span class="p">(</span><span class="n">upper_bound</span> <span class="o">-</span> <span class="n">lower_bound</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
 
         <span class="n">numbers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequencies</span>
-        
-        <span class="c1"># Générer toutes les combinaisons possibles de N_REPEAT nombres (avec répétition)</span>
         <span class="n">comb_of_six_with_repetition</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">product</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_REPEAT</span><span class="p">))</span>
-
-        <span class="c1"># Ensemble pour stocker les résultats et leurs triplés sans doublon</span>
         <span class="n">results_with_triples</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-
-        <span class="c1"># Générer toutes les combinaisons de + et - (2^N_REPEAT combinaisons)</span>
         <span class="n">sign_combinations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">product</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">repeat</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_REPEAT</span><span class="p">))</span>
 
-        <span class="c1"># Parcourir chaque combinaison de nombres avec répétition</span>
         <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">comb_of_six_with_repetition</span><span class="p">:</span>
-            <span class="c1"># Pour chaque combinaison de signes, appliquer les signes aux nombres</span>
             <span class="k">for</span> <span class="n">signs</span> <span class="ow">in</span> <span class="n">sign_combinations</span><span class="p">:</span>
-                <span class="c1"># Calculer la somme pondérée par les signes</span>
                 <span class="n">numbers</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">sign</span> <span class="o">*</span> <span class="n">num</span> <span class="k">for</span> <span class="n">sign</span><span class="p">,</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">signs</span><span class="p">,</span> <span class="n">combo</span><span class="p">))</span>
-
-                <span class="c1"># Construire le triplé avec les signes appliqués</span>
                 <span class="n">operation_triple</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">sign</span> <span class="o">*</span> <span class="n">num</span> <span class="k">for</span> <span class="n">sign</span><span class="p">,</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">signs</span><span class="p">,</span> <span class="n">combo</span><span class="p">))</span>
-
-                <span class="c1"># Ajouter le résultat et le triplé à l&#39;ensemble</span>
                 <span class="n">results_with_triples</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">numbers</span><span class="p">,</span> <span class="n">operation_triple</span><span class="p">))</span>
 
-        <span class="c1"># Convertir l&#39;ensemble en une liste triée des résultats avec leurs triplés</span>
         <span class="n">sorted_results_with_triples</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">results_with_triples</span><span class="p">)</span>
-
-        <span class="c1"># Normaliser les résultats selon les bornes spécifiées</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">sorted_results_with_triples</span><span class="p">]</span>
-        
-        <span class="n">max_sum_frequency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequencies</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">N_REPEAT</span>
-
+        <span class="n">max_sum_frequency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequencies</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_REPEAT</span>
         <span class="n">normalized_results_with_triples</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">value</span><span class="p">,</span> <span class="n">triple</span> <span class="ow">in</span> <span class="n">sorted_results_with_triples</span><span class="p">:</span>
-
             <span class="n">raw_ratio</span> <span class="o">=</span> <span class="n">value</span> <span class="o">/</span> <span class="n">max_sum_frequency</span>
             <span class="n">normalized_ratio</span> <span class="o">=</span> <span class="n">raw_ratio</span> <span class="o">*</span> <span class="n">amplitude</span>
-            
-            <span class="c1"># Échelle à [lower_bound, upper_bound]</span>
-            <span class="c1"># scaled_value = lower_bound + normalized_value * (upper_bound - lower_bound)</span>
-            
-            <span class="c1"># Centrer autour de `center`</span>
             <span class="n">centered_ratio</span> <span class="o">=</span> <span class="n">normalized_ratio</span> <span class="o">+</span> <span class="n">new_center</span>
-
             <span class="n">normalized_results_with_triples</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">centered_ratio</span><span class="p">,</span> <span class="n">triple</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">normalized_results_with_triples</span></div>
-    
 
-<div class="viewcode-block" id="Controller.f"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Controller.html#Neuroscience.structures.Controller.Controller.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">:</span> 
+<div class="viewcode-block" id="Controller.f"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Controller.html#Neuroscience.structures.Controller.Controller.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        counts the number of elements of the same sign as the command</span>
+<span class="sd">        Counts the number of elements in the combination that have the same sign as the command.</span>
+
+<span class="sd">        :param e: A tuple containing the ratio and combination.</span>
+<span class="sd">        :type e: tuple</span>
+<span class="sd">        :returns: The count of elements with the same sign as the command.</span>
+<span class="sd">        :rtype: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">f</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">c</span> <span class="o">=</span>  <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">:</span> 
-            <span class="k">if</span> <span class="n">n</span> <span class="o">*</span> <span class="n">f</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">:</span>
-                <span class="n">c</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">n</span> <span class="o">*</span> <span class="n">f</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">c</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">c</span></div>
-    
 
-<div class="viewcode-block" id="Controller.build_combinations"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Controller.html#Neuroscience.structures.Controller.Controller.build_combinations">[docs]</a>    <span class="k">def</span> <span class="nf">build_combinations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+<div class="viewcode-block" id="Controller.build_combinations"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Controller.html#Neuroscience.structures.Controller.Controller.build_combinations">[docs]</a>    <span class="k">def</span> <span class="nf">build_combinations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        the purpose of this function is to drastically reduce the number of elements in the Controller.main_list; It achieves two things </span>
-<span class="sd">        -get rid of doublons</span>
-<span class="sd">        -select only the elements that maximises a certain function(here f)</span>
-<span class="sd">        f is as it is to ensure that for negative movements we use mostly Inhibitory neurons and Excitatory movements for positive movements</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Reduces the number of elements in the Controller&#39;s main list by removing duplicates and selecting </span>
+<span class="sd">        elements that maximize a specific function.</span>
 
+<span class="sd">        The function `f` is designed to ensure that for negative movements, inhibitory neurons are used </span>
+<span class="sd">        predominantly, and excitatory neurons are used for positive movements.</span>
+
+<span class="sd">        :returns: A list of optimized frequency combinations.</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">Controller</span><span class="o">.</span><span class="n">main_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_combinations_raw</span><span class="p">()</span>
 
-
-        <span class="n">setA</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span> <span class="c1"># </span>
-
+        <span class="n">setA</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Controller</span><span class="o">.</span><span class="n">main_list</span><span class="p">)):</span>
             <span class="n">setA</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Controller</span><span class="o">.</span><span class="n">main_list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
 
         <span class="n">listA</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">setA</span><span class="p">)</span>
         <span class="n">index_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">value</span><span class="p">:</span> <span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">listA</span><span class="p">)}</span>
 
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">listA</span><span class="p">))</span> <span class="p">:</span> 
-            <span class="n">listA</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">listA</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
-
-        <span class="c1">#we are looking for the elements (a, (b,c)) of equal a and of maximum value f(b,c) in a linear time. that&#39;s why we use the dictionnary for constant complexity operations</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">listA</span><span class="p">)):</span>
+            <span class="n">listA</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">listA</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Controller</span><span class="o">.</span><span class="n">main_list</span><span class="p">)):</span>
             <span class="n">e</span> <span class="o">=</span> <span class="n">Controller</span><span class="o">.</span><span class="n">main_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="n">corresp_index</span> <span class="o">=</span> <span class="n">index_dict</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="c1"># retrieve index in constant time</span>
-            <span class="n">val</span> <span class="o">=</span> <span class="n">Controller</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="c1"># see above</span>
-            <span class="k">if</span> <span class="n">val</span> <span class="o">&gt;=</span> <span class="n">listA</span><span class="p">[</span><span class="n">corresp_index</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="p">:</span> 
-                 <span class="n">listA</span><span class="p">[</span><span class="n">corresp_index</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
-                 <span class="n">listA</span><span class="p">[</span><span class="n">corresp_index</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span> 
+            <span class="n">corresp_index</span> <span class="o">=</span> <span class="n">index_dict</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">Controller</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">val</span> <span class="o">&gt;=</span> <span class="n">listA</span><span class="p">[</span><span class="n">corresp_index</span><span class="p">][</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">listA</span><span class="p">[</span><span class="n">corresp_index</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                <span class="n">listA</span><span class="p">[</span><span class="n">corresp_index</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span>
 
         <span class="n">new_l</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">listA</span><span class="p">)):</span> 
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">listA</span><span class="p">)):</span>
             <span class="n">new_l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">listA</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span>
 
         <span class="n">set_l</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_l</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_l</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">new_l</span></div>
-    
-<div class="viewcode-block" id="Controller.create_oscillators"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Controller.html#Neuroscience.structures.Controller.Controller.create_oscillators">[docs]</a>    <span class="k">def</span> <span class="nf">create_oscillators</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ratio</span><span class="p">):</span>
 
+<div class="viewcode-block" id="Controller.create_oscillators"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Controller.html#Neuroscience.structures.Controller.Controller.create_oscillators">[docs]</a>    <span class="k">def</span> <span class="nf">create_oscillators</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ratio</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates and configures oscillators based on the given frequency ratio.</span>
+
+<span class="sd">        :param ratio: The target frequency ratio for configuring the oscillators.</span>
+<span class="sd">        :type ratio: float</span>
+<span class="sd">        :returns: The true value of the ratio and the corresponding frequency combination.</span>
+<span class="sd">        :rtype: tuple(float, tuple)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">tuple</span><span class="p">,</span> <span class="n">true_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_combination</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
 
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="nb">tuple</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_REPEAT</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">:</span>
-            
-            <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span> 
+            <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="k">else</span> <span class="p">:</span>
-                <span class="n">sign</span> <span class="o">=</span> <span class="n">j</span><span class="o">//</span><span class="nb">abs</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sign</span> <span class="o">=</span> <span class="n">j</span> <span class="o">//</span> <span class="nb">abs</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
 
             <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">oscillators</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
             <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequencies</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-                <span class="n">current</span><span class="o">.</span><span class="n">tune_oscillator</span><span class="p">([</span><span class="mf">0.015</span><span class="p">,</span><span class="mf">0.015</span><span class="p">],</span><span class="n">sign</span><span class="p">)</span><span class="c1">#0</span>
+                <span class="n">current</span><span class="o">.</span><span class="n">tune_oscillator</span><span class="p">([</span><span class="mf">0.015</span><span class="p">,</span> <span class="mf">0.015</span><span class="p">],</span> <span class="n">sign</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequencies</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="c1">#3.003003003003003</span>
-                <span class="n">current</span><span class="o">.</span><span class="n">tune_oscillator</span><span class="p">([</span><span class="mf">7.5</span><span class="p">,</span><span class="mf">7.5</span><span class="p">],</span><span class="n">sign</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequencies</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">current</span><span class="o">.</span><span class="n">tune_oscillator</span><span class="p">([</span><span class="mf">7.5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">],</span> <span class="n">sign</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequencies</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span><span class="c1"># 3.6032217041119123 </span>
-                <span class="n">current</span><span class="o">.</span><span class="n">tune_oscillator</span><span class="p">([</span><span class="mf">7.65</span><span class="p">,</span><span class="mf">7.65</span><span class="p">],</span><span class="n">sign</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequencies</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+                <span class="n">current</span><span class="o">.</span><span class="n">tune_oscillator</span><span class="p">([</span><span class="mf">7.65</span><span class="p">,</span> <span class="mf">7.65</span><span class="p">],</span> <span class="n">sign</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequencies</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="c1"># 4.504504504504505</span>
-                <span class="n">current</span><span class="o">.</span><span class="n">tune_oscillator</span><span class="p">([</span><span class="mf">7.8</span><span class="p">,</span><span class="mf">7.8</span><span class="p">],</span><span class="n">sign</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequencies</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+                <span class="n">current</span><span class="o">.</span><span class="n">tune_oscillator</span><span class="p">([</span><span class="mf">7.8</span><span class="p">,</span> <span class="mf">7.8</span><span class="p">],</span> <span class="n">sign</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequencies</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="c1">#6.024096385542169</span>
-                <span class="n">current</span><span class="o">.</span><span class="n">tune_oscillator</span><span class="p">([</span><span class="mf">8.325</span><span class="p">,</span><span class="mf">8.325</span><span class="p">],</span><span class="n">sign</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequencies</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span>
+                <span class="n">current</span><span class="o">.</span><span class="n">tune_oscillator</span><span class="p">([</span><span class="mf">8.325</span><span class="p">,</span> <span class="mf">8.325</span><span class="p">],</span> <span class="n">sign</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequencies</span><span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="c1">#9.00900900900901</span>
-                <span class="n">current</span><span class="o">.</span><span class="n">tune_oscillator</span><span class="p">([</span><span class="mf">10.65</span><span class="p">,</span><span class="mf">10.65</span><span class="p">],</span><span class="n">sign</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequencies</span><span class="p">[</span><span class="mi">5</span><span class="p">]:</span>
+                <span class="n">current</span><span class="o">.</span><span class="n">tune_oscillator</span><span class="p">([</span><span class="mf">10.65</span><span class="p">,</span> <span class="mf">10.65</span><span class="p">],</span> <span class="n">sign</span><span class="p">)</span>
 
-            <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
-        <span class="c1"># self.pass_inputs(1)</span>
-        <span class="k">return</span> <span class="n">true_val</span><span class="p">,</span><span class="nb">tuple</span></div>
-            
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">use_old_combinations</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">true_val</span><span class="p">,</span> <span class="nb">tuple</span></div>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">use_old_combinations</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the Controller instance with specified resolution and oscillator configuration.</span>
+
+<span class="sd">        :param res: The resolution of the simulation, affecting time steps.</span>
+<span class="sd">        :type res: int</span>
+<span class="sd">        :param use_old_combinations: Flag to determine whether to use old frequency combinations, defaults to False.</span>
+<span class="sd">        :type use_old_combinations: bool, optional</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Controller&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">res</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">oscillators</span> <span class="o">=</span> <span class="p">[</span><span class="n">Tunable_Oscillator</span><span class="p">(</span><span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_REPEAT</span><span class="p">)]</span>
-        <span class="k">if</span> <span class="n">Controller</span><span class="o">.</span><span class="n">main_list</span> <span class="o">==</span> <span class="p">[]</span> <span class="p">:</span> 
-            <span class="k">if</span> <span class="n">use_old_combinations</span> <span class="p">:</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">oscillators</span> <span class="o">=</span> <span class="p">[</span><span class="n">Tunable_Oscillator</span><span class="p">(</span><span class="n">res</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_REPEAT</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">Controller</span><span class="o">.</span><span class="n">main_list</span> <span class="o">==</span> <span class="p">[]:</span>
+            <span class="k">if</span> <span class="n">use_old_combinations</span><span class="p">:</span>
                 <span class="n">Controller</span><span class="o">.</span><span class="n">main_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_combinations_raw</span><span class="p">()</span>
-            <span class="k">else</span><span class="p">:</span> 
+            <span class="k">else</span><span class="p">:</span>
                 <span class="n">Controller</span><span class="o">.</span><span class="n">main_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_combinations</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">brain</span> <span class="o">=</span> <span class="p">[</span><span class="n">neuron</span> <span class="k">for</span> <span class="n">oscillator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">oscillators</span> <span class="k">for</span> <span class="n">neuron</span> <span class="ow">in</span> <span class="n">oscillator</span><span class="o">.</span><span class="n">brain</span><span class="p">]</span></div>
-
-        <span class="c1"># print(&quot;len :  \n&quot;,len(self.brain))</span>
 </pre></div>
 
           </div>
@@ -279,8 +319,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/animation.animate_any.html">animation.animate_any</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/forces.utils_forces.html">forces.utils_forces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/index.html">Welcome to Your Project’s documentation!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/index.html">Welcome to the Walking Neural Project !</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html">unitree_legged_sdk.example_py.Bezier.Foot_Sensor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>
@@ -292,11 +334,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.main_loop_v2.html">unitree_legged_sdk.example_py.Bezier.main_loop_v2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.plot_neurons.html">unitree_legged_sdk.example_py.Bezier.plot_neurons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/utils.html">utils</a></li>
 </ul>
 

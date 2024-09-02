@@ -31,54 +31,124 @@
           <div class="body" role="main">
             
   <h1>Source code for unitree_legged_sdk.example_py.Bezier.Foot_Sensor</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">forces.utils_forces</span> <span class="kn">import</span> <span class="o">*</span>   
+<span></span><span class="kn">from</span> <span class="nn">forces.utils_forces</span> <span class="kn">import</span> <span class="o">*</span>
 
-<div class="viewcode-block" id="Foot_Sensor"><a class="viewcode-back" href="../../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html#unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor">[docs]</a><span class="k">class</span> <span class="nc">Foot_Sensor</span><span class="p">()</span> <span class="p">:</span> 
-    <span class="n">parts</span><span class="o">=</span> <span class="p">[</span><span class="s1">&#39;FR&#39;</span><span class="p">,</span> <span class="s1">&#39;FL&#39;</span><span class="p">,</span><span class="s1">&#39;RR&#39;</span><span class="p">,</span><span class="s1">&#39;RL&#39;</span><span class="p">]</span>
+<div class="viewcode-block" id="Foot_Sensor"><a class="viewcode-back" href="../../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html#unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor">[docs]</a><span class="k">class</span> <span class="nc">Foot_Sensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to detect foot contact using sensor data and pattern recognition.</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">present_frames</span> <span class="o">=</span> <span class="p">{</span><span class="n">part</span> <span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">feet_detected</span> <span class="o">=</span> <span class="p">{</span><span class="n">part</span> <span class="p">:</span> <span class="n">part</span> <span class="o">+</span> <span class="s2">&quot; foot not detected&quot;</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">}</span> 
-        <span class="bp">self</span><span class="o">.</span><span class="n">old_point</span> <span class="o">=</span> <span class="p">{</span><span class="n">part</span> <span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">new_point</span> <span class="o">=</span> <span class="p">{</span><span class="n">part</span> <span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">}</span>
+<span class="sd">    The `Foot_Sensor` class tracks the movement and force data of a robot&#39;s foot over time to detect when </span>
+<span class="sd">    the foot makes contact with the ground. It utilizes a simple gradient-based pattern recognition to </span>
+<span class="sd">    identify specific footfall patterns.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    present_frames : dict of list</span>
+<span class="sd">        A dictionary storing the history of force data points for each foot.</span>
+<span class="sd">    </span>
+<span class="sd">    feet_detected : dict of str</span>
+<span class="sd">        A dictionary indicating whether a foot has been detected as making contact with the ground.</span>
+<span class="sd">        Initialized with &quot;foot not detected&quot; for each part.</span>
+<span class="sd">    </span>
+<span class="sd">    old_point : dict of list</span>
+<span class="sd">        A dictionary storing the previous force data point for each foot.</span>
+<span class="sd">    </span>
+<span class="sd">    new_point : dict of list</span>
+<span class="sd">        A dictionary storing the current force data point for each foot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;FR&#39;</span><span class="p">,</span> <span class="s1">&#39;FL&#39;</span><span class="p">,</span> <span class="s1">&#39;RR&#39;</span><span class="p">,</span> <span class="s1">&#39;RL&#39;</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    List of parts (feet) being monitored, including &#39;FR&#39; (Front Right), &#39;FL&#39; (Front Left),</span>
+<span class="sd">    &#39;RR&#39; (Rear Right), and &#39;RL&#39; (Rear Left).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the Foot_Sensor with default values.</span>
+
+<span class="sd">        The constructor sets up empty lists for tracking the force data history (`present_frames`),</span>
+<span class="sd">        initializes detection statuses (`feet_detected`), and sets up placeholders for old and new</span>
+<span class="sd">        force data points (`old_point`, `new_point`).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">present_frames</span> <span class="o">=</span> <span class="p">{</span><span class="n">part</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feet_detected</span> <span class="o">=</span> <span class="p">{</span><span class="n">part</span><span class="p">:</span> <span class="n">part</span> <span class="o">+</span> <span class="s2">&quot; foot not detected&quot;</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">old_point</span> <span class="o">=</span> <span class="p">{</span><span class="n">part</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_point</span> <span class="o">=</span> <span class="p">{</span><span class="n">part</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">}</span>
     
-<div class="viewcode-block" id="Foot_Sensor.get_foot_detected"><a class="viewcode-back" href="../../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html#unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.get_foot_detected">[docs]</a>    <span class="k">def</span> <span class="nf">get_foot_detected</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part</span><span class="p">)</span> <span class="p">:</span> 
+<div class="viewcode-block" id="Foot_Sensor.get_foot_detected"><a class="viewcode-back" href="../../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html#unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.get_foot_detected">[docs]</a>    <span class="k">def</span> <span class="nf">get_foot_detected</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the detection status of the specified foot part.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        part : str</span>
+<span class="sd">            The part (foot) for which to get the detection status.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            The detection status of the specified foot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">feet_detected</span><span class="p">[</span><span class="n">part</span><span class="p">]</span></div>
     
-<div class="viewcode-block" id="Foot_Sensor.reset_detection"><a class="viewcode-back" href="../../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html#unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.reset_detection">[docs]</a>    <span class="k">def</span> <span class="nf">reset_detection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">part</span><span class="p">):</span> 
+<div class="viewcode-block" id="Foot_Sensor.reset_detection"><a class="viewcode-back" href="../../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html#unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.reset_detection">[docs]</a>    <span class="k">def</span> <span class="nf">reset_detection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets the detection status of the specified foot part to &quot;foot not detected&quot;.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        part : str</span>
+<span class="sd">            The part (foot) for which to reset the detection status.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">feet_detected</span><span class="p">[</span><span class="n">part</span><span class="p">]</span> <span class="o">=</span> <span class="n">part</span> <span class="o">+</span> <span class="s2">&quot; foot not detected&quot;</span></div>
 
-<div class="viewcode-block" id="Foot_Sensor.detect"><a class="viewcode-back" href="../../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html#unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.detect">[docs]</a>    <span class="k">def</span> <span class="nf">detect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">new_motion_time</span><span class="p">,</span><span class="n">force</span><span class="p">,</span><span class="n">part</span><span class="p">)</span> <span class="p">:</span> 
-            <span class="c1"># self.feet_detected[part] = part +  &quot; foot detected&quot;</span>
-            <span class="c1"># print(&quot;inside detect : &quot;, new_motion_time,force)</span>
-            <span class="k">if</span> <span class="n">new_motion_time</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span> 
-                <span class="bp">self</span><span class="o">.</span><span class="n">new_point</span><span class="p">[</span><span class="n">part</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">new_motion_time</span><span class="p">,</span><span class="n">force</span><span class="p">]</span>
-            <span class="k">else</span> <span class="p">:</span> 
-                <span class="bp">self</span><span class="o">.</span><span class="n">old_point</span><span class="p">[</span><span class="n">part</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_point</span><span class="p">[</span><span class="n">part</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">new_point</span><span class="p">[</span><span class="n">part</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">new_motion_time</span><span class="p">,</span> <span class="n">force</span><span class="p">]</span>
+<div class="viewcode-block" id="Foot_Sensor.detect"><a class="viewcode-back" href="../../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html#unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.detect">[docs]</a>    <span class="k">def</span> <span class="nf">detect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_motion_time</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">part</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Processes the force data for the specified foot part, updating the detection status based on pattern recognition.</span>
+
+<span class="sd">        This method tracks the force data over time for each foot and applies a gradient-based pattern recognition </span>
+<span class="sd">        algorithm to detect when a foot makes contact with the ground. If a footfall pattern is detected, the foot&#39;s </span>
+<span class="sd">        detection status is updated.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        new_motion_time : float</span>
+<span class="sd">            The current time point in the motion sequence.</span>
+<span class="sd">        </span>
+<span class="sd">        force : float</span>
+<span class="sd">            The force detected at the specified time point.</span>
+<span class="sd">        </span>
+<span class="sd">        part : str</span>
+<span class="sd">            The part (foot) for which the detection is being performed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">new_motion_time</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_point</span><span class="p">[</span><span class="n">part</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">new_motion_time</span><span class="p">,</span> <span class="n">force</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">old_point</span><span class="p">[</span><span class="n">part</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_point</span><span class="p">[</span><span class="n">part</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_point</span><span class="p">[</span><span class="n">part</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">new_motion_time</span><span class="p">,</span> <span class="n">force</span><span class="p">]</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">old_point</span><span class="p">[</span><span class="n">part</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">calculate_derivative</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">new_point</span><span class="p">[</span><span class="n">part</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">old_point</span><span class="p">[</span><span class="n">part</span><span class="p">])]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">present_frames</span><span class="p">[</span><span class="n">part</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">old_point</span><span class="p">[</span><span class="n">part</span><span class="p">])</span>
+            
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">present_frames</span><span class="p">[</span><span class="n">part</span><span class="p">])</span> <span class="o">%</span> <span class="mi">20</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">local_maxes</span> <span class="o">=</span> <span class="n">monte_carlo_gradient</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">present_frames</span><span class="p">[</span><span class="n">part</span><span class="p">])</span>
+                <span class="n">local_mins</span> <span class="o">=</span> <span class="n">monte_carlo_gradient</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">present_frames</span><span class="p">[</span><span class="n">part</span><span class="p">])</span>
+                <span class="n">new_merged_mins_maxes_coordinates</span> <span class="o">=</span> <span class="n">build_merge</span><span class="p">(</span><span class="n">local_maxes</span><span class="p">,</span> <span class="n">local_mins</span><span class="p">)</span>
                 
-                <span class="bp">self</span><span class="o">.</span><span class="n">old_point</span><span class="p">[</span><span class="n">part</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">old_point</span><span class="p">[</span><span class="n">part</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">calculate_derivative</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">new_point</span><span class="p">[</span><span class="n">part</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">old_point</span><span class="p">[</span><span class="n">part</span><span class="p">])]</span>
-                <span class="c1">#---you have a delay of 1 point...</span>
+                <span class="k">if</span> <span class="n">part</span> <span class="o">==</span> <span class="s2">&quot;FR&quot;</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;FR:&#39;</span><span class="p">)</span>
+                    <span class="n">detected</span><span class="p">,</span> <span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span> <span class="o">=</span> <span class="n">find_a_pattern</span><span class="p">(</span><span class="n">new_merged_mins_maxes_coordinates</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">present_frames</span><span class="p">[</span><span class="n">part</span><span class="p">],</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">part</span> <span class="o">==</span> <span class="s2">&quot;FL&quot;</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;FL:&#39;</span><span class="p">)</span>
+                    <span class="n">detected</span><span class="p">,</span> <span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span> <span class="o">=</span> <span class="n">find_a_pattern</span><span class="p">(</span><span class="n">new_merged_mins_maxes_coordinates</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">present_frames</span><span class="p">[</span><span class="n">part</span><span class="p">],</span> <span class="mi">700</span><span class="p">,</span> <span class="mi">700</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Detecting a step pattern on a limb with no filter developed&quot;</span><span class="p">)</span>
                 
-                <span class="bp">self</span><span class="o">.</span><span class="n">present_frames</span><span class="p">[</span><span class="n">part</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">old_point</span><span class="p">[</span><span class="n">part</span><span class="p">])</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">present_frames</span><span class="p">[</span><span class="n">part</span><span class="p">])</span><span class="o">%</span><span class="mi">20</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span> 
-                    <span class="n">local_maxes</span> <span class="o">=</span> <span class="n">monte_carlo_gradient</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">present_frames</span><span class="p">[</span><span class="n">part</span><span class="p">])</span>
-                    <span class="n">local_mins</span> <span class="o">=</span> <span class="n">monte_carlo_gradient</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">present_frames</span><span class="p">[</span><span class="n">part</span><span class="p">])</span>
-                    <span class="n">new_merged_mins_maxes_coordinates</span> <span class="o">=</span> <span class="n">build_merge</span><span class="p">(</span><span class="n">local_maxes</span><span class="p">,</span> <span class="n">local_mins</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">part</span> <span class="o">==</span> <span class="s2">&quot;FR&quot;</span> <span class="p">:</span> 
-                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;FR : &#39;</span><span class="p">)</span>
-                        <span class="c1"># print(self.present_frames[part])</span>
-                        <span class="nb">bool</span><span class="p">,</span> <span class="n">p0</span><span class="p">,</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span> <span class="o">=</span> <span class="n">find_a_pattern</span><span class="p">(</span><span class="n">new_merged_mins_maxes_coordinates</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">present_frames</span><span class="p">[</span><span class="n">part</span><span class="p">],</span><span class="mi">400</span><span class="p">,</span><span class="mi">400</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
-                    <span class="k">elif</span> <span class="n">part</span> <span class="o">==</span> <span class="s2">&quot;FL&quot;</span> <span class="p">:</span> 
-                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FL: &quot;</span><span class="p">)</span>
-                        <span class="nb">bool</span><span class="p">,</span> <span class="n">p0</span><span class="p">,</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span> <span class="o">=</span> <span class="n">find_a_pattern</span><span class="p">(</span><span class="n">new_merged_mins_maxes_coordinates</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">present_frames</span><span class="p">[</span><span class="n">part</span><span class="p">],</span><span class="mi">700</span><span class="p">,</span><span class="mi">700</span><span class="p">,</span><span class="mf">5.5</span><span class="p">)</span>
-                    <span class="k">else</span> <span class="p">:</span> 
-                        <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;detecting a step pattern on a limb ith no filter developped&quot;</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="nb">bool</span> <span class="p">:</span>
-                        <span class="c1"># print(&quot;pattern found !\n\n&quot;,p0,p1,p2)#-----------this is typically where we would take action after the recognition of a step.</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;pattern found ! at : &quot;</span><span class="p">,</span> <span class="n">new_motion_time</span><span class="p">,</span><span class="s2">&quot;for part : &quot;</span><span class="p">,</span> <span class="n">part</span><span class="p">)</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">feet_detected</span><span class="p">[</span><span class="n">part</span><span class="p">]</span> <span class="o">=</span> <span class="n">part</span> <span class="o">+</span>  <span class="s2">&quot; foot detected&quot;</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">present_frames</span><span class="p">[</span><span class="n">part</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span></div></div>
+                <span class="k">if</span> <span class="n">detected</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pattern found at: </span><span class="si">{</span><span class="n">new_motion_time</span><span class="si">}</span><span class="s2"> for part: </span><span class="si">{</span><span class="n">part</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">feet_detected</span><span class="p">[</span><span class="n">part</span><span class="p">]</span> <span class="o">=</span> <span class="n">part</span> <span class="o">+</span> <span class="s2">&quot; foot detected&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">present_frames</span><span class="p">[</span><span class="n">part</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span></div></div>
 </pre></div>
 
           </div>
@@ -114,8 +184,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/animation.animate_any.html">animation.animate_any</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/forces.utils_forces.html">forces.utils_forces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/index.html">Welcome to Your Project’s documentation!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/index.html">Welcome to the Walking Neural Project !</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html">unitree_legged_sdk.example_py.Bezier.Foot_Sensor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>
@@ -127,11 +199,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.main_loop_v2.html">unitree_legged_sdk.example_py.Bezier.main_loop_v2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.plot_neurons.html">unitree_legged_sdk.example_py.Bezier.plot_neurons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/utils.html">utils</a></li>
 </ul>
 

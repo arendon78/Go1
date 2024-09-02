@@ -40,6 +40,19 @@ parts = ['FR','FL','RR','RL']
 # for part in parts : 
 #     for n in [0,1,2]:
 def directed_to_undirected(adj_matrix):
+    """
+    Converts a directed adjacency matrix to an undirected one.
+    
+    Parameters
+    ----------
+    adj_matrix : list of list of int
+        The directed adjacency matrix.
+
+    Returns
+    -------
+    undirected_matrix : np.ndarray
+        The undirected adjacency matrix.
+    """
     # Convert the input to a numpy array for easier manipulation
     adj_matrix = np.array(adj_matrix)
     n = adj_matrix.shape[0]
@@ -61,6 +74,14 @@ def directed_to_undirected(adj_matrix):
     return undirected_matrix
 
 def pretty_print(matrix):
+    """
+    Displays the adjacency matrix using Seaborn's heatmap.
+    
+    Parameters
+    ----------
+    matrix : list of list of int
+        The adjacency matrix.
+    """
     plt.figure(figsize=(8, 8))
     sns.heatmap(matrix, annot=True, fmt='d', cbar=False, cmap='viridis', linewidths=0.5, linecolor='black')
     plt.title('Adjacency Matrix')
@@ -69,6 +90,16 @@ def pretty_print(matrix):
     plt.show()
 
 def draw_graph(matrix,name="Directed Graph"):
+    """
+    Draws a directed graph using NetworkX.
+    
+    Parameters
+    ----------
+    matrix : list of list of int
+        The adjacency matrix representing the graph.
+    name : str, optional
+        The title of the graph. Default is "Directed Graph".
+    """
     G = nx.DiGraph()
     # Add nodes
     num_vertices = matrix.shape[0]
@@ -85,6 +116,22 @@ def draw_graph(matrix,name="Directed Graph"):
     plt.show()
 
 class Neuron(m.VMobject):
+    """
+    A class to represent a single neuron in the neural network visualization.
+
+    Attributes
+    ----------
+    radius : float
+        The radius of the neuron's visual representation.
+    color : m.Color
+        The color of the neuron.
+    original_color : m.Color
+        The original color of the neuron.
+    original_radius : float
+        The original radius of the neuron.
+    circle : m.Circle
+        The visual representation of the neuron.
+    """
     def __init__(self, radius=0.08, color=m.BLUE, **kwargs):
         super().__init__(**kwargs)
         self.radius = radius
@@ -102,8 +149,19 @@ class Neuron(m.VMobject):
 
 
 class NeuralNetwork(m.Scene):
+    """
+    A class to visualize a neural network using Manim.
+
+    This class constructs a visual representation of a neural network based on
+    the data provided in the JSON file. It handles the placement of neurons,
+    the drawing of connections, and the animation of neuron activations.
+    """
 
     def construct(self):
+        """
+        Constructs the neural network visualization, applies forces to neurons,
+        and animates their activations.
+        """ 
         neurons = []
         n_neurons_per_pack = 4*4*3 #3 articulations each with 4 tunable oscillators each containing 4 neurons
         packs = 4
@@ -169,6 +227,16 @@ class NeuralNetwork(m.Scene):
         
         # Function to apply repulsion and spring forces within each pack
         def apply_forces(neurons_pack, adjacency_matrix):
+            """
+            Applies repulsion and spring forces within each pack of neurons.
+
+            Parameters
+            ----------
+            neurons_pack : list of Neuron
+                The list of neurons in the pack.
+            adjacency_matrix : np.ndarray
+                The adjacency matrix representing connections between neurons.
+            """
             undirected_matrix = directed_to_undirected(adjacency_matrix)
             spring_constant = 1
             rest_length = 0.2
@@ -205,6 +273,14 @@ class NeuralNetwork(m.Scene):
 
         # Function to avoid overlap by nudging neurons slightly apart
         def avoid_overlap(neurons_pack):
+            """
+            Avoids overlap by nudging neurons slightly apart.
+
+            Parameters
+            ----------
+            neurons_pack : list of Neuron
+                The list of neurons in the pack.
+            """
             for _ in range(10):  # Number of iterations for overlap avoidance
                 for i in range(len(neurons_pack)):
                     for j in range(i + 1, len(neurons_pack)):
@@ -221,7 +297,17 @@ class NeuralNetwork(m.Scene):
 
         # Function to apply centripetal force towards pack center
         def apply_centripetal_force(neurons_pack, center):
-            for i in range(150):  # Number of iterations for centripetal force
+            """
+            Applies centripetal force towards the pack center.
+
+            Parameters
+            ----------
+            neurons_pack : list of Neuron
+                The list of neurons in the pack.
+            center : np.ndarray
+                The center towards which the centripetal force is applied.
+            """
+            for _ in range(150):  # Number of iterations for centripetal force
                 for idx, neuron in enumerate(neurons_pack):
                     force = np.array([0.0, 0.0, 0.0])
                     # Centripetal force towards pack center
@@ -262,6 +348,23 @@ class NeuralNetwork(m.Scene):
 
         # Function to calculate mean distances between neurons
         def calculate_mean_distances(neurons_by_pack, adjacency_matrices):
+            """
+            Calculates mean distances between connected and unconnected neurons.
+
+            Parameters
+            ----------
+            neurons_by_pack : list of Neuron
+                The list of neurons in the pack.
+            adjacency_matrices : list of np.ndarray
+                The list of adjacency matrices for each pack.
+
+            Returns
+            -------
+            mean_connected : float
+                The mean distance between connected neurons.
+            mean_unconnected : float
+                The mean distance between unconnected neurons.
+            """
             connected_distances = []
             unconnected_distances = []
             for pack_neurons, adjacency_matrix in zip(neurons_by_pack, adjacency_matrices):
@@ -287,6 +390,25 @@ class NeuralNetwork(m.Scene):
 
         
         def map_data_to_neuron(part,n,k, neurons_by_pack) : 
+            """
+            Maps data to the corresponding neuron in the visualization.
+
+            Parameters
+            ----------
+            part : str
+                The part of the system ('FR', 'FL', etc.).
+            n : int
+                The index of the neuron group.
+            k : int
+                The index of the neuron within the group.
+            neurons_by_pack : list of Neuron
+                The list of neurons in the pack.
+
+            Returns
+            -------
+            Neuron
+                The neuron object corresponding to the provided data.
+            """
             #corresponds to activity of neuron data_json[part][n][1][k]
             index = -1
             for i, partt in enumerate(parts):
@@ -300,6 +422,21 @@ class NeuralNetwork(m.Scene):
             return neurons_by_pack[index][16*n + k]
         
         def map_neuron_to_data(part_index, i): 
+            """
+            Maps a neuron in the visualization to its data.
+
+            Parameters
+            ----------
+            part_index : int
+                The index of the part in the parts list.
+            i : int
+                The index of the neuron.
+
+            Returns
+            -------
+            tuple
+                A tuple containing the part, neuron group index, neuron index, and the corresponding data.
+            """
             #corresponds to neuron neurons_by_pack[part_index][i]
             part = parts[part_index]
             n = i//16
@@ -310,6 +447,16 @@ class NeuralNetwork(m.Scene):
 
 
         def activation(time_neuron_to_fire, neurons_by_pack):
+            """
+            Animates neuron activations over time.
+
+            Parameters
+            ----------
+            time_neuron_to_fire : list of list of list
+                A time-indexed structure containing neurons that fire at each step.
+            neurons_by_pack : list of Neuron
+                The list of neurons in the pack.
+            """
             active_color = "yellow"  # Choose a distinct color
             active_scale_factor = 1.5  # Scale factor for active neurons
 

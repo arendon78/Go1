@@ -46,10 +46,57 @@
 
 
 <div class="viewcode-block" id="Activity_Detector"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Activity_Detector.html#Neuroscience.structures.Activity_Detector.Activity_Detector">[docs]</a><span class="k">class</span>  <span class="nc">Activity_Detector</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class that monitors and detects the activity of neurons in a neural network.</span>
+
+<span class="sd">    The `Activity_Detector` class keeps track of the membrane potential of a set of neurons and records </span>
+<span class="sd">    whether each neuron is active or inactive. It uses timeouts to determine the activity state based on </span>
+<span class="sd">    the neuron&#39;s potential compared to the action potential threshold.</span>
+
+<span class="sd">    The important property of the Activity Detector compared to the Frequency Detector is that it notices     </span>
+<span class="sd">    activity with a constant offset of [DELAY] thus the period of activity and inactivity remains the same as originally. On the other hand,     </span>
+<span class="sd">    the Frequency detector notices the frequence as soon as it noticed two spikes and the frequence comes back to 0 once [DELAY] has passed.  </span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    -----------</span>
+<span class="sd">    </span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of the activity detector, initialized as &quot;Activity Detector&quot;.</span>
+<span class="sd">      </span>
+<span class="sd">    watch_neurons : list of Abstract_Neuron</span>
+<span class="sd">        The list of neurons being monitored by the activity detector.</span>
+<span class="sd">     </span>
+<span class="sd">    len : int</span>
+<span class="sd">        The number of neurons being monitored.</span>
+<span class="sd">    </span>
+<span class="sd">    inactive_timeout : list of int</span>
+<span class="sd">        A list that tracks the inactive timeout for each neuron. Initialized to -1.</span>
+<span class="sd">    </span>
+<span class="sd">    active_timeout : list of int</span>
+<span class="sd">        A list that tracks the active timeout for each neuron. Initialized to -1.</span>
+<span class="sd">    </span>
+<span class="sd">    active_neurons : list of str</span>
+<span class="sd">        A list that records the activity state (&quot;0&quot; for inactive, &quot;1&quot; for active) of each neuron.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">DELAY</span> <span class="o">=</span> <span class="mi">800</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The delay period (in simulation steps) used to determine the transition between active and inactive states.</span>
+<span class="sd">    </span>
+<span class="sd">    .</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">watch_neurons</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the Activity_Detector instance with a list of neurons to monitor.</span>
+
+<span class="sd">        :param watch_neurons: The list of neurons to be monitored for activity.</span>
+<span class="sd">        :type watch_neurons: list of Abstract_Neuron</span>
+
+<span class="sd">        :raises AssertionError: If the list of watch_neurons is empty.</span>
+
+<span class="sd">        .</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Activity Detector&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">watch_neurons</span> <span class="o">=</span> <span class="n">watch_neurons</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">watch_neurons</span><span class="p">)</span>
@@ -60,7 +107,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">active_neurons</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;0&quot;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)]</span>
 
 
-<div class="viewcode-block" id="Activity_Detector.update_activity"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Activity_Detector.html#Neuroscience.structures.Activity_Detector.Activity_Detector.update_activity">[docs]</a>    <span class="k">def</span> <span class="nf">update_activity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+<div class="viewcode-block" id="Activity_Detector.update_activity"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Activity_Detector.html#Neuroscience.structures.Activity_Detector.Activity_Detector.update_activity">[docs]</a>    <span class="k">def</span> <span class="nf">update_activity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the activity status of the monitored neurons.</span>
+
+<span class="sd">        This method checks each neuron s membrane potential and updates its activity state based on the action </span>
+<span class="sd">        potential threshold. The state is updated using timeouts to manage transitions between active and </span>
+<span class="sd">        inactive states.</span>
+
+<span class="sd">        .</span>
+<span class="sd">        &quot;&quot;&quot;</span> 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">):</span> 
         
             <span class="n">curr_neur</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">watch_neurons</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -91,9 +147,25 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">inactive_timeout</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Activity_Detector</span><span class="o">.</span><span class="n">DELAY</span></div>
 
 <div class="viewcode-block" id="Activity_Detector.print_activity"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Activity_Detector.html#Neuroscience.structures.Activity_Detector.Activity_Detector.print_activity">[docs]</a>    <span class="k">def</span> <span class="nf">print_activity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span> 
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the current activity status of the monitored neurons as a string.</span>
+
+<span class="sd">        :returns: A string representing the activity status of each neuron (&quot;0&quot; for inactive, &quot;1&quot; for active).</span>
+<span class="sd">        :rtype: str</span>
+
+<span class="sd">        .</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">active_neurons</span><span class="p">)</span></div>
     
 <div class="viewcode-block" id="Activity_Detector.get_activity"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Activity_Detector.html#Neuroscience.structures.Activity_Detector.Activity_Detector.get_activity">[docs]</a>    <span class="k">def</span> <span class="nf">get_activity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span> 
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the current activity status of the monitored neurons.</span>
+
+<span class="sd">        :returns: A string representing the activity status of each neuron (&quot;0&quot; for inactive, &quot;1&quot; for active).</span>
+<span class="sd">        :rtype: str</span>
+
+<span class="sd">        .</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span>  <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">active_neurons</span><span class="p">)</span></div></div>
             
 
@@ -133,8 +205,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/animation.animate_any.html">animation.animate_any</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/forces.utils_forces.html">forces.utils_forces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/index.html">Welcome to Your Project’s documentation!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/index.html">Welcome to the Walking Neural Project !</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html">unitree_legged_sdk.example_py.Bezier.Foot_Sensor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>
@@ -146,11 +220,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.main_loop_v2.html">unitree_legged_sdk.example_py.Bezier.main_loop_v2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.plot_neurons.html">unitree_legged_sdk.example_py.Bezier.plot_neurons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/utils.html">utils</a></li>
 </ul>
 

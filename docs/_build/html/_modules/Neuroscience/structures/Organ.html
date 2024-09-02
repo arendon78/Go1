@@ -45,10 +45,39 @@
 <span class="c1"># from structures.Excitatory_Neuron import Excitatory_Neuron</span>
 <span class="c1"># from structures.Inhibitory_Neuron import Inhibitory_Neuron</span>
 
-<div class="viewcode-block" id="Organ"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ">[docs]</a><span class="k">class</span> <span class="nc">Organ</span><span class="p">:</span> 
+<div class="viewcode-block" id="Organ"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ">[docs]</a><span class="k">class</span> <span class="nc">Organ</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class representing an organ in a neural network model, consisting of multiple neurons and managing their interactions.</span>
 
+<span class="sd">    The `Organ` class serves as a container for neurons, managing their connections, updating the adjacency matrix,</span>
+<span class="sd">    and simulating the neural activity. It can be used to represent more complex structures within a neural network.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of the organ. If not overridden, defaults to &quot;Your class does not implement name attribute (it should)&quot;.</span>
+<span class="sd">    </span>
+<span class="sd">    brain : list of Abstract_Neuron</span>
+<span class="sd">        A list of neurons that make up the organ.</span>
+<span class="sd">    </span>
+<span class="sd">    input_neurons : list of Abstract_Neuron</span>
+<span class="sd">        A list of input neurons for the organ.</span>
+<span class="sd">    </span>
+<span class="sd">    output_neurons : list of Abstract_Neuron</span>
+<span class="sd">        A list of output neurons for the organ.</span>
+<span class="sd">    </span>
+<span class="sd">    network : list</span>
+<span class="sd">        A list representing the network connections within the organ.</span>
+<span class="sd">    </span>
+<span class="sd">    adjacency : AdjacencyMatrix</span>
+<span class="sd">        An adjacency matrix representing the connections between neurons in the organ.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the Organ instance, setting up the basic attributes including the brain, input, and output neurons,</span>
+<span class="sd">        as well as the network and adjacency matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Your class does not implement name attribute (it should)&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">brain</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_neurons</span> <span class="o">=</span> <span class="p">[]</span>
@@ -56,79 +85,111 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">network</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">adjacency</span> <span class="o">=</span> <span class="n">AdjacencyMatrix</span><span class="p">()</span>
 
+<div class="viewcode-block" id="Organ.tune"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ.tune">[docs]</a>    <span class="k">def</span> <span class="nf">tune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tunes the weights of a specific neuron in the organ.</span>
 
-<div class="viewcode-block" id="Organ.tune"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ.tune">[docs]</a>    <span class="k">def</span> <span class="nf">tune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">weigths</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">set_weights</span><span class="p">(</span><span class="n">weigths</span><span class="p">)</span></div>
+<span class="sd">        :param index: The index of the neuron in the brain list.</span>
+<span class="sd">        :type index: int</span>
+<span class="sd">        :param weights: The new weights to be set for the neuron.</span>
+<span class="sd">        :type weights: list of float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">set_weights</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Organ.get_voltage"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ.get_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the voltage of the organ (currently a placeholder function).</span>
+
+<span class="sd">        :returns: A string indicating that this is the organ voltage.</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;organ voltage&quot;</span></div>
     
-<div class="viewcode-block" id="Organ.add_to_brain"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ.add_to_brain">[docs]</a>    <span class="k">def</span> <span class="nf">add_to_brain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">neuron</span><span class="p">):</span>
+<div class="viewcode-block" id="Organ.add_to_brain"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ.add_to_brain">[docs]</a>    <span class="k">def</span> <span class="nf">add_to_brain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neuron</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds a neuron to the organ&#39;s brain.</span>
+
+<span class="sd">        :param neuron: The neuron to be added to the brain list.</span>
+<span class="sd">        :type neuron: Abstract_Neuron</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neuron</span><span class="p">)</span></div>
     
-<div class="viewcode-block" id="Organ.update_adjacency_matrix"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ.update_adjacency_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">update_adjacency_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1">#costly function (O(n^2))</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adjacency</span><span class="o">.</span><span class="n">size</span> <span class="p">:</span>
+<div class="viewcode-block" id="Organ.update_adjacency_matrix"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ.update_adjacency_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">update_adjacency_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the adjacency matrix to reflect the current connections between neurons in the organ.</span>
+
+<span class="sd">        This is a costly function with a time complexity of O(n^2), where n is the number of neurons.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adjacency</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">adjacency</span> <span class="o">=</span> <span class="n">AdjacencyMatrix</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="p">)):</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="p">)):</span>
                 <span class="n">ni</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                 <span class="n">nj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">ni</span><span class="o">.</span><span class="n">is_connected</span><span class="p">(</span><span class="n">nj</span><span class="p">):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">adjacency</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span></div>
-
+                    <span class="bp">self</span><span class="o">.</span><span class="n">adjacency</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Organ.print_network"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ.print_network">[docs]</a>    <span class="k">def</span> <span class="nf">print_network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prints the network structure of the organ using the adjacency matrix.</span>
+
+<span class="sd">        :param name: The name for the graph or network being printed.</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">neuron_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">neuron</span><span class="o">.</span><span class="n">type</span> <span class="k">for</span> <span class="n">neuron</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="p">]</span>
-        <span class="c1"># self.adjacency.plot_force_directed_graph(neuron_types,graph_name = name)</span>
-        <span class="c1"># self.adjacency.plot_force_directed_graph(neuron_types, graph_name = name)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">adjacency</span><span class="o">.</span><span class="n">pretty_print</span><span class="p">()</span></div>
     
-<div class="viewcode-block" id="Organ.connect"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">index</span><span class="p">,</span> <span class="n">neuron</span><span class="p">):</span>
+<div class="viewcode-block" id="Organ.connect"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">neuron</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Connects a neuron at a specified index in the brain to another neuron.</span>
+
+<span class="sd">        :param index: The index of the neuron in the brain list.</span>
+<span class="sd">        :type index: int</span>
+<span class="sd">        :param neuron: The neuron to connect with.</span>
+<span class="sd">        :type neuron: Abstract_Neuron</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">connect_with_neuron</span><span class="p">(</span><span class="n">neuron</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Organ.replace"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ.replace">[docs]</a>    <span class="k">def</span> <span class="nf">replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">index</span><span class="p">,</span> <span class="n">neuron</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">=</span> <span class="n">neuron</span></div>
+<div class="viewcode-block" id="Organ.replace"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ.replace">[docs]</a>    <span class="k">def</span> <span class="nf">replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">neuron</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Replaces a neuron at a specified index in the brain with another neuron.</span>
 
+<span class="sd">        :param index: The index of the neuron to be replaced.</span>
+<span class="sd">        :type index: int</span>
+<span class="sd">        :param neuron: The new neuron to replace the old one.</span>
+<span class="sd">        :type neuron: Abstract_Neuron</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">neuron</span></div>
 
+<div class="viewcode-block" id="Organ.simulate"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">V</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simulates the neural activity within the organ for a single time step.</span>
 
-<div class="viewcode-block" id="Organ.simulate"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">V</span><span class="p">):</span>
-
+<span class="sd">        :param k: The current time step in the simulation.</span>
+<span class="sd">        :type k: int</span>
+<span class="sd">        :param V: A matrix to store the membrane potentials of the neurons over time.</span>
+<span class="sd">        :type V: numpy.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">neuron_count</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="c1"># One for loop for calculating the state of the neurons with the current inputs</span>
 
+        <span class="c1"># Calculate the state of each neuron based on current inputs</span>
         <span class="k">for</span> <span class="n">neuron</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="p">:</span>
-            <span class="c1"># If there&#39;s an input present and an action potential is not going on,</span>
-            <span class="c1"># then prepare to keep track of the voltage and reinitialize timers</span>
             <span class="n">neuron</span><span class="o">.</span><span class="n">present_inputs</span><span class="p">(</span><span class="n">neuron</span><span class="o">.</span><span class="n">inputs</span><span class="p">)</span>
-            <span class="c1"># If there&#39;s no active potential taking place,</span>
-            <span class="c1"># call spatial_summation function to keep track of the overall voltage in the neuron</span>
+            
             <span class="k">if</span> <span class="ow">not</span> <span class="n">neuron</span><span class="o">.</span><span class="n">active_potential_bool</span><span class="p">:</span>
-                <span class="c1"># print(&quot;k,neuron_count : &quot;,k,neuron_count)</span>
-                <span class="c1"># print(k)</span>
-                <span class="c1"># print(neuron_count)</span>
                 <span class="n">V</span><span class="p">[</span><span class="n">neuron_count</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">neuron</span><span class="o">.</span><span class="n">spatial_summation</span><span class="p">()</span>
 
-            <span class="c1"># There is an active potential taking place</span>
             <span class="k">if</span> <span class="n">neuron</span><span class="o">.</span><span class="n">active_potential_bool</span><span class="p">:</span>
                 <span class="n">neuron</span><span class="o">.</span><span class="n">time_neuron</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="c1"># Call to active potential function</span>
-                <span class="n">pot</span> <span class="o">=</span> <span class="n">neuron</span><span class="o">.</span><span class="n">active_potential</span><span class="p">(</span><span class="n">neuron</span><span class="o">.</span><span class="n">time_neuron</span><span class="o">*</span><span class="n">neuron</span><span class="o">.</span><span class="n">resolution</span><span class="p">)</span>
+                <span class="n">pot</span> <span class="o">=</span> <span class="n">neuron</span><span class="o">.</span><span class="n">active_potential</span><span class="p">(</span><span class="n">neuron</span><span class="o">.</span><span class="n">time_neuron</span> <span class="o">*</span> <span class="n">neuron</span><span class="o">.</span><span class="n">resolution</span><span class="p">)</span>
+                <span class="n">V</span><span class="p">[</span><span class="n">neuron_count</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">pot</span>
 
-                <span class="n">V</span><span class="p">[</span><span class="n">neuron_count</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">pot</span> <span class="c1">#... updating V along the way.</span>
-                <span class="c1"># End of call to active potential function</span>
-
-            <span class="c1"># The PSP or the active potential are over</span>
-            <span class="c1"># Reset voltage, time, and temporal summation of the neuron to 0</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">neuron</span><span class="o">.</span><span class="n">active_PSP</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">neuron</span><span class="o">.</span><span class="n">active_potential_bool</span><span class="p">:</span>
                 <span class="n">V</span><span class="p">[</span><span class="n">neuron_count</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="n">neuron</span><span class="o">.</span><span class="n">time_neuron</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="n">neuron</span><span class="o">.</span><span class="n">membrane_potential</span> <span class="o">=</span> <span class="mi">0</span>   
 
-
-            <span class="c1"># Update current outputs of the neurons to their connected neurons for the next iteration</span>
             <span class="n">neuron</span><span class="o">.</span><span class="n">propagate_outputs</span><span class="p">()</span>
-
-            <span class="c1"># Update neuron counter</span>
             <span class="n">neuron_count</span> <span class="o">+=</span> <span class="mi">1</span></div></div>
 </pre></div>
 
@@ -165,8 +226,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/animation.animate_any.html">animation.animate_any</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/forces.utils_forces.html">forces.utils_forces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/index.html">Welcome to Your Project’s documentation!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/index.html">Welcome to the Walking Neural Project !</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html">unitree_legged_sdk.example_py.Bezier.Foot_Sensor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>
@@ -178,11 +241,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.main_loop_v2.html">unitree_legged_sdk.example_py.Bezier.main_loop_v2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.plot_neurons.html">unitree_legged_sdk.example_py.Bezier.plot_neurons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/utils.html">utils</a></li>
 </ul>
 

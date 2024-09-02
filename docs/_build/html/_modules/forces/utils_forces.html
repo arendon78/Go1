@@ -37,278 +37,265 @@
 <span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">math</span>
 
-<div class="viewcode-block" id="calculate_derivative"><a class="viewcode-back" href="../../source/forces.utils_forces.html#forces.utils_forces.calculate_derivative">[docs]</a><span class="k">def</span> <span class="nf">calculate_derivative</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">((</span><span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span></div>
+<div class="viewcode-block" id="calculate_derivative"><a class="viewcode-back" href="../../source/forces.utils_forces.html#forces.utils_forces.calculate_derivative">[docs]</a><span class="k">def</span> <span class="nf">calculate_derivative</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the derivative (slope) between two points.</span>
 
-<span class="c1">#not exactly a gradient, but idea is the same idea</span>
-<div class="viewcode-block" id="gradient_ascent"><a class="viewcode-back" href="../../source/forces.utils_forces.html#forces.utils_forces.gradient_ascent">[docs]</a><span class="k">def</span> <span class="nf">gradient_ascent</span><span class="p">(</span><span class="n">list_point_derivative</span><span class="p">)</span> <span class="p">:</span> 
-    <span class="n">HORIZON</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list_point_derivative</span><span class="p">)</span><span class="o">/</span><span class="mi">10</span><span class="p">),</span><span class="mi">2</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="n">HORIZON</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">list_point_derivative</span><span class="p">)</span><span class="o">-</span><span class="n">HORIZON</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mf">0.25</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">list_point_derivative</span><span class="p">))):</span>
+<span class="sd">    :param p1: The first point (x1, y1).</span>
+<span class="sd">    :type p1: tuple of float</span>
+<span class="sd">    :param p2: The second point (x2, y2).</span>
+<span class="sd">    :type p2: tuple of float</span>
+<span class="sd">    :returns: The slope between the two points.</span>
+<span class="sd">    :rtype: float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="gradient_ascent"><a class="viewcode-back" href="../../source/forces.utils_forces.html#forces.utils_forces.gradient_ascent">[docs]</a><span class="k">def</span> <span class="nf">gradient_ascent</span><span class="p">(</span><span class="n">list_point_derivative</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Performs gradient ascent to find a local maximum in the list of points.</span>
+
+<span class="sd">    :param list_point_derivative: A list of points with their derivatives.</span>
+<span class="sd">    :type list_point_derivative: list of tuples</span>
+<span class="sd">    :returns: The point corresponding to the local maximum found.</span>
+<span class="sd">    :rtype: tuple</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">HORIZON</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list_point_derivative</span><span class="p">)</span><span class="o">/</span><span class="mi">10</span><span class="p">),</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="n">HORIZON</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_point_derivative</span><span class="p">)</span> <span class="o">-</span> <span class="n">HORIZON</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mf">0.25</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_point_derivative</span><span class="p">))):</span>
         <span class="n">current_point</span> <span class="o">=</span> <span class="n">list_point_derivative</span><span class="p">[</span><span class="n">p</span><span class="p">]</span>
         <span class="n">found_higher_point</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="k">while</span>  <span class="n">j</span><span class="o">&lt;</span><span class="n">HORIZON</span><span class="o">//</span><span class="mi">2</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">found_higher_point</span><span class="p">:</span> 
-            <span class="k">if</span> <span class="p">(</span><span class="n">p</span><span class="o">+</span><span class="n">j</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_point_derivative</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="p">(</span><span class="n">p</span><span class="o">-</span><span class="n">j</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">:</span> 
+        <span class="k">while</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">HORIZON</span> <span class="o">//</span> <span class="mi">2</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">found_higher_point</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">j</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_point_derivative</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">or</span> <span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="n">j</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">break</span>
-            <span class="n">left_point</span> <span class="o">=</span> <span class="n">list_point_derivative</span><span class="p">[</span><span class="n">p</span><span class="o">-</span><span class="n">j</span><span class="p">]</span>
-            <span class="n">right_point</span> <span class="o">=</span> <span class="n">list_point_derivative</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="n">j</span><span class="p">]</span>
-            <span class="c1">#we go in the direction of the highest point in an horizon of 10 points. this is to prevent beiing stuck because of local plateaus(where the first derivative would be stuck)</span>
-            <span class="k">if</span> <span class="n">right_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">current_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">:</span> 
-                <span class="n">p</span><span class="o">+=</span><span class="n">j</span>
+            <span class="n">left_point</span> <span class="o">=</span> <span class="n">list_point_derivative</span><span class="p">[</span><span class="n">p</span> <span class="o">-</span> <span class="n">j</span><span class="p">]</span>
+            <span class="n">right_point</span> <span class="o">=</span> <span class="n">list_point_derivative</span><span class="p">[</span><span class="n">p</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">right_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">current_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">p</span> <span class="o">+=</span> <span class="n">j</span>
                 <span class="n">found_higher_point</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">break</span>
-            <span class="k">elif</span> <span class="n">left_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">current_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> 
-                <span class="n">p</span><span class="o">-=</span><span class="n">j</span>
+            <span class="k">elif</span> <span class="n">left_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">current_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">p</span> <span class="o">-=</span> <span class="n">j</span>
                 <span class="n">found_higher_point</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">break</span>
-            <span class="k">else</span> <span class="p">:</span> <span class="kc">None</span>
-            <span class="n">j</span><span class="o">+=</span><span class="mi">1</span>                
+            <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>                
     <span class="k">return</span> <span class="n">list_point_derivative</span><span class="p">[</span><span class="n">p</span><span class="p">]</span></div>
 
-<span class="c1">#not exactly a gradient, but idea is the same</span>
-<div class="viewcode-block" id="gradient_descent"><a class="viewcode-back" href="../../source/forces.utils_forces.html#forces.utils_forces.gradient_descent">[docs]</a><span class="k">def</span> <span class="nf">gradient_descent</span><span class="p">(</span><span class="n">list_point_derivative</span><span class="p">):</span> 
-    
-    <span class="n">HORIZON</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list_point_derivative</span><span class="p">)</span><span class="o">/</span><span class="mi">10</span><span class="p">),</span><span class="mi">2</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="n">HORIZON</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">list_point_derivative</span><span class="p">)</span><span class="o">-</span><span class="n">HORIZON</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mf">0.25</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">list_point_derivative</span><span class="p">))):</span>
-        <span class="n">current_point</span> <span class="o">=</span> <span class="n">list_point_derivative</span><span class="p">[</span><span class="n">p</span><span class="p">]</span>
+<div class="viewcode-block" id="gradient_descent"><a class="viewcode-back" href="../../source/forces.utils_forces.html#forces.utils_forces.gradient_descent">[docs]</a><span class="k">def</span> <span class="nf">gradient_descent</span><span class="p">(</span><span class="n">list_point_derivative</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Performs gradient descent to find a local minimum in the list of points.</span>
 
+<span class="sd">    :param list_point_derivative: A list of points with their derivatives.</span>
+<span class="sd">    :type list_point_derivative: list of tuples</span>
+<span class="sd">    :returns: The point corresponding to the local minimum found.</span>
+<span class="sd">    :rtype: tuple</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">HORIZON</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list_point_derivative</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span><span class="p">),</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="n">HORIZON</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_point_derivative</span><span class="p">)</span> <span class="o">-</span> <span class="n">HORIZON</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mf">0.25</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_point_derivative</span><span class="p">))):</span>
+        <span class="n">current_point</span> <span class="o">=</span> <span class="n">list_point_derivative</span><span class="p">[</span><span class="n">p</span><span class="p">]</span>
         <span class="n">found_higher_point</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="k">while</span>  <span class="n">j</span> <span class="o">&lt;</span> <span class="n">HORIZON</span><span class="o">//</span><span class="mi">2</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">found_higher_point</span><span class="p">:</span> 
-            <span class="k">if</span> <span class="n">p</span><span class="o">+</span><span class="n">j</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_point_derivative</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">p</span><span class="o">-</span><span class="n">j</span><span class="o">&lt;</span> <span class="mi">0</span> <span class="p">:</span> 
+        <span class="k">while</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">HORIZON</span> <span class="o">//</span> <span class="mi">2</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">found_higher_point</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">p</span> <span class="o">+</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_point_derivative</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">p</span> <span class="o">-</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">break</span>
-
-
-            <span class="n">left_point</span> <span class="o">=</span> <span class="n">list_point_derivative</span><span class="p">[</span><span class="n">p</span><span class="o">-</span><span class="n">j</span><span class="p">]</span>
-
-
-            <span class="n">right_point</span> <span class="o">=</span> <span class="n">list_point_derivative</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="n">j</span><span class="p">]</span>
-            <span class="c1">#we go in the direction of the lowest point in an horizon of 10 points. this is to prevent beiing stuck because of local plateaus(where the first derivative would be stuck)</span>
-            <span class="k">if</span> <span class="n">right_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">current_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">:</span> 
-                <span class="n">p</span><span class="o">+=</span><span class="n">j</span>
+            <span class="n">left_point</span> <span class="o">=</span> <span class="n">list_point_derivative</span><span class="p">[</span><span class="n">p</span> <span class="o">-</span> <span class="n">j</span><span class="p">]</span>
+            <span class="n">right_point</span> <span class="o">=</span> <span class="n">list_point_derivative</span><span class="p">[</span><span class="n">p</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">right_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">current_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">p</span> <span class="o">+=</span> <span class="n">j</span>
                 <span class="n">found_higher_point</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">elif</span> <span class="n">left_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">current_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> 
-                <span class="n">p</span><span class="o">-=</span><span class="n">j</span>
+            <span class="k">elif</span> <span class="n">left_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">current_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">p</span> <span class="o">-=</span> <span class="n">j</span>
                 <span class="n">found_higher_point</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">else</span> <span class="p">:</span> <span class="kc">None</span>
-            <span class="n">j</span><span class="o">+=</span><span class="mi">1</span>                
+            <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>                
     <span class="k">return</span> <span class="n">list_point_derivative</span><span class="p">[</span><span class="n">p</span><span class="p">]</span></div>
 
+<div class="viewcode-block" id="calculate_mean_rooted_derivative"><a class="viewcode-back" href="../../source/forces.utils_forces.html#forces.utils_forces.calculate_mean_rooted_derivative">[docs]</a><span class="k">def</span> <span class="nf">calculate_mean_rooted_derivative</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the mean rooted derivative between two points within a list.</span>
 
-<div class="viewcode-block" id="calculate_mean_rooted_derivative"><a class="viewcode-back" href="../../source/forces.utils_forces.html#forces.utils_forces.calculate_mean_rooted_derivative">[docs]</a><span class="k">def</span> <span class="nf">calculate_mean_rooted_derivative</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="p">:</span> 
-    <span class="n">i1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="n">i2</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="sd">    :param p1: The first point (x1, y1).</span>
+<span class="sd">    :type p1: tuple of float</span>
+<span class="sd">    :param p2: The second point (x2, y2).</span>
+<span class="sd">    :type p2: tuple of float</span>
+<span class="sd">    :param l: The list of points to search within.</span>
+<span class="sd">    :type l: list of tuples</span>
+<span class="sd">    :returns: The mean rooted derivative between p1 and p2.</span>
+<span class="sd">    :rtype: float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">i1</span><span class="p">,</span> <span class="n">i2</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)):</span> 
-        <span class="k">if</span> <span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">p1</span> <span class="p">:</span> 
+        <span class="k">if</span> <span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">p1</span><span class="p">:</span> 
             <span class="n">i1</span> <span class="o">=</span> <span class="n">i</span>
-        <span class="k">if</span> <span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">p2</span> <span class="p">:</span> 
+        <span class="k">if</span> <span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">p2</span><span class="p">:</span> 
             <span class="n">i2</span> <span class="o">=</span> <span class="n">i</span>
-    <span class="k">if</span> <span class="n">i1</span><span class="o">&lt;</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">i2</span><span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span> 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;one of the point not found inthe list !!!&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">i1</span> <span class="o">&gt;</span> <span class="n">i2</span><span class="p">:</span> <span class="c1"># unordered params or unordered list: swap the points st l[i1] = p1 and l[i2] = p2 and i1&lt;i2 in any case</span>
-        <span class="n">p1</span><span class="p">,</span><span class="n">p2</span> <span class="o">=</span> <span class="n">p2</span><span class="p">,</span><span class="n">p1</span>
-        <span class="n">i1</span><span class="p">,</span><span class="n">i2</span> <span class="o">=</span> <span class="n">i2</span><span class="p">,</span><span class="n">i1</span>
+    <span class="k">if</span> <span class="n">i1</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">i2</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;One of the points was not found in the list!&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">i1</span> <span class="o">&gt;</span> <span class="n">i2</span><span class="p">:</span>
+        <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span> <span class="o">=</span> <span class="n">p2</span><span class="p">,</span> <span class="n">p1</span>
+        <span class="n">i1</span><span class="p">,</span> <span class="n">i2</span> <span class="o">=</span> <span class="n">i2</span><span class="p">,</span> <span class="n">i1</span>
     <span class="n">d_abs_sum</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i1</span><span class="p">,</span> <span class="n">i2</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i1</span><span class="p">,</span> <span class="n">i2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">d_abs_sum</span> <span class="o">+=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="n">p</span><span class="p">][</span><span class="mi">2</span><span class="p">]))</span>
-    <span class="n">d_abs_mean</span> <span class="o">=</span> <span class="n">d_abs_sum</span><span class="o">/</span><span class="p">(</span><span class="n">i2</span><span class="o">-</span><span class="n">i1</span><span class="p">)</span>
+    <span class="n">d_abs_mean</span> <span class="o">=</span> <span class="n">d_abs_sum</span> <span class="o">/</span> <span class="p">(</span><span class="n">i2</span> <span class="o">-</span> <span class="n">i1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">d_abs_mean</span></div>
 
 <div class="viewcode-block" id="find_value"><a class="viewcode-back" href="../../source/forces.utils_forces.html#forces.utils_forces.find_value">[docs]</a><span class="k">def</span> <span class="nf">find_value</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Finds the value at a specific time within a list of points.</span>
+
+<span class="sd">    :param time: The time to search for.</span>
+<span class="sd">    :type time: float</span>
+<span class="sd">    :param list: The list of points to search within.</span>
+<span class="sd">    :type list: list of tuples</span>
+<span class="sd">    :returns: The point corresponding to the given time, or None if not found.</span>
+<span class="sd">    :rtype: tuple or None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)):</span>
-        <span class="k">if</span> <span class="nb">list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">time</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="nb">list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">time</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;not found&quot;</span><span class="p">)</span></div>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Not found&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
 
+<div class="viewcode-block" id="monte_carlo_gradient"><a class="viewcode-back" href="../../source/forces.utils_forces.html#forces.utils_forces.monte_carlo_gradient">[docs]</a><span class="k">def</span> <span class="nf">monte_carlo_gradient</span><span class="p">(</span><span class="n">direction</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Performs Monte Carlo gradient ascent or descent to find local extrema.</span>
 
-<div class="viewcode-block" id="monte_carlo_gradient"><a class="viewcode-back" href="../../source/forces.utils_forces.html#forces.utils_forces.monte_carlo_gradient">[docs]</a><span class="k">def</span> <span class="nf">monte_carlo_gradient</span><span class="p">(</span><span class="n">direction</span><span class="p">,</span><span class="n">l</span><span class="p">):</span>
-    <span class="c1"># print(&quot;len(l) : &quot;, len(l))</span>
-    <span class="n">n_rep</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="o">//</span><span class="mi">10</span> <span class="o">*</span><span class="mf">1.5</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">direction</span> <span class="o">&lt;</span><span class="mi">0</span> <span class="p">:</span> 
+<span class="sd">    :param direction: The direction to search in; negative for descent, positive for ascent.</span>
+<span class="sd">    :type direction: int</span>
+<span class="sd">    :param l: The list of points to search within.</span>
+<span class="sd">    :type l: list of tuples</span>
+<span class="sd">    :returns: A list of local maxima or minima found.</span>
+<span class="sd">    :rtype: list of tuples</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_rep</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">//</span> <span class="mi">10</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">direction</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span> 
         <span class="n">local_mins</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="c1"># print(&quot;nrep : &quot;,n_rep)</span>
-
-        <span class="c1">#monte carlo</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_rep</span><span class="p">):</span> 
             <span class="n">local_min_found</span> <span class="o">=</span> <span class="n">gradient_descent</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
-            <span class="c1"># if i%100 == 0: </span>
-                <span class="c1"># print(&quot;returned  :&quot;,local_min_found)</span>
             <span class="n">local_mins</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">local_min_found</span><span class="p">)</span>
         <span class="n">local_mins</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">sub_list</span><span class="p">)</span> <span class="k">for</span> <span class="n">sub_list</span> <span class="ow">in</span> <span class="n">local_mins</span><span class="p">))</span>
-        <span class="c1"># print(&quot;new length : &quot;, len(local_mins))</span>
         <span class="k">return</span> <span class="n">local_mins</span>
-    
-    <span class="k">else</span> <span class="p">:</span> 
+    <span class="k">else</span><span class="p">:</span> 
         <span class="n">local_maxes</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_rep</span><span class="p">):</span> 
             <span class="n">local_max_found</span> <span class="o">=</span> <span class="n">gradient_ascent</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
-            <span class="c1"># if i%100 == 0: </span>
-                <span class="c1"># print(&quot;returned  :&quot;,local_max_found)</span>
             <span class="n">local_maxes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">local_max_found</span><span class="p">)</span>
         <span class="n">local_maxes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">sub_list</span><span class="p">)</span> <span class="k">for</span> <span class="n">sub_list</span> <span class="ow">in</span> <span class="n">local_maxes</span><span class="p">))</span>
-        <span class="c1"># print(&quot;new length : &quot;, len(local_maxes))</span>
         <span class="k">return</span> <span class="n">local_maxes</span></div>
 
-<span class="c1">#4 criterias  to recognise the curve of a step : </span>
-<span class="c1">#-alternate between max min max</span>
-<span class="c1">#-time between max1 min1 and min1 max2 is in a given range </span>
-<span class="c1">#-the amplitudes are relatively close</span>
-<span class="c1">#-there is not a plateau at the bottom of the curve (mean of sqrt of derivatives)</span>
-<span class="c1"># def find_pattern_fr(merged_mins_maxes_coordinates,fr_coordinates) :</span>
-<span class="c1">#     PRECISION = 0.5</span>
-<span class="c1">#     pattern_to_fit = [&quot;max&quot;,&quot;min&quot;,&quot;max&quot;]</span>
-<span class="c1">#     p = 0</span>
-<span class="c1">#     for i in range(len(merged_mins_maxes_coordinates)-2): </span>
-<span class="c1">#         p0 = merged_mins_maxes_coordinates[i]</span>
-<span class="c1">#         p1 = merged_mins_maxes_coordinates[i+1]</span>
-<span class="c1">#         p2 = merged_mins_maxes_coordinates[i+2]</span>
+<div class="viewcode-block" id="find_patterns"><a class="viewcode-back" href="../../source/forces.utils_forces.html#forces.utils_forces.find_patterns">[docs]</a><span class="k">def</span> <span class="nf">find_patterns</span><span class="p">(</span><span class="n">merged_mins_maxes_coordinates</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">,</span> <span class="n">p0_spike</span><span class="p">,</span> <span class="n">p2_spike</span><span class="p">,</span> <span class="n">MRD_value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Finds specific patterns in the list of merged minima and maxima coordinates.</span>
 
-<span class="c1">#         pattern = [p0[3],p1[3],p2[3]]</span>
-<span class="c1">#         if pattern == pattern_to_fit : # good pattern : now let&#39;s see if that works</span>
-
-<span class="c1">#             deltat1 = abs(p1[0] - p0[0])</span>
-<span class="c1">#             deltat2 = abs(p2[0] - p1[0])</span>
-
-<span class="c1">#             amplitude1 = abs(p1[1] - p0[1])</span>
-<span class="c1">#             amplitude2 = abs(p2[1] - p1[1])</span>
-
-<span class="c1">#             # if abs(deltat1 - 25) &lt;25 * PRECISION and abs(deltat2 - 25) &lt; 25 * PRECISION: </span>
-<span class="c1">#             if p0[1] &gt; 500 and p2[1] &gt; 500:# this is a criterion of height : if you decrease the weight of the robot (by taking away the battery for example), it might not work as expected. This is the best criterion for caracterising a step.)</span>
-<span class="c1">#                 # if abs(amplitude1 - amplitude2)/ (amplitude1 + amplitude2) &lt;0.2:# &lt;0.1</span>
-<span class="c1">#                 if calculate_mean_rooted_derivative(p0[:-1],p2[:-1],fr_coordinates) &gt; 4:</span>
-<span class="c1">#                     p+=1</span>
-<span class="c1">#                     print(&quot;pattern found !! the robot was walking : &quot;, p0,p1,p2,abs(amplitude1 - amplitude2)/ (amplitude1 + amplitude2),deltat1, deltat2 ,</span>
-<span class="c1">#                       &quot;\n mean absolute derivative : &quot;,calculate_mean_rooted_derivative(p0[:-1],p2[:-1],fr_coordinates),&quot;\n&quot; )</span>
-    <span class="c1"># print(p)</span>
-
-<span class="c1"># def find_pattern_fl(merged_mins_maxes_coordinates,fr_coordinates) :</span>
-<span class="c1">#     PRECISION = 0.5</span>
-<span class="c1">#     pattern_to_fit = [&quot;max&quot;,&quot;min&quot;,&quot;max&quot;]</span>
-<span class="c1">#     p = 0</span>
-<span class="c1">#     for i in range(len(merged_mins_maxes_coordinates)-2): </span>
-<span class="c1">#         p0 = merged_mins_maxes_coordinates[i]</span>
-<span class="c1">#         p1 = merged_mins_maxes_coordinates[i+1]</span>
-<span class="c1">#         p2 = merged_mins_maxes_coordinates[i+2]</span>
-
-<span class="c1">#         pattern = [p0[3],p1[3],p2[3]]</span>
-<span class="c1">#         if pattern == pattern_to_fit : # good pattern : now let&#39;s see if that works</span>
-
-<span class="c1">#             deltat1 = abs(p1[0] - p0[0])</span>
-<span class="c1">#             deltat2 = abs(p2[0] - p1[0])</span>
-
-<span class="c1">#             amplitude1 = abs(p1[1] - p0[1])</span>
-<span class="c1">#             amplitude2 = abs(p2[1] - p1[1])</span>
-
-<span class="c1">#             # if abs(deltat1 - 25) &lt;25 * PRECISION and abs(deltat2 - 25) &lt; 25 * PRECISION: </span>
-<span class="c1">#             if p0[1] &gt; 700 and p2[1] &gt; 700:# this is a criterion of height : if you decrease the weight of the robot (by taking away the battery for example), it might not work as expected. This is the best criterion for caracterising a step.)</span>
-<span class="c1">#                     # if abs(amplitude1 - amplitude2)/ (amplitude1 + amplitude2) &lt;0.2:# &lt;0.1</span>
-<span class="c1">#                 if calculate_mean_rooted_derivative(p0[:-1],p2[:-1],fr_coordinates) &gt; 5.5:</span>
-<span class="c1">#                     p+=1</span>
-<span class="c1">#                     print(&quot;pattern found !! the robot was walking : &quot;, p0,p1,p2,abs(amplitude1 - amplitude2)/ (amplitude1 + amplitude2),deltat1, deltat2 ,</span>
-<span class="c1">#                       &quot;\n mean absolute derivative : &quot;,calculate_mean_rooted_derivative(p0[:-1],p2[:-1],fr_coordinates),&quot;\n&quot; )</span>
-<span class="c1">#     print(p)</span>
-
-
-<div class="viewcode-block" id="find_patterns"><a class="viewcode-back" href="../../source/forces.utils_forces.html#forces.utils_forces.find_patterns">[docs]</a><span class="k">def</span> <span class="nf">find_patterns</span><span class="p">(</span><span class="n">merged_mins_maxes_coordinates</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">,</span> <span class="n">p0_spike</span><span class="p">,</span><span class="n">p2_spike</span><span class="p">,</span><span class="n">MRD_value</span> <span class="p">)</span> <span class="p">:</span>
-    <span class="n">pattern_to_fit</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;max&quot;</span><span class="p">,</span><span class="s2">&quot;min&quot;</span><span class="p">,</span><span class="s2">&quot;max&quot;</span><span class="p">]</span>
+<span class="sd">    :param merged_mins_maxes_coordinates: The list of merged minima and maxima coordinates.</span>
+<span class="sd">    :type merged_mins_maxes_coordinates: list of tuples</span>
+<span class="sd">    :param coordinates: The list of original coordinates.</span>
+<span class="sd">    :type coordinates: list of tuples</span>
+<span class="sd">    :param p0_spike: The threshold for the first peak.</span>
+<span class="sd">    :type p0_spike: float</span>
+<span class="sd">    :param p2_spike: The threshold for the second peak.</span>
+<span class="sd">    :type p2_spike: float</span>
+<span class="sd">    :param MRD_value: The minimum mean rooted derivative value to qualify as a pattern.</span>
+<span class="sd">    :type MRD_value: float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pattern_to_fit</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;max&quot;</span><span class="p">,</span> <span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">]</span>
     <span class="n">p</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">merged_mins_maxes_coordinates</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="p">):</span> 
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">merged_mins_maxes_coordinates</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">):</span> 
         <span class="n">p0</span> <span class="o">=</span> <span class="n">merged_mins_maxes_coordinates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="n">p1</span> <span class="o">=</span> <span class="n">merged_mins_maxes_coordinates</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">p2</span> <span class="o">=</span> <span class="n">merged_mins_maxes_coordinates</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span>
-
-        <span class="n">pattern</span> <span class="o">=</span> <span class="p">[</span><span class="n">p0</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">p1</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">p2</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span>
-        <span class="k">if</span> <span class="n">pattern</span> <span class="o">==</span> <span class="n">pattern_to_fit</span> <span class="p">:</span> <span class="c1"># good pattern : now let&#39;s see if that works</span>
-
+        <span class="n">p1</span> <span class="o">=</span> <span class="n">merged_mins_maxes_coordinates</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">p2</span> <span class="o">=</span> <span class="n">merged_mins_maxes_coordinates</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="p">[</span><span class="n">p0</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">p1</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">p2</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="n">pattern</span> <span class="o">==</span> <span class="n">pattern_to_fit</span><span class="p">:</span>
             <span class="n">deltat1</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p0</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">deltat2</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-
             <span class="n">amplitude1</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
             <span class="n">amplitude2</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-
-            <span class="c1"># if abs(deltat1 - 25) &lt;25 * PRECISION and abs(deltat2 - 25) &lt; 25 * PRECISION: </span>
-            <span class="k">if</span> <span class="n">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">p0_spike</span> <span class="ow">and</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">p2_spike</span> <span class="p">:</span><span class="c1"># this is a criterion of height : if you decrease the weight of the robot (by taking away the battery for example), it might not work as expected. This is the best criterion for caracterising a step.)</span>
-                <span class="c1"># if abs(amplitude1 - amplitude2)/ (amplitude1 + amplitude2) &lt;0.2:# &lt;0.1</span>
-                <span class="k">if</span> <span class="n">calculate_mean_rooted_derivative</span><span class="p">(</span><span class="n">p0</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">p2</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">coordinates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MRD_value</span><span class="p">:</span>
-                    <span class="n">p</span><span class="o">+=</span><span class="mi">1</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;pattern found !! the robot was walking : &quot;</span><span class="p">,</span> <span class="n">p0</span><span class="p">,</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">,</span><span class="nb">abs</span><span class="p">(</span><span class="n">amplitude1</span> <span class="o">-</span> <span class="n">amplitude2</span><span class="p">)</span><span class="o">/</span> <span class="p">(</span><span class="n">amplitude1</span> <span class="o">+</span> <span class="n">amplitude2</span><span class="p">),</span><span class="n">deltat1</span><span class="p">,</span> <span class="n">deltat2</span> <span class="p">,</span>
-                      <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> mean absolute derivative : &quot;</span><span class="p">,</span><span class="n">calculate_mean_rooted_derivative</span><span class="p">(</span><span class="n">p0</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">p2</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">coordinates</span><span class="p">),</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="n">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">p0_spike</span> <span class="ow">and</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">p2_spike</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">calculate_mean_rooted_derivative</span><span class="p">(</span><span class="n">p0</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">p2</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">coordinates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MRD_value</span><span class="p">:</span>
+                    <span class="n">p</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pattern found! The robot was walking: &quot;</span><span class="p">,</span> <span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">amplitude1</span> <span class="o">-</span> <span class="n">amplitude2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">amplitude1</span> <span class="o">+</span> <span class="n">amplitude2</span><span class="p">),</span> <span class="n">deltat1</span><span class="p">,</span> <span class="n">deltat2</span><span class="p">,</span>
+                          <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Mean absolute derivative: &quot;</span><span class="p">,</span> <span class="n">calculate_mean_rooted_derivative</span><span class="p">(</span><span class="n">p0</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">p2</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">coordinates</span><span class="p">),</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="find_a_pattern"><a class="viewcode-back" href="../../source/forces.utils_forces.html#forces.utils_forces.find_a_pattern">[docs]</a><span class="k">def</span> <span class="nf">find_a_pattern</span><span class="p">(</span><span class="n">merged_mins_maxes_coordinates</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">,</span> <span class="n">p0_spike</span><span class="p">,</span> <span class="n">p2_spike</span><span class="p">,</span> <span class="n">MRD_value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Finds a specific pattern in the list of merged minima and maxima coordinates.</span>
 
-
-<div class="viewcode-block" id="find_a_pattern"><a class="viewcode-back" href="../../source/forces.utils_forces.html#forces.utils_forces.find_a_pattern">[docs]</a><span class="k">def</span> <span class="nf">find_a_pattern</span><span class="p">(</span><span class="n">merged_mins_maxes_coordinates</span><span class="p">,</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">p0_spike</span><span class="p">,</span><span class="n">p2_spike</span><span class="p">,</span> <span class="n">MRD_value</span><span class="p">)</span> <span class="p">:</span> 
+<span class="sd">    :param merged_mins_maxes_coordinates: The list of merged minima and maxima coordinates.</span>
+<span class="sd">    :type merged_mins_maxes_coordinates: list of tuples</span>
+<span class="sd">    :param coordinates: The list of original coordinates.</span>
+<span class="sd">    :type coordinates: list of tuples</span>
+<span class="sd">    :param p0_spike: The threshold for the first peak.</span>
+<span class="sd">    :type p0_spike: float</span>
+<span class="sd">    :param p2_spike: The threshold for the second peak.</span>
+<span class="sd">    :type p2_spike: float</span>
+<span class="sd">    :param MRD_value: The minimum mean rooted derivative value to qualify as a pattern.</span>
+<span class="sd">    :type MRD_value: float</span>
+<span class="sd">    :returns: A tuple indicating whether a pattern was found, and the points involved in the pattern.</span>
+<span class="sd">    :rtype: tuple (bool, tuple, tuple, tuple)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">PRECISION</span> <span class="o">=</span> <span class="mf">0.5</span> 
-    <span class="n">pattern_to_fit</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;max&quot;</span><span class="p">,</span><span class="s2">&quot;min&quot;</span><span class="p">,</span><span class="s2">&quot;max&quot;</span><span class="p">]</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">merged_mins_maxes_coordinates</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="p">):</span> 
+    <span class="n">pattern_to_fit</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;max&quot;</span><span class="p">,</span> <span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">merged_mins_maxes_coordinates</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">):</span> 
         <span class="n">p0</span> <span class="o">=</span> <span class="n">merged_mins_maxes_coordinates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="n">p1</span> <span class="o">=</span> <span class="n">merged_mins_maxes_coordinates</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">p2</span> <span class="o">=</span> <span class="n">merged_mins_maxes_coordinates</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span>
-
-        <span class="n">pattern</span> <span class="o">=</span> <span class="p">[</span><span class="n">p0</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">p1</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">p2</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span>
-        <span class="k">if</span> <span class="n">pattern</span> <span class="o">==</span> <span class="n">pattern_to_fit</span> <span class="p">:</span> <span class="c1"># good pattern : now let&#39;s see if that works</span>
-
+        <span class="n">p1</span> <span class="o">=</span> <span class="n">merged_mins_maxes_coordinates</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">p2</span> <span class="o">=</span> <span class="n">merged_mins_maxes_coordinates</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="p">[</span><span class="n">p0</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">p1</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">p2</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="n">pattern</span> <span class="o">==</span> <span class="n">pattern_to_fit</span><span class="p">:</span>
             <span class="n">deltat1</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p0</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">deltat2</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-
             <span class="n">amplitude1</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
             <span class="n">amplitude2</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">deltat1</span> <span class="o">-</span> <span class="mi">25</span><span class="p">)</span> <span class="o">&lt;</span><span class="mi">25</span> <span class="o">*</span> <span class="n">PRECISION</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">deltat2</span> <span class="o">-</span> <span class="mi">25</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">25</span> <span class="o">*</span> <span class="n">PRECISION</span><span class="p">:</span> <span class="c1"># when detecting in live, this criteria is important. (there can appear local maxes/mins that don&#39;t appear usually)</span>
-                <span class="k">if</span> <span class="n">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">p0_spike</span> <span class="ow">and</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">p2_spike</span><span class="p">:</span><span class="c1"># this is a criterion of height : if you decrease the weight of the robot (by taking away the battery for example), it might not work as expected. This is the best criterion for caracterising a step.)</span>
-                    <span class="k">if</span> <span class="n">calculate_mean_rooted_derivative</span><span class="p">(</span><span class="n">p0</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">p2</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">coordinates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MRD_value</span><span class="p">:</span>
-                        <span class="c1"># p+=1</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;pattern found !! the robot was walking : &quot;</span><span class="p">,</span> <span class="n">p0</span><span class="p">,</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">,</span><span class="nb">abs</span><span class="p">(</span><span class="n">amplitude1</span> <span class="o">-</span> <span class="n">amplitude2</span><span class="p">)</span><span class="o">/</span> <span class="p">(</span><span class="n">amplitude1</span> <span class="o">+</span> <span class="n">amplitude2</span><span class="p">),</span><span class="n">deltat1</span><span class="p">,</span> <span class="n">deltat2</span> <span class="p">,</span>
-                          <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> mean absolute derivative : &quot;</span><span class="p">,</span><span class="n">calculate_mean_rooted_derivative</span><span class="p">(</span><span class="n">p0</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">p2</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">coordinates</span><span class="p">),</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="p">)</span>
-                        <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">p0</span><span class="p">,</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span>
-    <span class="k">return</span> <span class="kc">False</span> <span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span></div>
-                            
-<span class="c1">#builds an ordered list (along time axis) of maxes and mins </span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">deltat1</span> <span class="o">-</span> <span class="mi">25</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">25</span> <span class="o">*</span> <span class="n">PRECISION</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">deltat2</span> <span class="o">-</span> <span class="mi">25</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">25</span> <span class="o">*</span> <span class="n">PRECISION</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">p0_spike</span> <span class="ow">and</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">p2_spike</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">calculate_mean_rooted_derivative</span><span class="p">(</span><span class="n">p0</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">p2</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">coordinates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MRD_value</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pattern found! The robot was walking: &quot;</span><span class="p">,</span> <span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">amplitude1</span> <span class="o">-</span> <span class="n">amplitude2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">amplitude1</span> <span class="o">+</span> <span class="n">amplitude2</span><span class="p">),</span> <span class="n">deltat1</span><span class="p">,</span> <span class="n">deltat2</span><span class="p">,</span>
+                              <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Mean absolute derivative: &quot;</span><span class="p">,</span> <span class="n">calculate_mean_rooted_derivative</span><span class="p">(</span><span class="n">p0</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">p2</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">coordinates</span><span class="p">),</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span>
+    <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="build_merge"><a class="viewcode-back" href="../../source/forces.utils_forces.html#forces.utils_forces.build_merge">[docs]</a><span class="k">def</span> <span class="nf">build_merge</span><span class="p">(</span><span class="n">local_maxes</span><span class="p">,</span> <span class="n">local_mins</span><span class="p">)</span> <span class="p">:</span><span class="c1"># O(n**2)</span>
+<div class="viewcode-block" id="build_merge"><a class="viewcode-back" href="../../source/forces.utils_forces.html#forces.utils_forces.build_merge">[docs]</a><span class="k">def</span> <span class="nf">build_merge</span><span class="p">(</span><span class="n">local_maxes</span><span class="p">,</span> <span class="n">local_mins</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Builds an ordered list of maxima and minima along the time axis.</span>
+
+<span class="sd">    :param local_maxes: The list of local maxima.</span>
+<span class="sd">    :type local_maxes: list of tuples</span>
+<span class="sd">    :param local_mins: The list of local minima.</span>
+<span class="sd">    :type local_mins: list of tuples</span>
+<span class="sd">    :returns: A merged list of minima and maxima ordered by time.</span>
+<span class="sd">    :rtype: list of tuples</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">merged_mins_maxes_coordinates</span> <span class="o">=</span> <span class="p">[]</span>
-
     <span class="n">local_maxes_copy</span> <span class="o">=</span> <span class="n">local_maxes</span>
     <span class="n">local_mins_copy</span> <span class="o">=</span> <span class="n">local_mins</span>
-
-    <span class="n">nmax</span>  <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">local_maxes</span><span class="p">)</span>
+    <span class="n">nmax</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">local_maxes</span><span class="p">)</span>
     <span class="n">nmin</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">local_mins</span><span class="p">)</span>
-
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nmax</span> <span class="o">+</span> <span class="n">nmin</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">local_maxes_copy</span> <span class="o">!=</span> <span class="p">[]:</span>
+        <span class="k">if</span> <span class="n">local_maxes_copy</span><span class="p">:</span>
             <span class="n">index_max_in_list</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="c1"># first_point_max = local_maxes_copy[index_max_in_list]</span>
             <span class="n">time_maxes_index</span> <span class="o">=</span> <span class="n">local_maxes_copy</span><span class="p">[</span><span class="n">index_max_in_list</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="c1">#search for minimum time in maxes</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">local_maxes_copy</span><span class="p">)):</span> 
-                <span class="k">if</span> <span class="n">local_maxes_copy</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">time_maxes_index</span> <span class="p">:</span> 
+                <span class="k">if</span> <span class="n">local_maxes_copy</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">time_maxes_index</span><span class="p">:</span>
                     <span class="n">time_maxes_index</span> <span class="o">=</span> <span class="n">local_maxes_copy</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                     <span class="n">index_max_in_list</span> <span class="o">=</span> <span class="n">j</span>
-                    <span class="c1"># first_point = local_maxes_copy[index_max_in_list]</span>
-        <span class="k">else</span> <span class="p">:</span> 
-            <span class="n">time_maxes_index</span> <span class="o">=</span> <span class="mi">100000000000000000000000000000000000000</span>
-
-        <span class="k">if</span> <span class="n">local_mins_copy</span> <span class="o">!=</span> <span class="p">[]:</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="n">time_maxes_index</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">local_mins_copy</span><span class="p">:</span>
             <span class="n">index_min_in_list</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="c1"># first_point_min = local_mins_copy[index_min_in_list]</span>
             <span class="n">time_mins_index</span> <span class="o">=</span> <span class="n">local_mins_copy</span><span class="p">[</span><span class="n">index_min_in_list</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="c1">#search for minimum min in mins</span>
             <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">local_mins_copy</span><span class="p">)):</span>
-                <span class="k">if</span> <span class="n">local_mins_copy</span><span class="p">[</span><span class="n">p</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">time_mins_index</span> <span class="p">:</span> 
+                <span class="k">if</span> <span class="n">local_mins_copy</span><span class="p">[</span><span class="n">p</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">time_mins_index</span><span class="p">:</span>
                     <span class="n">time_mins_index</span> <span class="o">=</span> <span class="n">local_mins_copy</span><span class="p">[</span><span class="n">p</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                     <span class="n">index_min_in_list</span> <span class="o">=</span> <span class="n">p</span>
-                    <span class="c1"># first_point_min = local_mins_copy[index_min_in_list]</span>
-        <span class="k">else</span> <span class="p">:</span> 
-            <span class="n">time_mins_index</span> <span class="o">=</span> <span class="mi">100000000000000000000000000000000000000</span>
-
-        <span class="k">if</span> <span class="n">time_maxes_index</span> <span class="o">&lt;</span> <span class="n">time_mins_index</span> <span class="p">:</span> 
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="n">time_mins_index</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">time_maxes_index</span> <span class="o">&lt;</span> <span class="n">time_mins_index</span><span class="p">:</span> 
             <span class="n">el</span> <span class="o">=</span> <span class="n">local_maxes_copy</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">index_max_in_list</span><span class="p">)</span>
-            <span class="n">merged_mins_maxes_coordinates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">[</span><span class="n">el</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">el</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">el</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="s2">&quot;max&quot;</span><span class="p">])</span>
-        <span class="k">else</span> <span class="p">:</span> 
+            <span class="n">merged_mins_maxes_coordinates</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">el</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">el</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">el</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s2">&quot;max&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span> 
             <span class="n">el</span> <span class="o">=</span> <span class="n">local_mins_copy</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">index_min_in_list</span><span class="p">)</span>
-            <span class="n">merged_mins_maxes_coordinates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">[</span><span class="n">el</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">el</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">el</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="s2">&quot;min&quot;</span><span class="p">])</span>
+            <span class="n">merged_mins_maxes_coordinates</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">el</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">el</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">el</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s2">&quot;min&quot;</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">merged_mins_maxes_coordinates</span></div>
 </pre></div>
 
@@ -345,8 +332,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/animation.animate_any.html">animation.animate_any</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/forces.utils_forces.html">forces.utils_forces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../source/index.html">Welcome to Your Project’s documentation!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/index.html">Welcome to the Walking Neural Project !</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html">unitree_legged_sdk.example_py.Bezier.Foot_Sensor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>
@@ -358,11 +347,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.Bezier.main_loop_v2.html">unitree_legged_sdk.example_py.Bezier.main_loop_v2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.Bezier.plot_neurons.html">unitree_legged_sdk.example_py.Bezier.plot_neurons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/utils.html">utils</a></li>
 </ul>
 

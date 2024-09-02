@@ -6,142 +6,269 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')
 sys.path.append(project_root)
 from Neuroscience.structures.Organ import Organ
 
-# Definition of class Excitatory_Neuron
 class Abstract_Neuron(Organ):
+    """
+    A class representing an abstract neuron model used in computational neuroscience.
+
+    The `Abstract_Neuron` class simulates the behavior of a neuron, focusing on synaptic potentials, 
+    membrane potential dynamics, and action potentials. It can be used as a building block for more 
+    complex neural network structures.
+
+    """
+
+
     instanciation_counter = 0
-    # For this model a tau of 1.0857 ms will be used
-    # This means that EPSPs and IPSPs will take approx. 5.4 ms to charge, 5.4 ms to discharge,
-    # and it will remain 3 ms in a constant value
-#    tau = 2.1714
+    """
+    A class-level counter that tracks the number of Abstract_Neuron instances created.
+
+    .
+    """
+
     tau = 1.0857
+    """
+    Time constant (ms) used in the exponential functions for charging and discharging potentials. 
+        This influences the duration of EPSPs and IPSPs.
 
-    # Membrane potential (initially zero)
-    # As inputs arrive, membrane potential will increase and when it excedes 15 mV, the neuron will fire
+    .
+    """
+
     membrane_potential = 0
+    """
+     The membrane potential of the neuron, initially set to zero. The neuron fires when this potential 
+        exceeds the threshold voltage.
 
-    # Duration of Excitatory Post-Synaptic Potential EPSP (every 15 ms)
-    # Including charge (5.4 ms), stable response (3 ms) and discharge (5.4 ms)
+    .
+    """
+
+
     EPSP_time = 150
+    """
+     Duration (in simulation steps) of an Excitatory Post-Synaptic Potential (EPSP), including 
+        charge, stable response, and discharge phases.
 
-    # Duration of Inhibitory Post-Synaptic Potential EPSP (every 15 ms)
-    # Including charge (5.4 ms), stable response (3 ms) and discharge (5.4 ms)
+    .
+    """
+
     IPSP_time = 150
+    """
+     Duration (in simulation steps) of an Inhibitory Post-Synaptic Potential (IPSP), including 
+        charge, stable response, and discharge phases.
 
-    # Duration of an action potential pulse (5 ms)
-    # Refractory period included
+    .
+    """
+
     Act_Pot_time = 50
+    """
+     Duration of an action potential pulse (in simulation steps), including the refractory period.
+     
+    .
+    """
 
-    # Peak voltage during an action potential pulse (mV)
     Act_Pot_volt = 86.9
+    """
+    Peak voltage (mV) during an action potential.
 
-    # Threshold Voltage (mV) to fire the neuron
+    .
+    """
+
     Thres_Act_Pot_volt = 14.9
+    """
+    Threshold voltage (mV) required to fire the neuron.
     
-# redundant
-    # # Neuron's resolution
-    # resolution = 0
+    .
+    """
 
-    # Perform spatial summation on all dendrites of the neuron
+    res = 0.1
+    """
+     The resolution of the simulation, affecting the time steps.
+
+    .
+    """
+
+    def __init__(self, res, inputs, outputs, instance_count=""):
+        """
+        Initializes the Abstract_Neuron instance with specific resolution, number of inputs (dendrites), 
+        and outputs (axon terminals).
+
+        :param res: The resolution of the simulation, affecting the time steps.
+        :type res: int
+        :param inputs: Number of dendrites (input connections) in the neuron.
+        :type inputs: int
+        :param outputs: Number of axon terminals (output connections) in the neuron.
+        :type outputs: int
+        :param instance_count: A string to distinguish different instances, default is an empty string.
+        :type instance_count: str, optional
+
+        .
+        """
+        super().__init__()
+
+        self.instance_count = str(Abstract_Neuron.instanciation_counter)
+        Abstract_Neuron.instanciation_counter += 1
+
+        self.num_dendrites = inputs
+        self.num_axon_terminals = outputs
+        self.inputs = np.zeros(self.num_dendrites)
+        self.taken_inputs = np.zeros(self.num_dendrites)
+        self.weights = np.zeros(self.num_dendrites)
+        self.active_potential_bool = False
+        self.volt_dendrites = np.zeros(self.num_dendrites)
+        self.temp_summation = np.zeros(self.num_dendrites)
+        self.axon_terminals = []
+        self.max_active_potential = False
+        self.active_PSP = [False for _ in range(self.num_dendrites)]
+        self.temp_inputs = np.zeros(self.num_dendrites)
+        self.time_dendrites = np.zeros(self.num_dendrites)
+        self.time_neuron = 0
+        self.resolution = res
+        self.brain = [self]
+
     def spatial_summation(self):
+        """
+        Performs spatial summation on all dendrites of the neuron.
 
+        This method updates the membrane potential based on the combined inputs from all active synapses. 
+        If the membrane potential exceeds the threshold, the neuron fires an action potential.
+
+        :returns: The updated membrane potential after spatial summation.
+        :rtype: float
+
+        .
+        """
         result = 0
-        # Do spatial summation on the neuron's dendrites.
         for i in range(self.num_dendrites):
-            # If the dendrite has an PSP active
             if self.active_PSP[i]:
                 self.time_dendrites[i] += 1
 
-                # If the input comes from an excitatory dendrite, Call to EPSP function
-
                 if self.temp_inputs[i] == 1:
-                    self.volt_dendrites[i] = self.EPSP(i, self.time_dendrites[i]*self.resolution, self.weights[i])
-                # If the input comes from an inhibitory dendrite, Call to IPSP function
+                    self.volt_dendrites[i] = self.EPSP(i, self.time_dendrites[i] * self.resolution, self.weights[i])
                 elif self.temp_inputs[i] == -1:
-                    self.volt_dendrites[i] = self.IPSP(i, self.time_dendrites[i]*self.resolution, self.weights[i])
+                    self.volt_dendrites[i] = self.IPSP(i, self.time_dendrites[i] * self.resolution, self.weights[i])
 
-                # Update potential due to this dendrite
                 result += self.volt_dendrites[i]
 
-                # If the active potential threshold has been reached, activate flag
                 if self.membrane_potential > self.Thres_Act_Pot_volt:
                     self.active_potential_bool = True
                     self.time_neuron = 0
                     self.reset_PSP()
 
-                # If the PSP is over, then turn active_PSP off
-                if (self.time_dendrites[i]*self.resolution) == self.EPSP_time/10:
+                if (self.time_dendrites[i] * self.resolution) == self.EPSP_time / 10:
                     self.active_PSP[i] = False
                     self.volt_dendrites[i] = 0
                     self.time_dendrites[i] = 0
                     self.temp_summation[i] = 0
                     self.temp_inputs[i] = 0
 
-        # Update membrane's potential
         self.membrane_potential = result
-
         return result
-    
 
     def get_voltage(self):
+        """
+        Gets the current voltage values for each dendrite.
+
+        :returns: An array of voltage values for each dendrite.
+        :rtype: numpy.ndarray
+
+        .
+        """
         return self.volt_dendrites
 
-
     def active_potential(self, t):
-        # This action potential takes 5 ms in total
-        # action potential + refractory period
+        """
+        Simulates the action potential over the time period `t`.
 
-        # If the active potential is over, then turn active_potential_bool off
-        if t == self.Act_Pot_time/10:
+        This method includes both the action potential and the refractory period.
+
+        :param t: Time step for which the action potential is being calculated.
+        :type t: float
+        :returns: The membrane potential at time `t` during the action potential.
+        :rtype: float
+
+        .
+        """
+        if t == self.Act_Pot_time / 10:
             self.active_potential_bool = False
 
-        self.membrane_potential = (np.sin(1.5*t)/(1.5*t)-0.1266)*100
+        self.membrane_potential = (np.sin(1.5 * t) / (1.5 * t) - 0.1266) * 100
 
-        # If the signal has reached its peak, then turn max_active_potential off
         if self.max_active_potential:
             self.max_active_potential = False
 
-        # If the neuron is at its peak voltage, then send signal to the axon terminals
         if self.membrane_potential > self.Act_Pot_volt:
             self.max_active_potential = True
 
         return self.membrane_potential
 
     def EPSP(self, index, t, weight):
-        # Excitatory Post-Synaptic Potential
-        # These are the pulses that will be added up and if the threshold is reached (15 mV), fire the neuron
-        # 5.4 ms to charge, 5.4 ms to discharge, and 3 ms in a constant value
+        """
+        Calculates the Excitatory Post-Synaptic Potential (EPSP) for a given dendrite.
 
-        # Charge curve
-        if t < self.EPSP_time/30 + 3: # 5 ms approx of charge + 3 ms of constant value
-            value = weight * (1 - np.exp(-(t/self.tau))) + self.temp_summation[index]
-        # Discharge curve
-        else: # At time = 8 ms from the start of the EPSP, start discharge
-            value = weight * np.exp(-((t-7.9)/self.tau))
+        This method simulates the potential that will be added up, and if the threshold is reached (15 mV), 
+        it fires the neuron.
+
+        :param index: Index of the dendrite receiving the EPSP.
+        :type index: int
+        :param t: Time step at which the EPSP is calculated.
+        :type t: float
+        :param weight: Synaptic weight associated with the dendrite.
+        :type weight: float
+        :returns: The voltage change due to the EPSP at the specified dendrite.
+        :rtype: float
+
+        .
+        """
+        if t < self.EPSP_time / 30 + 3:
+            value = weight * (1 - np.exp(-(t / self.tau))) + self.temp_summation[index]
+        else:
+            value = weight * np.exp(-((t - 7.9) / self.tau))
 
         return value
 
     def IPSP(self, index, t, weight):
-        # Inhibitory Post-Synaptic Potential
-        # These are the pulses that will be added up and if the threshold is reached (15 mV), fire the neuron
-        # 5.4 ms to charge, 5.4 ms to discharge, and 3 ms in a constant value
+        """
+        Calculates the Inhibitory Post-Synaptic Potential (IPSP) for a given dendrite.
 
-        # Discharge curve
-        if t < self.EPSP_time/30 + 3: # 5 ms approx of discharge + 3 ms of constant value
-            value = -weight * (1 - np.exp(-(t/self.tau))) + self.temp_summation[index]
-        # Charge curve
-        else: # At time = 8 ms from the start of the IPSP, start charge
-            value = -weight * np.exp(-((t-7.9)/self.tau))
+        This method simulates the potential that will be subtracted, and if the threshold is reached (15 mV), 
+        it fires the neuron.
+
+        :param index: Index of the dendrite receiving the IPSP.
+        :type index: int
+        :param t: Time step at which the IPSP is calculated.
+        :type t: float
+        :param weight: Synaptic weight associated with the dendrite.
+        :type weight: float
+        :returns: The voltage change due to the IPSP at the specified dendrite.
+        :rtype: float
+
+        .
+        """
+        if t < self.EPSP_time / 30 + 3:
+            value = -weight * (1 - np.exp(-(t / self.tau))) + self.temp_summation[index]
+        else:
+            value = -weight * np.exp(-((t - 7.9) / self.tau))
 
         return value
 
     def set_weights(self, values):
-        # The weight(s) for synapses must be such that the output voltage remains
-        # between 0.1 mV and 5 mV
+        """
+        Sets the synaptic weights for each dendrite.
+
+        The weights must be such that the output voltage remains within physiological limits.
+
+        :param values: List of weights to be set for each dendrite.
+        :type values: list of float
+
+        .
+        """
         for i in range(self.num_dendrites):
             self.weights[i] = values[i]
 
     def reset_PSP(self):
-        # Reset all PSP values to False
+        """
+        Resets all Post-Synaptic Potentials (PSPs) to their default (inactive) states.
+        
+        .
+        """
         for i in range(self.num_dendrites):
             self.active_PSP[i] = False
             self.volt_dendrites[i] = 0
@@ -150,107 +277,74 @@ class Abstract_Neuron(Organ):
             self.temp_inputs[i] = 0
 
     def reset_axon_terminals(self):
-        # Turn all axon terminals off
+        """
+        Turns off all axon terminals, indicating no active signaling.
+
+        .
+        """
         for i in range(self.num_axon_terminals):
             self.axon_terminals[i][1] = 0
 
     def present_inputs(self, inputs):
-        # Check that there's not an active potential occurring at the moment
-        if not self.active_potential_bool:
+        """
+        Processes incoming inputs at the current time step.
 
-            # Checks if there is an input at the present time at any of the dendrites of the neuron
+        This method checks if an active potential is occurring, and if not, updates the neuron's state 
+        based on the inputs.
+
+        :param inputs: List of inputs for each dendrite. Values should be 1 for excitatory input, 
+                       -1 for inhibitory input, or 0 for no input.
+        :type inputs: list of int
+
+        .
+        """
+        if not self.active_potential_bool:
             for i in range(len(inputs)):
-                # if there's an input present: turn active_PSP on
-                # initialize temp_summation array with current values for the dendrites,
-                # and reset times for those dendrites with an input
                 if inputs[i] == 1 or inputs[i] == -1:
                     self.active_PSP[i] = True
-
                     self.temp_summation[i] = self.volt_dendrites[i]
                     self.temp_inputs[i] = inputs[i]
                     self.time_dendrites[i] = 0
 
     def connect_with_neuron(self, target_neuron):
-        # Gets the next available index of the inputs variable for the target neuron
-        index = target_neuron.assign_input()
+        """
+        Establishes a connection between this neuron and a target neuron.
 
-        # Adds a new connection to axon_terminals
+        This is done by linking an axon terminal to the target neuron's dendrite.
+
+        :param target_neuron: The target neuron to connect to.
+        :type target_neuron: Abstract_Neuron
+
+        .
+        """
+        index = target_neuron.assign_input()
         if index != -1:
-            # print(self.axon_terminals)
-            self.axon_terminals.append([target_neuron,index])
+            self.axon_terminals.append([target_neuron, index])
 
     def is_connected(self, n):
+        """
+        Checks if this neuron is already connected to the given neuron `n`.
+
+        :param n: The neuron to check connection with.
+        :type n: Abstract_Neuron
+        :returns: True if connected, False otherwise.
+        :rtype: bool
+        
+        .
+        """
         return n in [el[0] for el in self.axon_terminals]
 
-
     def assign_input(self):
-        # Check for an available dendrite(input) to link it with the calling neuron
+        """
+        Assigns an available dendrite to a connecting neuron.
+
+        :returns: The index of the assigned dendrite. Returns -1 if no dendrite is available.
+        :rtype: int
+
+        .
+        """ 
         for i in range(self.num_dendrites):
-            # Return the index if it's available
             if self.taken_inputs[i] == 0:
                 self.taken_inputs[i] = 1
                 return i
-
-        # This indicates no indexes are available for this neuron
         return -1
-
-
-    def __init__(self, res, inputs, outputs, instance_count=""):
-        super().__init__()
-        
-        self.instance_count = str(Abstract_Neuron.instanciation_counter)
-        Abstract_Neuron.instanciation_counter +=1
-        
-        # Initialize number of dendrites (inputs) in the neuron
-        self.num_dendrites = inputs
-
-        # Initialize number of axon terminals (outputs) in the neuron
-        self.num_axon_terminals = outputs
-
-        # Variable to store incoming inputs from connected neurons
-        self.inputs = np.zeros(self.num_dendrites)
-
-        # Variable to check which inputs(dendrites) have already been taken by a connected neuron
-        self.taken_inputs = np.zeros(self.num_dendrites)
-
-        # Initialize weights for the synapses at every dendrite
-        self.weights = np.zeros(self.num_dendrites)
-
-        # Variable that indicates if the Active Potential threshold has been reached and therefore,
-        # an action potential is taking place in the neuron
-        self.active_potential_bool = False
-
-        # Variable to keep track of the actual value of voltage in every dendrite
-        self.volt_dendrites = np.zeros(self.num_dendrites)
-
-        # Variable to keep track of the voltage for temporal summation
-        # In case several EPSPs arrive within a short period of time (one for each dendrite)
-        self.temp_summation = np.zeros(self.num_dendrites)
-
-        # Variable to transmit an action potential to all connected neurons through the axon terminal of the neuron
-        self.axon_terminals = []
-
-        # Variable to know if the neuron's potential has reached it's maximum
-        self.max_active_potential = False
-
-        # Variable that indicates if a Post-Synaptic Potential is taking place at any of the dendrites in the neuron at the moment
-        # Initialize active_PSP variable for every dendrite
-        self.active_PSP = []
-        for i in range(self.num_dendrites):
-            self.active_PSP.append(False)
-
-        # This variable keeps track of wether the last input was excitatory or inhibitory so that when temporal
-        # summation takes place, the program will know if it should add or substract a potential
-        self.temp_inputs = np.zeros(self.num_dendrites)
-
-        # We need to have a time variable for every dendrite because inputs may arrive at different times
-        self.time_dendrites = np.zeros(self.num_dendrites)
-
-        # variable to keep track of the action potential time
-        self.time_neuron = 0
-
-        # Set resolution
-        self.resolution = res
-
-        self.brain = [self]
-# End of definition of class Excitatory_Neuron

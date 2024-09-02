@@ -47,31 +47,43 @@
 
 
 <div class="viewcode-block" id="Counter_1_bit"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Counter_1_bit.html#Neuroscience.structures.Counter_1_bit.Counter_1_bit">[docs]</a><span class="k">class</span> <span class="nc">Counter_1_bit</span><span class="p">(</span><span class="n">Organ</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class representing a 1-bit counter implemented with neural network components.</span>
+
+<span class="sd">    This class uses a `Flip_Flop_T` structure as the core of the counter, driven by excitatory neurons </span>
+<span class="sd">    to provide the necessary pulse train.</span>
+
+<span class="sd">    :param res: Resolution or configuration parameter required to initialize the neural components.</span>
+<span class="sd">    :type res: int</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
 
 <div class="viewcode-block" id="Counter_1_bit.pass_inputs"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Counter_1_bit.html#Neuroscience.structures.Counter_1_bit.Counter_1_bit.pass_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">pass_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inputs</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Passes the input signals to the appropriate neural components of the 1-bit counter.</span>
+<span class="sd">    </span>
+<span class="sd">        This method routes the inputs to both the `Flip_Flop_T` structure and the relevant excitatory neurons </span>
+<span class="sd">        based on the current timestep `k`. It ensures that the neural components receive the correct input signals </span>
+<span class="sd">        at each step of the operation.</span>
+<span class="sd">    </span>
+<span class="sd">        :param inputs: A list or array of input signals where each entry corresponds to a different timestep.</span>
+<span class="sd">        :type inputs: list</span>
+<span class="sd">        :param k: The current timestep index, used to select the appropriate input signals.</span>
+<span class="sd">        :type k: int</span>
+<span class="sd">    </span>
+<span class="sd">        .. note::</span>
+<span class="sd">            - The `Flip_Flop_T` component handles the oscillatory inputs through the method </span>
+<span class="sd">              `pass_inputs_oscillators`, and `pass_inputs_selfputs`.</span>
+<span class="sd">            - The second input to `neuronC_1` is directly set from the input at the current timestep.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">T0</span><span class="o">.</span><span class="n">pass_inputs_oscillators</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span><span class="n">k</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">neuronC_1</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">T0</span><span class="o">.</span><span class="n">pass_inputs_selfputs</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span><span class="n">k</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">res</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        @brief Initializes the 1-bit counter with a Flip-Flop T and necessary neurons.</span>
-
-<span class="sd">        @param res Resolution or configuration parameter required to initialize the neural components.</span>
-
-<span class="sd">        @section Components</span>
-<span class="sd">        - **Flip-Flop T:** A toggle flip-flop providing the core functionality of the counter.</span>
-<span class="sd">        - **Excitatory Neurons:** Two neurons (`neuronC_1` and `neuronC_2`) that generate a pulse train to drive the flip-flop.</span>
-
-<span class="sd">        @section Neural Connections</span>
-<span class="sd">        - **neuronC_1 -&gt; T0.brain[0], T0.brain[7], neuronC_2:** Connects the first neuron to the flip-flop and the second neuron.</span>
-<span class="sd">        - **neuronC_2 -&gt; neuronC_1:** Reciprocally connects the second neuron to the first.</span>
-
-<span class="sd">        @section Output</span>
-<span class="sd">        The counter&#39;s output neuron is the Q output of the Flip-Flop T, accessed via `self.output_neurons`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Counter_1_bit&quot;</span>
@@ -138,8 +150,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/animation.animate_any.html">animation.animate_any</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/forces.utils_forces.html">forces.utils_forces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/index.html">Welcome to Your Project’s documentation!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/index.html">Welcome to the Walking Neural Project !</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html">unitree_legged_sdk.example_py.Bezier.Foot_Sensor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>
@@ -151,11 +165,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.main_loop_v2.html">unitree_legged_sdk.example_py.Bezier.main_loop_v2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.plot_neurons.html">unitree_legged_sdk.example_py.Bezier.plot_neurons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/utils.html">utils</a></li>
 </ul>
 

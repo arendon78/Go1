@@ -39,25 +39,107 @@
 <dt class="sig sig-object py" id="unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unitree_legged_sdk.example_py.Bezier.Foot_Sensor.</span></span><span class="sig-name descname"><span class="pre">Foot_Sensor</span></span><a class="reference internal" href="../_modules/unitree_legged_sdk/example_py/Bezier/Foot_Sensor.html#Foot_Sensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to detect foot contact using sensor data and pattern recognition.</p>
+<p>The <cite>Foot_Sensor</cite> class tracks the movement and force data of a robot’s foot over time to detect when
+the foot makes contact with the ground. It utilizes a simple gradient-based pattern recognition to
+identify specific footfall patterns.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.present_frames">
+<span class="sig-name descname"><span class="pre">present_frames</span></span><a class="headerlink" href="#unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.present_frames" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary storing the history of force data points for each foot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict of list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.feet_detected">
+<span class="sig-name descname"><span class="pre">feet_detected</span></span><a class="headerlink" href="#unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.feet_detected" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary indicating whether a foot has been detected as making contact with the ground.
+Initialized with “foot not detected” for each part.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.old_point">
+<span class="sig-name descname"><span class="pre">old_point</span></span><a class="headerlink" href="#unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.old_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary storing the previous force data point for each foot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict of list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.new_point">
+<span class="sig-name descname"><span class="pre">new_point</span></span><a class="headerlink" href="#unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.new_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary storing the current force data point for each foot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict of list</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.detect">
 <span class="sig-name descname"><span class="pre">detect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_motion_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">part</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/unitree_legged_sdk/example_py/Bezier/Foot_Sensor.html#Foot_Sensor.detect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.detect" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Processes the force data for the specified foot part, updating the detection status based on pattern recognition.</p>
+<p>This method tracks the force data over time for each foot and applies a gradient-based pattern recognition
+algorithm to detect when a foot makes contact with the ground. If a footfall pattern is detected, the foot’s
+detection status is updated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>new_motion_time</strong> (<em>float</em>) – The current time point in the motion sequence.</p></li>
+<li><p><strong>force</strong> (<em>float</em>) – The force detected at the specified time point.</p></li>
+<li><p><strong>part</strong> (<em>str</em>) – The part (foot) for which the detection is being performed.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.get_foot_detected">
 <span class="sig-name descname"><span class="pre">get_foot_detected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/unitree_legged_sdk/example_py/Bezier/Foot_Sensor.html#Foot_Sensor.get_foot_detected"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.get_foot_detected" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the detection status of the specified foot part.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>part</strong> (<em>str</em>) – The part (foot) for which to get the detection status.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The detection status of the specified foot.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.parts">
 <span class="sig-name descname"><span class="pre">parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['FR',</span> <span class="pre">'FL',</span> <span class="pre">'RR',</span> <span class="pre">'RL']</span></em><a class="headerlink" href="#unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.parts" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>List of parts (feet) being monitored, including ‘FR’ (Front Right), ‘FL’ (Front Left),
+‘RR’ (Rear Right), and ‘RL’ (Rear Left).</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.reset_detection">
 <span class="sig-name descname"><span class="pre">reset_detection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/unitree_legged_sdk/example_py/Bezier/Foot_Sensor.html#Foot_Sensor.reset_detection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unitree_legged_sdk.example_py.Bezier.Foot_Sensor.Foot_Sensor.reset_detection" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Resets the detection status of the specified foot part to “foot not detected”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>part</strong> (<em>str</em>) – The part (foot) for which to reset the detection status.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -97,15 +179,18 @@
 <li class="toctree-l1"><a class="reference internal" href="Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="animation.animate_any.html">animation.animate_any</a></li>
+<li class="toctree-l1"><a class="reference internal" href="animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="forces.utils_forces.html">forces.utils_forces</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Welcome to Your Project’s documentation!</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Welcome to the Walking Neural Project !</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Activity_Detector.html">Neuroscience.structures.Activity_Detector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Controller.html">Neuroscience.structures.Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.lie_down_procedure.html">unitree_legged_sdk.example_py.Bezier.lie_down_procedure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Excitatory_Neuron.html">Neuroscience.structures.Excitatory_Neuron</a></li>
+<li class="toctree-l2"><a class="reference internal" href="animation.animate_any.html">animation.animate_any</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.forward_neuron.html">unitree_legged_sdk.example_py.Bezier.forward_neuron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Frequency_Detector_new.html">Neuroscience.structures.Frequency_Detector_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
@@ -116,8 +201,6 @@
 <li class="toctree-l2"><a class="reference internal" href="utils.html">utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Frequency_Detector.html">Neuroscience.structures.Frequency_Detector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Gate_NAND.html">Neuroscience.structures.Gate_NAND</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.foot_trajectory.html">unitree_legged_sdk.example_py.Bezier.foot_trajectory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Counter_3_bits.html">Neuroscience.structures.Counter_3_bits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="forces.utils_forces.html">forces.utils_forces</a></li>
@@ -129,8 +212,6 @@
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Counter_4_bits.html">Neuroscience.structures.Counter_4_bits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Flip_FLop_T.html">Neuroscience.structures.Flip_FLop_T</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Neuroscience.structures.Abstract_Neuron.html">Neuroscience.structures.Abstract_Neuron</a></li>
 </ul>
 </li>
@@ -145,11 +226,6 @@
 <li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.main_loop_v2.html">unitree_legged_sdk.example_py.Bezier.main_loop_v2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.plot_neurons.html">unitree_legged_sdk.example_py.Bezier.plot_neurons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">utils</a></li>
 </ul>
 
@@ -157,7 +233,7 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-  <li><a href="index.html">Welcome to Your Project’s documentation!</a><ul>
+  <li><a href="index.html">Welcome to the Walking Neural Project !</a><ul>
       <li>Previous: <a href="unitree_legged_sdk.example_py.Bezier.foot_trajectory.html" title="previous chapter">unitree_legged_sdk.example_py.Bezier.foot_trajectory</a></li>
       <li>Next: <a href="unitree_legged_sdk.example_py.Bezier.main_loop.html" title="next chapter">unitree_legged_sdk.example_py.Bezier.main_loop</a></li>
   </ul></li>

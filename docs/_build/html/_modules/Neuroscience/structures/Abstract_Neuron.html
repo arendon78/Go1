@@ -39,142 +39,269 @@
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">project_root</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">Neuroscience.structures.Organ</span> <span class="kn">import</span> <span class="n">Organ</span>
 
-<span class="c1"># Definition of class Excitatory_Neuron</span>
 <div class="viewcode-block" id="Abstract_Neuron"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Abstract_Neuron.html#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron">[docs]</a><span class="k">class</span> <span class="nc">Abstract_Neuron</span><span class="p">(</span><span class="n">Organ</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class representing an abstract neuron model used in computational neuroscience.</span>
+
+<span class="sd">    The `Abstract_Neuron` class simulates the behavior of a neuron, focusing on synaptic potentials, </span>
+<span class="sd">    membrane potential dynamics, and action potentials. It can be used as a building block for more </span>
+<span class="sd">    complex neural network structures.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
     <span class="n">instanciation_counter</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="c1"># For this model a tau of 1.0857 ms will be used</span>
-    <span class="c1"># This means that EPSPs and IPSPs will take approx. 5.4 ms to charge, 5.4 ms to discharge,</span>
-    <span class="c1"># and it will remain 3 ms in a constant value</span>
-<span class="c1">#    tau = 2.1714</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class-level counter that tracks the number of Abstract_Neuron instances created.</span>
+
+<span class="sd">    .</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">tau</span> <span class="o">=</span> <span class="mf">1.0857</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Time constant (ms) used in the exponential functions for charging and discharging potentials. </span>
+<span class="sd">        This influences the duration of EPSPs and IPSPs.</span>
 
-    <span class="c1"># Membrane potential (initially zero)</span>
-    <span class="c1"># As inputs arrive, membrane potential will increase and when it excedes 15 mV, the neuron will fire</span>
+<span class="sd">    .</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">membrane_potential</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     The membrane potential of the neuron, initially set to zero. The neuron fires when this potential </span>
+<span class="sd">        exceeds the threshold voltage.</span>
 
-    <span class="c1"># Duration of Excitatory Post-Synaptic Potential EPSP (every 15 ms)</span>
-    <span class="c1"># Including charge (5.4 ms), stable response (3 ms) and discharge (5.4 ms)</span>
+<span class="sd">    .</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
     <span class="n">EPSP_time</span> <span class="o">=</span> <span class="mi">150</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     Duration (in simulation steps) of an Excitatory Post-Synaptic Potential (EPSP), including </span>
+<span class="sd">        charge, stable response, and discharge phases.</span>
 
-    <span class="c1"># Duration of Inhibitory Post-Synaptic Potential EPSP (every 15 ms)</span>
-    <span class="c1"># Including charge (5.4 ms), stable response (3 ms) and discharge (5.4 ms)</span>
+<span class="sd">    .</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">IPSP_time</span> <span class="o">=</span> <span class="mi">150</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     Duration (in simulation steps) of an Inhibitory Post-Synaptic Potential (IPSP), including </span>
+<span class="sd">        charge, stable response, and discharge phases.</span>
 
-    <span class="c1"># Duration of an action potential pulse (5 ms)</span>
-    <span class="c1"># Refractory period included</span>
+<span class="sd">    .</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">Act_Pot_time</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     Duration of an action potential pulse (in simulation steps), including the refractory period.</span>
+<span class="sd">     </span>
+<span class="sd">    .</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># Peak voltage during an action potential pulse (mV)</span>
     <span class="n">Act_Pot_volt</span> <span class="o">=</span> <span class="mf">86.9</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Peak voltage (mV) during an action potential.</span>
 
-    <span class="c1"># Threshold Voltage (mV) to fire the neuron</span>
+<span class="sd">    .</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">Thres_Act_Pot_volt</span> <span class="o">=</span> <span class="mf">14.9</span>
-    
-<span class="c1"># redundant</span>
-    <span class="c1"># # Neuron&#39;s resolution</span>
-    <span class="c1"># resolution = 0</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Threshold voltage (mV) required to fire the neuron.</span>
+<span class="sd">    </span>
+<span class="sd">    .</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># Perform spatial summation on all dendrites of the neuron</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     The resolution of the simulation, affecting the time steps.</span>
+
+<span class="sd">    .</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">instance_count</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the Abstract_Neuron instance with specific resolution, number of inputs (dendrites), </span>
+<span class="sd">        and outputs (axon terminals).</span>
+
+<span class="sd">        :param res: The resolution of the simulation, affecting the time steps.</span>
+<span class="sd">        :type res: int</span>
+<span class="sd">        :param inputs: Number of dendrites (input connections) in the neuron.</span>
+<span class="sd">        :type inputs: int</span>
+<span class="sd">        :param outputs: Number of axon terminals (output connections) in the neuron.</span>
+<span class="sd">        :type outputs: int</span>
+<span class="sd">        :param instance_count: A string to distinguish different instances, default is an empty string.</span>
+<span class="sd">        :type instance_count: str, optional</span>
+
+<span class="sd">        .</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instance_count</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Abstract_Neuron</span><span class="o">.</span><span class="n">instanciation_counter</span><span class="p">)</span>
+        <span class="n">Abstract_Neuron</span><span class="o">.</span><span class="n">instanciation_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span> <span class="o">=</span> <span class="n">inputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_axon_terminals</span> <span class="o">=</span> <span class="n">outputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">taken_inputs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_potential_bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">volt_dendrites</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temp_summation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axon_terminals</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_active_potential</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_PSP</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temp_inputs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_dendrites</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_neuron</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">res</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">brain</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span>
+
 <div class="viewcode-block" id="Abstract_Neuron.spatial_summation"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Abstract_Neuron.html#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.spatial_summation">[docs]</a>    <span class="k">def</span> <span class="nf">spatial_summation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs spatial summation on all dendrites of the neuron.</span>
 
+<span class="sd">        This method updates the membrane potential based on the combined inputs from all active synapses. </span>
+<span class="sd">        If the membrane potential exceeds the threshold, the neuron fires an action potential.</span>
+
+<span class="sd">        :returns: The updated membrane potential after spatial summation.</span>
+<span class="sd">        :rtype: float</span>
+
+<span class="sd">        .</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="c1"># Do spatial summation on the neuron&#39;s dendrites.</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">):</span>
-            <span class="c1"># If the dendrite has an PSP active</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_PSP</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">time_dendrites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
-                <span class="c1"># If the input comes from an excitatory dendrite, Call to EPSP function</span>
-
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">volt_dendrites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">EPSP</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_dendrites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-                <span class="c1"># If the input comes from an inhibitory dendrite, Call to IPSP function</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">volt_dendrites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">EPSP</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_dendrites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
                 <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">volt_dendrites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">IPSP</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_dendrites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">volt_dendrites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">IPSP</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_dendrites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
-                <span class="c1"># Update potential due to this dendrite</span>
                 <span class="n">result</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">volt_dendrites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
-                <span class="c1"># If the active potential threshold has been reached, activate flag</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">membrane_potential</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">Thres_Act_Pot_volt</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">active_potential_bool</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">time_neuron</span> <span class="o">=</span> <span class="mi">0</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">reset_PSP</span><span class="p">()</span>
 
-                <span class="c1"># If the PSP is over, then turn active_PSP off</span>
-                <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_dendrites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">EPSP_time</span><span class="o">/</span><span class="mi">10</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_dendrites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">EPSP_time</span> <span class="o">/</span> <span class="mi">10</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">active_PSP</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">volt_dendrites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">time_dendrites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">temp_summation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">temp_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
-        <span class="c1"># Update membrane&#39;s potential</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">membrane_potential</span> <span class="o">=</span> <span class="n">result</span>
-
         <span class="k">return</span> <span class="n">result</span></div>
-    
 
 <div class="viewcode-block" id="Abstract_Neuron.get_voltage"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Abstract_Neuron.html#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.get_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the current voltage values for each dendrite.</span>
+
+<span class="sd">        :returns: An array of voltage values for each dendrite.</span>
+<span class="sd">        :rtype: numpy.ndarray</span>
+
+<span class="sd">        .</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">volt_dendrites</span></div>
 
-
 <div class="viewcode-block" id="Abstract_Neuron.active_potential"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Abstract_Neuron.html#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.active_potential">[docs]</a>    <span class="k">def</span> <span class="nf">active_potential</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
-        <span class="c1"># This action potential takes 5 ms in total</span>
-        <span class="c1"># action potential + refractory period</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simulates the action potential over the time period `t`.</span>
 
-        <span class="c1"># If the active potential is over, then turn active_potential_bool off</span>
-        <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">Act_Pot_time</span><span class="o">/</span><span class="mi">10</span><span class="p">:</span>
+<span class="sd">        This method includes both the action potential and the refractory period.</span>
+
+<span class="sd">        :param t: Time step for which the action potential is being calculated.</span>
+<span class="sd">        :type t: float</span>
+<span class="sd">        :returns: The membrane potential at time `t` during the action potential.</span>
+<span class="sd">        :rtype: float</span>
+
+<span class="sd">        .</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">Act_Pot_time</span> <span class="o">/</span> <span class="mi">10</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">active_potential_bool</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">membrane_potential</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">1.5</span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mf">1.5</span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="o">-</span><span class="mf">0.1266</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">membrane_potential</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">1.5</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.5</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.1266</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
 
-        <span class="c1"># If the signal has reached its peak, then turn max_active_potential off</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_active_potential</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">max_active_potential</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="c1"># If the neuron is at its peak voltage, then send signal to the axon terminals</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">membrane_potential</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">Act_Pot_volt</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">max_active_potential</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">membrane_potential</span></div>
 
 <div class="viewcode-block" id="Abstract_Neuron.EPSP"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Abstract_Neuron.html#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.EPSP">[docs]</a>    <span class="k">def</span> <span class="nf">EPSP</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">weight</span><span class="p">):</span>
-        <span class="c1"># Excitatory Post-Synaptic Potential</span>
-        <span class="c1"># These are the pulses that will be added up and if the threshold is reached (15 mV), fire the neuron</span>
-        <span class="c1"># 5.4 ms to charge, 5.4 ms to discharge, and 3 ms in a constant value</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the Excitatory Post-Synaptic Potential (EPSP) for a given dendrite.</span>
 
-        <span class="c1"># Charge curve</span>
-        <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">EPSP_time</span><span class="o">/</span><span class="mi">30</span> <span class="o">+</span> <span class="mi">3</span><span class="p">:</span> <span class="c1"># 5 ms approx of charge + 3 ms of constant value</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="n">weight</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">t</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">tau</span><span class="p">)))</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp_summation</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
-        <span class="c1"># Discharge curve</span>
-        <span class="k">else</span><span class="p">:</span> <span class="c1"># At time = 8 ms from the start of the EPSP, start discharge</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="n">weight</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">((</span><span class="n">t</span><span class="o">-</span><span class="mf">7.9</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">tau</span><span class="p">))</span>
+<span class="sd">        This method simulates the potential that will be added up, and if the threshold is reached (15 mV), </span>
+<span class="sd">        it fires the neuron.</span>
+
+<span class="sd">        :param index: Index of the dendrite receiving the EPSP.</span>
+<span class="sd">        :type index: int</span>
+<span class="sd">        :param t: Time step at which the EPSP is calculated.</span>
+<span class="sd">        :type t: float</span>
+<span class="sd">        :param weight: Synaptic weight associated with the dendrite.</span>
+<span class="sd">        :type weight: float</span>
+<span class="sd">        :returns: The voltage change due to the EPSP at the specified dendrite.</span>
+<span class="sd">        :rtype: float</span>
+
+<span class="sd">        .</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">EPSP_time</span> <span class="o">/</span> <span class="mi">30</span> <span class="o">+</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">weight</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">t</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span><span class="p">)))</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp_summation</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">weight</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">((</span><span class="n">t</span> <span class="o">-</span> <span class="mf">7.9</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">value</span></div>
 
 <div class="viewcode-block" id="Abstract_Neuron.IPSP"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Abstract_Neuron.html#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.IPSP">[docs]</a>    <span class="k">def</span> <span class="nf">IPSP</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">weight</span><span class="p">):</span>
-        <span class="c1"># Inhibitory Post-Synaptic Potential</span>
-        <span class="c1"># These are the pulses that will be added up and if the threshold is reached (15 mV), fire the neuron</span>
-        <span class="c1"># 5.4 ms to charge, 5.4 ms to discharge, and 3 ms in a constant value</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the Inhibitory Post-Synaptic Potential (IPSP) for a given dendrite.</span>
 
-        <span class="c1"># Discharge curve</span>
-        <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">EPSP_time</span><span class="o">/</span><span class="mi">30</span> <span class="o">+</span> <span class="mi">3</span><span class="p">:</span> <span class="c1"># 5 ms approx of discharge + 3 ms of constant value</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="o">-</span><span class="n">weight</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">t</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">tau</span><span class="p">)))</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp_summation</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
-        <span class="c1"># Charge curve</span>
-        <span class="k">else</span><span class="p">:</span> <span class="c1"># At time = 8 ms from the start of the IPSP, start charge</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="o">-</span><span class="n">weight</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">((</span><span class="n">t</span><span class="o">-</span><span class="mf">7.9</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">tau</span><span class="p">))</span>
+<span class="sd">        This method simulates the potential that will be subtracted, and if the threshold is reached (15 mV), </span>
+<span class="sd">        it fires the neuron.</span>
+
+<span class="sd">        :param index: Index of the dendrite receiving the IPSP.</span>
+<span class="sd">        :type index: int</span>
+<span class="sd">        :param t: Time step at which the IPSP is calculated.</span>
+<span class="sd">        :type t: float</span>
+<span class="sd">        :param weight: Synaptic weight associated with the dendrite.</span>
+<span class="sd">        :type weight: float</span>
+<span class="sd">        :returns: The voltage change due to the IPSP at the specified dendrite.</span>
+<span class="sd">        :rtype: float</span>
+
+<span class="sd">        .</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">EPSP_time</span> <span class="o">/</span> <span class="mi">30</span> <span class="o">+</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="o">-</span><span class="n">weight</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">t</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span><span class="p">)))</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp_summation</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="o">-</span><span class="n">weight</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">((</span><span class="n">t</span> <span class="o">-</span> <span class="mf">7.9</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">value</span></div>
 
 <div class="viewcode-block" id="Abstract_Neuron.set_weights"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Abstract_Neuron.html#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.set_weights">[docs]</a>    <span class="k">def</span> <span class="nf">set_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-        <span class="c1"># The weight(s) for synapses must be such that the output voltage remains</span>
-        <span class="c1"># between 0.1 mV and 5 mV</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the synaptic weights for each dendrite.</span>
+
+<span class="sd">        The weights must be such that the output voltage remains within physiological limits.</span>
+
+<span class="sd">        :param values: List of weights to be set for each dendrite.</span>
+<span class="sd">        :type values: list of float</span>
+
+<span class="sd">        .</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Abstract_Neuron.reset_PSP"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Abstract_Neuron.html#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.reset_PSP">[docs]</a>    <span class="k">def</span> <span class="nf">reset_PSP</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Reset all PSP values to False</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets all Post-Synaptic Potentials (PSPs) to their default (inactive) states.</span>
+<span class="sd">        </span>
+<span class="sd">        .</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">active_PSP</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">volt_dendrites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
@@ -183,110 +310,77 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">temp_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span></div>
 
 <div class="viewcode-block" id="Abstract_Neuron.reset_axon_terminals"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Abstract_Neuron.html#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.reset_axon_terminals">[docs]</a>    <span class="k">def</span> <span class="nf">reset_axon_terminals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Turn all axon terminals off</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Turns off all axon terminals, indicating no active signaling.</span>
+
+<span class="sd">        .</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_axon_terminals</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">axon_terminals</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span></div>
 
 <div class="viewcode-block" id="Abstract_Neuron.present_inputs"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Abstract_Neuron.html#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.present_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">present_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
-        <span class="c1"># Check that there&#39;s not an active potential occurring at the moment</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_potential_bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Processes incoming inputs at the current time step.</span>
 
-            <span class="c1"># Checks if there is an input at the present time at any of the dendrites of the neuron</span>
+<span class="sd">        This method checks if an active potential is occurring, and if not, updates the neuron&#39;s state </span>
+<span class="sd">        based on the inputs.</span>
+
+<span class="sd">        :param inputs: List of inputs for each dendrite. Values should be 1 for excitatory input, </span>
+<span class="sd">                       -1 for inhibitory input, or 0 for no input.</span>
+<span class="sd">        :type inputs: list of int</span>
+
+<span class="sd">        .</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_potential_bool</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">)):</span>
-                <span class="c1"># if there&#39;s an input present: turn active_PSP on</span>
-                <span class="c1"># initialize temp_summation array with current values for the dendrites,</span>
-                <span class="c1"># and reset times for those dendrites with an input</span>
                 <span class="k">if</span> <span class="n">inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">active_PSP</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-
                     <span class="bp">self</span><span class="o">.</span><span class="n">temp_summation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">volt_dendrites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">temp_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">time_dendrites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span></div>
 
 <div class="viewcode-block" id="Abstract_Neuron.connect_with_neuron"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Abstract_Neuron.html#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.connect_with_neuron">[docs]</a>    <span class="k">def</span> <span class="nf">connect_with_neuron</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_neuron</span><span class="p">):</span>
-        <span class="c1"># Gets the next available index of the inputs variable for the target neuron</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="n">target_neuron</span><span class="o">.</span><span class="n">assign_input</span><span class="p">()</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Establishes a connection between this neuron and a target neuron.</span>
 
-        <span class="c1"># Adds a new connection to axon_terminals</span>
+<span class="sd">        This is done by linking an axon terminal to the target neuron&#39;s dendrite.</span>
+
+<span class="sd">        :param target_neuron: The target neuron to connect to.</span>
+<span class="sd">        :type target_neuron: Abstract_Neuron</span>
+
+<span class="sd">        .</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">target_neuron</span><span class="o">.</span><span class="n">assign_input</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">index</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-            <span class="c1"># print(self.axon_terminals)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">axon_terminals</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">target_neuron</span><span class="p">,</span><span class="n">index</span><span class="p">])</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">axon_terminals</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">target_neuron</span><span class="p">,</span> <span class="n">index</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="Abstract_Neuron.is_connected"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Abstract_Neuron.html#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.is_connected">[docs]</a>    <span class="k">def</span> <span class="nf">is_connected</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if this neuron is already connected to the given neuron `n`.</span>
+
+<span class="sd">        :param n: The neuron to check connection with.</span>
+<span class="sd">        :type n: Abstract_Neuron</span>
+<span class="sd">        :returns: True if connected, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        </span>
+<span class="sd">        .</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">[</span><span class="n">el</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">axon_terminals</span><span class="p">]</span></div>
 
-
 <div class="viewcode-block" id="Abstract_Neuron.assign_input"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Abstract_Neuron.html#Neuroscience.structures.Abstract_Neuron.Abstract_Neuron.assign_input">[docs]</a>    <span class="k">def</span> <span class="nf">assign_input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Check for an available dendrite(input) to link it with the calling neuron</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Assigns an available dendrite to a connecting neuron.</span>
+
+<span class="sd">        :returns: The index of the assigned dendrite. Returns -1 if no dendrite is available.</span>
+<span class="sd">        :rtype: int</span>
+
+<span class="sd">        .</span>
+<span class="sd">        &quot;&quot;&quot;</span> 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">):</span>
-            <span class="c1"># Return the index if it&#39;s available</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">taken_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">taken_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
                 <span class="k">return</span> <span class="n">i</span>
-
-        <span class="c1"># This indicates no indexes are available for this neuron</span>
-        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span></div>
-
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">instance_count</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">instance_count</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Abstract_Neuron</span><span class="o">.</span><span class="n">instanciation_counter</span><span class="p">)</span>
-        <span class="n">Abstract_Neuron</span><span class="o">.</span><span class="n">instanciation_counter</span> <span class="o">+=</span><span class="mi">1</span>
-        
-        <span class="c1"># Initialize number of dendrites (inputs) in the neuron</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span> <span class="o">=</span> <span class="n">inputs</span>
-
-        <span class="c1"># Initialize number of axon terminals (outputs) in the neuron</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_axon_terminals</span> <span class="o">=</span> <span class="n">outputs</span>
-
-        <span class="c1"># Variable to store incoming inputs from connected neurons</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">)</span>
-
-        <span class="c1"># Variable to check which inputs(dendrites) have already been taken by a connected neuron</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">taken_inputs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">)</span>
-
-        <span class="c1"># Initialize weights for the synapses at every dendrite</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">)</span>
-
-        <span class="c1"># Variable that indicates if the Active Potential threshold has been reached and therefore,</span>
-        <span class="c1"># an action potential is taking place in the neuron</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">active_potential_bool</span> <span class="o">=</span> <span class="kc">False</span>
-
-        <span class="c1"># Variable to keep track of the actual value of voltage in every dendrite</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">volt_dendrites</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">)</span>
-
-        <span class="c1"># Variable to keep track of the voltage for temporal summation</span>
-        <span class="c1"># In case several EPSPs arrive within a short period of time (one for each dendrite)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">temp_summation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">)</span>
-
-        <span class="c1"># Variable to transmit an action potential to all connected neurons through the axon terminal of the neuron</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">axon_terminals</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="c1"># Variable to know if the neuron&#39;s potential has reached it&#39;s maximum</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_active_potential</span> <span class="o">=</span> <span class="kc">False</span>
-
-        <span class="c1"># Variable that indicates if a Post-Synaptic Potential is taking place at any of the dendrites in the neuron at the moment</span>
-        <span class="c1"># Initialize active_PSP variable for every dendrite</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">active_PSP</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">active_PSP</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-
-        <span class="c1"># This variable keeps track of wether the last input was excitatory or inhibitory so that when temporal</span>
-        <span class="c1"># summation takes place, the program will know if it should add or substract a potential</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">temp_inputs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">)</span>
-
-        <span class="c1"># We need to have a time variable for every dendrite because inputs may arrive at different times</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_dendrites</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dendrites</span><span class="p">)</span>
-
-        <span class="c1"># variable to keep track of the action potential time</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_neuron</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="c1"># Set resolution</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">res</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">brain</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span></div>
-<span class="c1"># End of definition of class Excitatory_Neuron</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span></div></div>
 </pre></div>
 
           </div>
@@ -322,8 +416,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/animation.animate_any.html">animation.animate_any</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/forces.utils_forces.html">forces.utils_forces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/index.html">Welcome to Your Project’s documentation!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/index.html">Welcome to the Walking Neural Project !</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html">unitree_legged_sdk.example_py.Bezier.Foot_Sensor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>
@@ -335,11 +431,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.main_loop_v2.html">unitree_legged_sdk.example_py.Bezier.main_loop_v2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.plot_neurons.html">unitree_legged_sdk.example_py.Bezier.plot_neurons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.stand_up_procedure.html">unitree_legged_sdk.example_py.Bezier.stand_up_procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_position.html">unitree_legged_sdk.example_py.old_examples.example_position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_torque.html">unitree_legged_sdk.example_py.old_examples.example_torque</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_velocity.html">unitree_legged_sdk.example_py.old_examples.example_velocity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.example_walk.html">unitree_legged_sdk.example_py.old_examples.example_walk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete.html">unitree_legged_sdk.example_py.old_examples.move_limb_neurons_discrete</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/utils.html">utils</a></li>
 </ul>
 

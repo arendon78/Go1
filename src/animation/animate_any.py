@@ -36,7 +36,21 @@ with open(file_abs_path + ".json", 'r') as file:
 
 adjacency_matrices = []
 
+# this module allows to animate any neural network.
+# to animate a neural network, all you have to do is simulate it thanks to src/Neuroscience/tests/sim/simulate_any module
+# you will get a json file that will be added to src/animation/datas
+# by changing the "name" variable to the name of your file (that should be the name of the neural network you simulated) witout .json at the end, 
+# you should be able to simulate it.
+
 def pretty_print(matrix):
+    """
+    Displays the adjacency matrix using Seaborn's heatmap.
+    
+    Parameters
+    ----------
+    matrix : list of list of int
+        The adjacency matrix.
+    """
     plt.figure(figsize=(8, 8))
     sns.heatmap(matrix, annot=True, fmt='d', cbar=False, cmap='viridis', linewidths=0.5, linecolor='black')
     plt.title('Adjacency Matrix')
@@ -45,6 +59,19 @@ def pretty_print(matrix):
     plt.show()
 
 def directed_to_undirected(adj_matrix):
+    """
+    Converts a directed adjacency matrix to an undirected one.
+    
+    Parameters
+    ----------
+    adj_matrix : list of list of int
+        The directed adjacency matrix.
+
+    Returns
+    -------
+    undirected_matrix : np.ndarray
+        The undirected adjacency matrix.
+    """
     # Convert the input to a numpy array for easier manipulation
     adj_matrix = np.array(adj_matrix)
     n = adj_matrix.shape[0]
@@ -67,6 +94,26 @@ def directed_to_undirected(adj_matrix):
 
 
 class Neuron(m.VMobject):
+    """
+    Visual representation of a neuron.
+
+    Attributes
+    ----------
+    index : int
+        The index of the neuron.
+    radius : float
+        The radius of the neuron's visual representation.
+    color : m.Color
+        The color of the neuron.
+    original_color : m.Color
+        The original color of the neuron.
+    original_radius : float
+        The original radius of the neuron.
+    circle : m.Circle
+        The visual representation of the neuron.
+    label : m.Text
+        The label displaying the neuron's index.
+    """
     def __init__(self, index, radius=0.07, color=m.BLUE, **kwargs):
         super().__init__(**kwargs)
         self.radius = radius
@@ -80,15 +127,27 @@ class Neuron(m.VMobject):
         self.add(self.circle,self.label)
     
     def activate(self):
+        """Activate the neuron (change its color)."""
         self.circle.set_fill(m.YELLOW, opacity=1)
     
     def deactivate(self):
+        """Deactivate the neuron (reset its color)."""
         self.circle.set_fill(self.color, opacity=1)
 
 
 class NeuralNetwork(m.Scene):
+    """
+    Manim scene to visualize the neural network and its activity.
 
+    This class constructs a visual representation of a neural network based on
+    the data provided in the JSON file. It handles the placement of neurons,
+    the drawing of connections, and the animation of neuron activations.
+    """
     def construct(self):
+        """
+        Constructs the neural network visualization, applies forces to neurons,
+        and animates their activations.
+        """
           # Increase the frame width to zoom out  # Scale the frame by 1.5 (or any other factor > 1 to zoom out)
         neurons = []
         n_neurons_per_pack = 4*4*3 #3 articulations each with 4 tunable oscillators each containing 4 neurons
@@ -162,42 +221,56 @@ class NeuralNetwork(m.Scene):
 
 
         def apply_forces(neurons_pack, adjacency_matrix):
-                undirected_matrix = directed_to_undirected(adjacency_matrix)
-                spring_constant = 1.1
-                rest_length = 0.5
-                for i in range(25):  # Number of iterations
-                    for idx, neuron in enumerate(neurons_pack):
-                        force = np.array([0.0, 0.0, 0.0])
+            """
+            Applies repulsion and spring forces within each pack of neurons.
 
-                        # Repulsion force (Coulomb's Law)
-                        for other_idx, other in enumerate(neurons_pack):
-                            if neuron != other:
-                                diff = neuron.get_center() - other.get_center()
-                                distance = np.linalg.norm(diff)
-                                if distance < 0.01:
-                                    distance = 0.01  # Avoid division by zero
-                                force +=  1.1*diff / (distance ** 2)
-
-                        # Spring force (Hooke's Law)
-
-                        for other_idx, connected in enumerate(undirected_matrix[idx]):
-                            if connected == 1:
-                                other = neurons_pack[other_idx]
-                                diff = other.get_center() - neuron.get_center()
-                                distance = np.linalg.norm(diff)
-                                displacement = distance - rest_length
-                                spring_force = spring_constant * displacement
-                                force += (diff / distance) * spring_force  # Normalize and apply spring force
-
-                        # Update position based on the net force
-                        new_position = neuron.get_center() + force * 0.3  # Adjust the 0.01 factor for step size
-                        neuron.move_to(new_position)
-
-                    # logging statement for each iteration
-                    print(f'Forces applied within pack {i}')
+            Parameters
+            ----------
+            neurons_pack : list of Neuron
+                The list of neurons in the pack.
+            adjacency_matrix : np.ndarray
+                The adjacency matrix representing connections between neurons.
+            """
+                
+            undirected_matrix = directed_to_undirected(adjacency_matrix)
+            spring_constant = 1.1
+            rest_length = 0.5
+            for i in range(25):  # Number of iterations
+                for idx, neuron in enumerate(neurons_pack):
+                    force = np.array([0.0, 0.0, 0.0])
+                    # Repulsion force (Coulomb's Law)
+                    for other_idx, other in enumerate(neurons_pack):
+                        if neuron != other:
+                            diff = neuron.get_center() - other.get_center()
+                            distance = np.linalg.norm(diff)
+                            if distance < 0.01:
+                                distance = 0.01  # Avoid division by zero
+                            force +=  1.1*diff / (distance ** 2)
+                    # Spring force (Hooke's Law)
+                    for other_idx, connected in enumerate(undirected_matrix[idx]):
+                        if connected == 1:
+                            other = neurons_pack[other_idx]
+                            diff = other.get_center() - neuron.get_center()
+                            distance = np.linalg.norm(diff)
+                            displacement = distance - rest_length
+                            spring_force = spring_constant * displacement
+                            force += (diff / distance) * spring_force  # Normalize and apply spring force
+                    # Update position based on the net force
+                    new_position = neuron.get_center() + force * 0.3  # Adjust the 0.01 factor for step size
+                    neuron.move_to(new_position)
+                # logging statement for each iteration
+                print(f'Forces applied within pack {i}')
     
         # Fnction to avoid overlap by nudging neurons slightly apart
         def avoid_overlap(neurons_pack):
+            """
+            Avoids overlap by nudging neurons slightly apart.
+
+            Parameters
+            ----------
+            neurons_pack : list of Neuron
+                The list of neurons in the pack.
+            """
             for _ in range(10):  # Number of iterations for overlap avoidance
                 for i in range(len(neurons_pack)):
                     for j in range(len(neurons_pack)):
@@ -216,6 +289,16 @@ class NeuralNetwork(m.Scene):
 
         # Function to apply centripetal force towards pack center
         def apply_centripetal_force(neurons_pack, center):
+            """
+            Applies centripetal force towards the pack center.
+
+            Parameters
+            ----------
+            neurons_pack : list of Neuron
+                The list of neurons in the pack.
+            center : np.ndarray
+                The center towards which the centripetal force is applied.
+            """
             for i in range(100):  # Number of iterations for centripetal force
                 for idx, neuron in enumerate(neurons_pack):
                     force = np.array([0.0, 0.0, 0.0])
@@ -252,6 +335,23 @@ class NeuralNetwork(m.Scene):
 
         # Function to calculate mean distances between neurons
         def calculate_mean_distances(pack_neurons, adjacency_matrix):
+            """
+            Calculates mean distances between connected and unconnected neurons.
+
+            Parameters
+            ----------
+            pack_neurons : list of Neuron
+                The list of neurons in the pack.
+            adjacency_matrix : np.ndarray
+                The adjacency matrix representing connections between neurons.
+
+            Returns
+            -------
+            mean_connected : float
+                The mean distance between connected neurons.
+            mean_unconnected : float
+                The mean distance between unconnected neurons.
+            """
             connected_distances = []
             unconnected_distances = []
             for i in range(n_neurons_per_pack):
@@ -275,9 +375,34 @@ class NeuralNetwork(m.Scene):
         print(f"Mean distance between unconnected neurons: {mean_unconnected}")
 
         def map_data_to_neuron(neuron_number, pack_neurons) : 
+            """
+            Maps data to the corresponding neuron in the visualization.
+
+            Parameters
+            ----------
+            neuron_number : int
+                The index of the neuron.
+            pack_neurons : list of Neuron
+                The list of neurons in the pack.
+
+            Returns
+            -------
+            Neuron
+                The neuron object corresponding to the provided data.
+            """
             return pack_neurons[neuron_number]
 
         def activation(time_neuron_to_fire, pack_neurons):
+            """
+            Animates neuron activations over time.
+
+            Parameters
+            ----------
+            time_neuron_to_fire : list of list of list
+                A time-indexed structure containing neurons that fire at each step.
+            pack_neurons : list of Neuron
+                The list of neurons in the pack.
+            """
             active_color = "yellow"  # Choose a distinct color
             active_color_output_neuron = "purple"
             active_scale_factor = 1.5  # Scale factor for active neurons

@@ -11,6 +11,8 @@ def jointLinearInterpolation(initPos, targetPos, rate):
     p = initPos*(1-rate) + targetPos*rate
     return p
 
+
+
 def theta_hip(x,y,z):
     x= 0
     """

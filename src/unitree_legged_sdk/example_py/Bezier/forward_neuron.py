@@ -54,6 +54,8 @@ if __name__ == '__main__':
         'RR': [trajectory[0]] * len(trajectory) * offset_cycle_RR + RR_trajectory + [trajectory[0]] * len(trajectory) * (TOTAL_OFFSET - offset_cycle_RR),
         'RL': [trajectory[0]] * len(trajectory) * offset_cycle_RL + RL_trajectory + [trajectory[0]] * len(trajectory) * (TOTAL_OFFSET - offset_cycle_RL)
     }
+
+    
     # Building the neural network
     res = 0.1
 

@@ -1,16 +1,22 @@
-import numpy as np
 import json
 import matplotlib.pyplot as plt
-import random
-import math
-from utils_forces import *
 
-# json_path = './datas/forces.json'
-# json_path = './datas/stop_each_2_steps_leaning_forward.json'
-json_path = './datas/stop_each_4_step_leaning_forward.json'
-# json_path = './datas/walking_50_points.json'
-# json_path = './datas/walking_4_stops_50_points.json'
-with open(json_path, 'r') as json_file:
+import os 
+import sys
+
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
+sys.path.append(project_root)
+
+from forces.utils_forces import *
+
+# json_path = '/forces/datas/forces.json'
+# json_path = '/forces/datas/stop_each_2_steps_leaning_forward.json'
+json_path = 'forces/datas/stop_each_4_step_leaning_forward.json'
+# json_path = '/forces/datas/walking_50_points.json'
+# json_path = '/forces/datas/walking_4_stops_50_points.json'
+
+with open(os.path.join(project_root,json_path), 'r') as json_file:
     forces = json.load(json_file)
 
 

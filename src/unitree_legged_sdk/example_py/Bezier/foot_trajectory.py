@@ -1,10 +1,7 @@
 #!/usr/bin/python
 import os 
 import sys
-import time
-import math
 import numpy as np
-import matplotlib.pyplot as plt
 from scipy.special import comb
 
 from utils import * 

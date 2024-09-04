@@ -1,14 +1,12 @@
 #!/usr/bin/python
 import os 
 import sys
-import time
-import math
 import numpy as np
 import matplotlib.pyplot as plt
 
 import json
 
-from src.utils import *
+from utils import *
 
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../'))

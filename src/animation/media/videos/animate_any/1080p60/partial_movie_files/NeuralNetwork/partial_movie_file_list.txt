@@ -1,3 +1,0 @@
-# This file is used internally by FFMPEG.
-file 'file:/home/santinu/stage/Go1/animation/media/videos/animate_any/1080p60/partial_movie_files/NeuralNetwork/3977891868_3391600355_682101365.mp4'
-file 'file:/home/santinu/stage/Go1/animation/media/videos/animate_any/1080p60/partial_movie_files/NeuralNetwork/2852726489_229896448_2664029505.mp4'

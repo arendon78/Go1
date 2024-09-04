@@ -1,10 +1,7 @@
 #!/usr/bin/python
 import os 
 import sys
-import time
-import math
 import numpy as np
-import matplotlib.pyplot as plt
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../'))
 sys.path.append(project_root)
@@ -15,7 +12,7 @@ from unitree_legged_sdk.example_py.Bezier.computation_neuron import *
 from unitree_legged_sdk.example_py.Bezier.error_calculation import *
 from unitree_legged_sdk.example_py.Bezier.plot_neurons import *
 from unitree_legged_sdk.example_py.Bezier.main_loop import *
-from unitree_legged_sdk.example_py.Bezier.main_loop_v2 import *
+# from unitree_legged_sdk.example_py.Bezier.main_loop_v2 import *
 
 from Neuroscience.structures.Controller import Controller
 from Neuroscience.structures.Frequency_Detector import Frequency_Detector
@@ -83,7 +80,7 @@ if __name__ == '__main__':
     }
 
     # Simulates the neurons on the trajectory
-    compute_simulation = True
+    compute_simulation = False
 
     if compute_simulation:
         neurons_coords, command_coords, frequency_parts, command, inside_oscillator = compute_neurons(trajectories, controllers, watchers, V)
@@ -121,4 +118,4 @@ if __name__ == '__main__':
         with open(json_path, "r") as json_file:
             neurons_coords = json.load(json_file)
 
-    main_loop(trajectories, trajectory, TOTAL_OFFSET, neurons_coords, parts, stand_up_1, stand_up_2, stand_up_3)
+    main_loop(trajectories, trajectory, TOTAL_OFFSET, neurons_coords, parts,stand_up_2)

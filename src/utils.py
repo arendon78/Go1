@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import networkx as nx
 import numpy as np
-from scipy.special import comb
 
 def jointLinearInterpolation(initPos, targetPos, rate):
 

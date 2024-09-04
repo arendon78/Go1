@@ -2,8 +2,6 @@ import os
 import sys
 import time
 import math
-import numpy as np
-import matplotlib.pyplot as plt
 import json
 import time 
 
@@ -31,7 +29,7 @@ import robot_interface as sdk
 
 
 
-def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up_1,stand_up_2,stand_up_3):
+def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up):
     """
     The main control loop for managing the robot's movement, including standing up, walking, and lying down.
 
@@ -52,7 +50,7 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
     parts : list of str
         A list of parts (limbs) being controlled, including 'FR' (Front Right), 'FL' (Front Left), 'RR' (Rear Right), and 'RL' (Rear Left).
     
-    stand_up_1, stand_up_2, stand_up_3 : dict
+    stand_up, stand_up, stand_up : dict
         Dictionaries containing the joint angle trajectories for the robot's standing up procedure.
     """
     
@@ -163,24 +161,24 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
                 
                 if (motiontime <=(STAND_UP_TIME+INIT_TIME)//2):
                     for part in parts : 
-                        qDes[part][0] = jointLinearInterpolation(qInit[part][0], stand_up_1[part][0], rate)
-                        qDes[part][1] = jointLinearInterpolation(qInit[part][1], stand_up_1[part][1], rate)
-                        qDes[part][2] = jointLinearInterpolation(qInit[part][2], stand_up_1[part][2], rate)
+                        qDes[part][0] = jointLinearInterpolation(qInit[part][0], stand_up[part][0], rate)
+                        qDes[part][1] = jointLinearInterpolation(qInit[part][1], stand_up[part][1], rate)
+                        qDes[part][2] = jointLinearInterpolation(qInit[part][2], stand_up[part][2], rate)
 
 
                 if (motiontime == (STAND_UP_TIME+INIT_TIME)//2 ): rate_count = 0
 
                 if (motiontime > (STAND_UP_TIME+INIT_TIME)//2 and motiontime <(STAND_UP_TIME+INIT_TIME)-10):
                     for part in parts : 
-                        qDes[part][0] = jointLinearInterpolation(stand_up_1[part][0], stand_up_1[part][0], rate)
-                        qDes[part][1] = jointLinearInterpolation(stand_up_1[part][1], stand_up_1[part][1], rate)
-                        qDes[part][2] = jointLinearInterpolation(stand_up_1[part][2], stand_up_1[part][2], rate)
+                        qDes[part][0] = jointLinearInterpolation(stand_up[part][0], stand_up[part][0], rate)
+                        qDes[part][1] = jointLinearInterpolation(stand_up[part][1], stand_up[part][1], rate)
+                        qDes[part][2] = jointLinearInterpolation(stand_up[part][2], stand_up[part][2], rate)
 
                 if (motiontime >= (STAND_UP_TIME+INIT_TIME) -10):
                     for part in parts : 
-                        qDes[part][0] = jointLinearInterpolation(stand_up_1[part][0], stand_up_1[part][0], rate)
-                        qDes[part][1] = jointLinearInterpolation(stand_up_1[part][1], stand_up_1[part][1], rate)
-                        qDes[part][2] = jointLinearInterpolation(stand_up_1[part][2], stand_up_1[part][2], rate)
+                        qDes[part][0] = jointLinearInterpolation(stand_up[part][0], stand_up[part][0], rate)
+                        qDes[part][1] = jointLinearInterpolation(stand_up[part][1], stand_up[part][1], rate)
+                        qDes[part][2] = jointLinearInterpolation(stand_up[part][2], stand_up[part][2], rate)
 
 
 # walking phase ---------------------------------------------------------------------
@@ -193,9 +191,9 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
                     if new_motion_time >  number_steps*TWO_STEP_TIME and new_motion_time < (number_steps+1)*TWO_STEP_TIME:
                         # print("1",number_steps,new_motion_time)
                         for part in parts : 
-                            qDes[part][0] = jointLinearInterpolation(stand_up_2[part][0], after_2_step[part][0], rate)
-                            qDes[part][1] = jointLinearInterpolation(stand_up_2[part][1], after_2_step[part][1], rate)
-                            qDes[part][2] = jointLinearInterpolation(stand_up_2[part][2], after_2_step[part][2], rate)
+                            qDes[part][0] = jointLinearInterpolation(stand_up[part][0], after_2_step[part][0], rate)
+                            qDes[part][1] = jointLinearInterpolation(stand_up[part][1], after_2_step[part][1], rate)
+                            qDes[part][2] = jointLinearInterpolation(stand_up[part][2], after_2_step[part][2], rate)
 
                     elif new_motion_time >  (number_steps+1)*ONE_STEP_TIME and new_motion_time < (number_steps+2)*ONE_STEP_TIME:
                         # print("2",number_steps+1,new_motion_time)
@@ -211,9 +209,9 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
                     elif new_motion_time >  (number_steps+2)*ONE_STEP_TIME and new_motion_time < (number_steps+3)*ONE_STEP_TIME:
                         # print("1",number_steps,new_motion_time)
                         for part in parts : 
-                            qDes[part][0] = jointLinearInterpolation(stand_up_2[part][0], after_2_step[part][0], rate)
-                            qDes[part][1] = jointLinearInterpolation(stand_up_2[part][1], after_2_step[part][1], rate)
-                            qDes[part][2] = jointLinearInterpolation(stand_up_2[part][2], after_2_step[part][2], rate)
+                            qDes[part][0] = jointLinearInterpolation(stand_up[part][0], after_2_step[part][0], rate)
+                            qDes[part][1] = jointLinearInterpolation(stand_up[part][1], after_2_step[part][1], rate)
+                            qDes[part][2] = jointLinearInterpolation(stand_up[part][2], after_2_step[part][2], rate)
 
                 fr_force = state.footForce[0]
                 fl_force = state.footForce[1]

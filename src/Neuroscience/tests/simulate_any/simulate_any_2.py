@@ -1,7 +1,6 @@
 import time
 import os 
 import sys
-import statistics
 import json
 import numpy as np
 

@@ -7,8 +7,6 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')
 sys.path.append(project_root)
 
 # Import both Excitatory and Inhibitory Neuron models
-from Neuroscience.structures.Excitatory_Neuron import Excitatory_Neuron
-from Neuroscience.structures.Inhibitory_Neuron import Inhibitory_Neuron
 from Neuroscience.structures.Flip_FLop_T import Flip_Flop_T
 from Neuroscience.structures.Organ import Organ
 

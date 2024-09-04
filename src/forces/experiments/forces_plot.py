@@ -1,15 +1,24 @@
 import json
 import matplotlib.pyplot as plt
 
-# Step 1: Read JSON data from file
-# json_path = '../unitree_legged_sdk-3.8.0/example_py/Bezier/data/forces.json'  # Replace with your actual path
-# json_path = './walking_50_points.json'
-json_path = './walking_4_stops_50_points.json'
-# json_path = './stop_each_2_steps_leaning_forward.json'
-# json_path = './forces.json'
+import os 
+import sys
 
-with open(json_path, 'r') as json_file:
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
+sys.path.append(project_root)
+
+
+# json_path = '/forces/datas/forces.json'
+# json_path = '/forces/datas/stop_each_2_steps_leaning_forward.json'
+json_path = 'forces/datas/stop_each_4_step_leaning_forward.json'
+# json_path = '/forces/datas/walking_50_points.json'
+# json_path = '/forces/datas/walking_4_stops_50_points.json'
+
+
+with open(os.path.join(project_root,json_path), 'r') as json_file:
     forces = json.load(json_file)
+
 
 # Assuming time points are indices of the list
 times = list(range(len(forces['FR'])))

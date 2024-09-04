@@ -2,8 +2,6 @@ import os
 import sys
 import time
 import math
-import numpy as np
-import matplotlib.pyplot as plt
 import json
 import time 
 

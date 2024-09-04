@@ -10,6 +10,7 @@ class Behavior_Walking_2_bits:
     simulate walking behavior. The walking pattern is controlled by sensory inputs and the state of the 
     system, which determines the next movement command.
 
+
     Attributes
     ----------
     sensor_stack : list of str

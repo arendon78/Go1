@@ -153,11 +153,12 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
 
 #------------------------------------------------------
 
-            if( motiontime >= 10 and motiontime < STAND_UP_TIME +INIT_TIME):
+            if( motiontime >= 10 and motiontime < STAND_UP_TIME +INIT_TIME): 
+            
                 rate_count += 1
                 rate = rate_count/(STAND_UP_TIME//2 - 100)                     # needs count to 500
-                Kp = [75, 75, 75]
-                Kd = [5, 5, 5]
+                Kp = [70, 70, 70]
+                Kd = [3, 3, 3]
                 
                 if (motiontime <=(STAND_UP_TIME+INIT_TIME)//2):
                     for part in parts : 
@@ -298,7 +299,7 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
                 cmd.motorCmd[d[ part + '_0' ]].dq = 0
                 cmd.motorCmd[d[ part + '_0' ]].Kp = Kp[0]
                 cmd.motorCmd[d[ part + '_0' ]].Kd = Kd[0]
-                cmd.motorCmd[d[ part + '_0' ]].tau = -0.65
+                cmd.motorCmd[d[ part + '_0' ]].tau = -0.65 #gravity
 
                 cmd.motorCmd[d[ part + '_1' ]].q = qDes[part][1]
                 cmd.motorCmd[d[ part + '_1' ]].dq = 0

@@ -87,8 +87,8 @@ if __name__ == '__main__':
         neurons_coords, command_coords, frequency_parts, command, inside_oscillator = compute_neurons(trajectories, controllers, watchers, V)
 
         # Saves the neurons coords array so that you can launch experiments without always making the whole simulation again
-        json_path = "data/neurons_coords.json"
-        with open(json_path, "w") as json_file:
+        json_path = "unitree_legged_sdk/example_py/Bezier/data/neurons_coords.json"
+        with open(os.path.join(project_root,json_path), "w") as json_file:
             json.dump(neurons_coords, json_file)
 
         # Plot the coords from neurons
@@ -116,7 +116,7 @@ if __name__ == '__main__':
     # Uses the last saved neuron coords array
     if not compute_simulation:
         json_path = "data/neurons_coords.json"
-        with open(json_path, "r") as json_file:
+        with open(os.path.joim(project_root,json_path), "r") as json_file:
             neurons_coords = json.load(json_file)
 
     main_loop(trajectories, trajectory, TOTAL_OFFSET, neurons_coords, parts,stand_up_2)

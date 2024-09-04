@@ -26,7 +26,7 @@ def theta_hip(x,y,z):
     float: The hip angle θ_hip in radians.
     """
     # print("z,y : ", z,y)
-    print("returned value : ",(math.atan2(z,y)) %(math.pi))
+    # print("returned value : ",(math.atan2(z,y)) %(math.pi))
     # true formula : (math.pi/2 + math.atan2(-y, z)) %(math.pi) equivalent to :
     return (math.atan2(z,y)) %(math.pi)
     # return math.atan2(y, z)

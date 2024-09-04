@@ -6,15 +6,13 @@ import seaborn as sns
 import os
 import sys
 
-
 import json 
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
 sys.path.append(project_root)
 
 
-
-import manim as m
+import animation.manim_env.lib.python3_8.site_packages.manim as m
 
 from Neuroscience.structures.Abstract_Neuron import Abstract_Neuron
 from utils import *

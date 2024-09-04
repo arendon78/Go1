@@ -4,6 +4,7 @@ import seaborn as sns
 import networkx as nx
 import numpy as np
 
+
 def jointLinearInterpolation(initPos, targetPos, rate):
 
     rate = np.fmin(np.fmax(rate, 0.0), 1.0)

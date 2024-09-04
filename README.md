@@ -8,6 +8,7 @@ https://www.youtube.com/watch?v=o6JtfTM3ArY&
 Setup : The robot sould be lying on the ground.
 
 
+
 0.1. install the virtual environment 
     0.1.1. install conda
     0.1.2. got to Go1/

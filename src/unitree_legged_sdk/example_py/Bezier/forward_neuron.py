@@ -23,8 +23,8 @@ if __name__ == '__main__':
 
     parts = ['FR','FL','RR','RL'] 
     # Generation of the foot trajectory
-    NUM_POINTS_BEZIER = 50
-    NUM_POINTS_STANCE = 50
+    NUM_POINTS_BEZIER = 5
+    NUM_POINTS_STANCE = 5
 
     trajectory = foot_trajectory(NUM_POINTS_BEZIER, NUM_POINTS_STANCE)
 
@@ -55,7 +55,7 @@ if __name__ == '__main__':
         'RL': [trajectory[0]] * len(trajectory) * offset_cycle_RL + RL_trajectory + [trajectory[0]] * len(trajectory) * (TOTAL_OFFSET - offset_cycle_RL)
     }
 
-    
+
     # Building the neural network
     res = 0.1
 
@@ -81,7 +81,7 @@ if __name__ == '__main__':
     }
 
     # Simulates the neurons on the trajectory
-    compute_simulation = False
+    compute_simulation = True
 
     if compute_simulation:
         neurons_coords, command_coords, frequency_parts, command, inside_oscillator = compute_neurons(trajectories, controllers, watchers, V)

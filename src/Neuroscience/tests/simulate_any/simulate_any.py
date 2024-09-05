@@ -6,7 +6,7 @@ import numpy as np
 
 
 #change to import the structure that you want to simulate
-from sim.Counter_4_bits_sim import instance_and_input
+from sim.Counter_1_bit_sim import instance_and_input
 
 
 
@@ -36,12 +36,17 @@ instance.update_adjacency_matrix()
 n_neurons = len(instance.brain)
 
 data = {
-    "activity" : np.zeros((n_neurons,sim_time)),#ïf it doesn't work, intervertir les deux
+    "activity" : np.empty((n_neurons, sim_time), dtype=object),#ïf it doesn't work, intervertir les deux
     # we will convert these datas into json-compatible data at the end of the simulation
     "adjacency" : instance.adjacency.matrix.tolist(),# assuming the structure of the network won't change along the simulation.
     "type" : [isinstance(neuron,Excitatory_Neuron) for neuron in instance.brain],
     "output_neurons" : []
 }
+
+# filling the "activity field"
+for i in range(n_neurons):
+    for j in range(sim_time):
+        data["activity"][i, j] = [0, 0]  # Each element is an array [0, 0]
 
 #retrieve the index of the output neuron
 if len(instance.output_neurons) == 0 : 

@@ -1,5 +1,12 @@
-from Neuroscience.structures.Counter_1_bit import Counter_1_bit# import the structure that you want to simulate
+import os 
+import sys
 import numpy as np
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../'))
+sys.path.append(project_root)
+
+from Neuroscience.structures.Counter_1_bit import Counter_1_bit# import the structure that you want to simulate
+
 
 def instance_and_input(sim_time):
     res = 0.1

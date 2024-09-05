@@ -12,7 +12,7 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
 sys.path.append(project_root)
 
 
-import animation.manim_env.lib.python3_8.site_packages.manim as m
+import manim as m
 
 from Neuroscience.structures.Abstract_Neuron import Abstract_Neuron
 from utils import *
@@ -22,7 +22,7 @@ ACT_POT = Abstract_Neuron.Act_Pot_volt
 # Path to the JSON file
 file_path = '/animation/datas'
 
-name = '/Counter_4_bits'
+name = '/Counter_1_bit'
 
 file_abs_path = project_root + file_path + name
 
@@ -460,7 +460,7 @@ class NeuralNetwork(m.Scene):
         for neuron_potentials_index in range(len(data_json["activity"])):
             neuron_potentials = data_json["activity"][neuron_potentials_index]
             for time_index in range(len(neuron_potentials)):
-                p = data_json["activity"][neuron_potentials_index][time_index]                    
+                p = data_json["activity"][neuron_potentials_index][time_index][1]                    
                 # print(p)
                 # time.sleep(0.00001)
                 if p > ACT_POT - 0.05:

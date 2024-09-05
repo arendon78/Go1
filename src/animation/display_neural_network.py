@@ -28,6 +28,7 @@ file_abs_path = project_root + file_path
 with open(file_abs_path, 'r') as file:
     data_json = json.load(file)
 
+# print(data_json[])
 # import successful
 # print(data_json)
 
@@ -346,6 +347,8 @@ class NeuralNetwork(m.Scene):
         self.play(*[m.FadeIn(neuron) for neuron in neurons], *[m.Create(edge) for edge in edges])
         self.wait(1)
 
+
+
         # Function to calculate mean distances between neurons
         def calculate_mean_distances(neurons_by_pack, adjacency_matrices):
             """
@@ -485,8 +488,11 @@ class NeuralNetwork(m.Scene):
                         n_to_activate.circle.set_color(active_color)
 
                     #generates the animation
-                    self.wait(0.017)# for 60fps 1 frame is 0,016666667s
-                    #self.wait(0,07)# for 15fps ( lower quality ) frame is 0,066666667
+
+                    #make sure to select the good one
+                    # self.wait(0.017)# for 60fps 1 frame is 0,016666667s
+                    self.wait(0.07)# for 15fps ( lower quality ) frame is 0,066666667
+                    #----------------------
 
                     for el in time_neuron_to_fire[i] : 
 
@@ -515,17 +521,21 @@ class NeuralNetwork(m.Scene):
                     neuron_potiential_list = data_json[part][n][1][neuron_index]
                     l = len(neuron_potiential_list)
                     k=0
-                    for p, time in neuron_potiential_list: 
+                    # print("potential list ! ",neuron_potiential_list)
+                    for  time,p in neuron_potiential_list: 
                         # if k > l//10: #only computes the beginning of the simulation
-                        #     break                      
+                        #     break    
+                        #                   
                         if ACT_POT - p < 0.07:
+                            # print(time)
+                            # print("hey !")
                             # we avoid to plot the oscillating part, just the output neuron
                             if neuron_index in [ 2 + 4*(i//2) + i%2 for i in range(len(data_json[part][n][1])//2)]:# selects [2,3,6,7,10,11,14,15] in [0,...,15]
                                 time_neuron_to_fire[int(time)].append([part, n, neuron_index])
                         k+=1
 
 
-
+        print(time_neuron_to_fire[:len(time_neuron_to_fire)//100])
         activation( time_neuron_to_fire, neurons_by_pack)    
 
 

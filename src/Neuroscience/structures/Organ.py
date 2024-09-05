@@ -142,15 +142,15 @@ class Organ:
             neuron.present_inputs(neuron.inputs)
             
             if not neuron.active_potential_bool:
-                V[neuron_count][k] = neuron.spatial_summation()
+                V[neuron_count][k] = [k,neuron.spatial_summation()]
 
             if neuron.active_potential_bool:
                 neuron.time_neuron += 1
                 pot = neuron.active_potential(neuron.time_neuron * neuron.resolution)
-                V[neuron_count][k] = pot
+                V[neuron_count][k] = [k,pot]
 
             if not np.any(neuron.active_PSP) and not neuron.active_potential_bool:
-                V[neuron_count][k] = 0
+                V[neuron_count][k] = [k,0]
                 neuron.time_neuron = 0
                 neuron.membrane_potential = 0   
 

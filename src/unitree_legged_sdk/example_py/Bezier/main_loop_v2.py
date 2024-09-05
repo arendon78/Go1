@@ -137,76 +137,76 @@ def main_loop_v2(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand
            wake_up_time = motiontime
 
 # # walking phase ---------------------------------------------------------------------
-        # if is_up and number_of_steps <=15: 
-        #     new_motion_time =  motiontime - wake_up_time
-        #     #retrieve the datas from the foot sensors
-        #     sensor_FL = foot_sensor.get_foot_detected("FL")
-        #     sensor_FR = foot_sensor.get_foot_detected("FR")
+        if is_up and number_of_steps <=15: 
+            new_motion_time =  motiontime - wake_up_time
+            #retrieve the datas from the foot sensors
+            sensor_FL = foot_sensor.get_foot_detected("FL")
+            sensor_FR = foot_sensor.get_foot_detected("FR")
             
-        #     if  sensor_FL == "FL foot detected": 
-        #         behavior_walking.push(sensor_FL)
-        #         foot_sensor.reset_detection("FL")
+            if  sensor_FL == "FL foot detected": 
+                behavior_walking.push(sensor_FL)
+                foot_sensor.reset_detection("FL")
 
-        #     if sensor_FR == "FR foot detected" : 
-        #         behavior_walking.push(sensor_FR)
-        #         foot_sensor.reset_detection("FR")
+            if sensor_FR == "FR foot detected" : 
+                behavior_walking.push(sensor_FR)
+                foot_sensor.reset_detection("FR")
 
-        #     response = behavior_walking.set_new_command()
-        #     if response != []:
-        #         command = response
-        #         i = 0
-        #         behavior_walking.set_ready(False)
-        #         number_of_steps +=1
-        #         print("envoie d'une commande ! ")
-        #     if i < len(command['FR']):
-
-
-        #         for part in parts : 
-        #             qDes[part][0] = command[part][i][0]
-        #             qDes[part][1] = command[part][i][1]
-        #             qDes[part][2] = command[part][i][2]
-        #         i += 1
-
-        #     if i == len(command['FR']) : 
-        #         behavior_walking.set_ready(True)
-
-            # fr_force = state.footForce[0]# real version : uncomment to test in live
-        #     fl_force = state.footForce[1]# real version : uncomment to test in live
-        #     rr_force = state.footForce[2]# real version : uncomment to test in live
-        #     rl_force = state.footForce[3]# real version : uncomment to test in live
+            response = behavior_walking.set_new_command()
+            if response != []:
+                command = response
+                i = 0
+                behavior_walking.set_ready(False)
+                number_of_steps +=1
+                print("envoie d'une commande ! ")
+            if i < len(command['FR']):
 
 
-        #     # fr_force =  mock_forces['FR'][new_motion_time] # mock version
-        #     # fl_force =  mock_forces['FL'][new_motion_time] # mock version
-        #     # rr_force =  mock_forces['RR'][new_motion_time] # mock version
-        #     # rl_force =  mock_forces['RL'][new_motion_time] # mock version
+                for part in parts : 
+                    qDes[part][0] = command[part][i][0]
+                    qDes[part][1] = command[part][i][1]
+                    qDes[part][2] = command[part][i][2]
+                i += 1
 
-        #     forces['FR'].append(fr_force)
-        #     forces['FL'].append(fl_force)
-        #     forces['RR'].append(rr_force)
-        #     forces['RL'].append(rl_force)
+            if i == len(command['FR']) : 
+                behavior_walking.set_ready(True)
 
-        #     #-----------force treatment and pattern recognition-------------
-        #     # firstly, we just use the sensor of FR limb to make it work
-        #     if new_motion_time%20 == 0: 
-        #         print("new_motion_time :" ,new_motion_time)
-        #     foot_sensor.detect(new_motion_time, fr_force,'FR')
-        #     foot_sensor.detect(new_motion_time, fl_force,'FL')
-        #     # is_step = foot_sensor.retrieve_datas()
+            fr_force = state.footForce[0]# real version : uncomment to test in live
+            fl_force = state.footForce[1]# real version : uncomment to test in live
+            rr_force = state.footForce[2]# real version : uncomment to test in live
+            rl_force = state.footForce[3]# real version : uncomment to test in live
 
 
+            # fr_force =  mock_forces['FR'][new_motion_time] # mock version
+            # fl_force =  mock_forces['FL'][new_motion_time] # mock version
+            # rr_force =  mock_forces['RR'][new_motion_time] # mock version
+            # rl_force =  mock_forces['RL'][new_motion_time] # mock version
 
-        #     if number_of_steps > 10:  
-        #         if number_of_steps == 11 : 
-        #             lie_down_time = motiontime
-        #             rate_count = 0
+            forces['FR'].append(fr_force)
+            forces['FL'].append(fl_force)
+            forces['RR'].append(rr_force)
+            forces['RL'].append(rl_force)
 
-        #             json_path = "data/forces.json"
-        #             with open(json_path,"w") as json_file: 
-        #                 json.dump(forces,json_file) 
+            #-----------force treatment and pattern recognition-------------
+            # firstly, we just use the sensor of FR limb to make it work
+            if new_motion_time%20 == 0: 
+                print("new_motion_time :" ,new_motion_time)
+            foot_sensor.detect(new_motion_time, fr_force,'FR')
+            foot_sensor.detect(new_motion_time, fl_force,'FL')
+            # is_step = foot_sensor.retrieve_datas()
 
-        #         new_motion_time = motiontime - lie_down_time
-        #         qDes = lie_down_procedure(new_motion_time,state,qInit,qDes,d,rate_count)
+
+
+            if number_of_steps > 10:  
+                if number_of_steps == 11 : 
+                    lie_down_time = motiontime
+                    rate_count = 0
+
+                    json_path = "data/forces.json"
+                    with open(json_path,"w") as json_file: 
+                        json.dump(forces,json_file) 
+
+                new_motion_time = motiontime - lie_down_time
+                qDes = lie_down_procedure(new_motion_time,state,qInit,qDes,d,rate_count)
 
 
 

@@ -312,13 +312,6 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
                 cmd.motorCmd[d[ part + '_2' ]].Kp = Kp[2]
                 cmd.motorCmd[d[ part + '_2' ]].Kd = Kd[2]
                 cmd.motorCmd[d[ part + '_2' ]].tau = 0.0
-            print(qDes['FR'])
-            fr_force = state.footForce[0]
-
-            print(fr_force)
-            assert qDes['FR'] == qDes['FL']
-            assert qDes['FL'] == qDes['RR']
-            assert qDes['RR'] == qDes['RL']
 
         if(motiontime > 10):
             safe.PowerProtect(cmd, state, 1)

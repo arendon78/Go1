@@ -15,6 +15,8 @@ Setup : The robot sould be lying on the ground.
     0.1.3  conda create --name go1 python=3.8
     0.1.4  conda activate go1
     0.1.5  pip install -r requirements.txt
+    0.1.6  If you got any other problems with some libraries not installed : install them.
+    0.1.7  If it tells you that manim is not installed when running the animation module : install it manually using the README.md file in the animation module
 
 if it asks you, [Y/n], type Y
 

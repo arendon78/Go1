@@ -7,6 +7,7 @@ sys.path.append(project_root)
 
 from Neuroscience.structures.Excitatory_Neuron import Excitatory_Neuron
 from Neuroscience.structures.Inhibitory_Neuron import Inhibitory_Neuron
+from Neuroscience.structures.Controller import Controller
 
 class Frequency_Detector:
     """
@@ -207,16 +208,16 @@ class Frequency_Detector:
         :returns: The normalized frequency ratio.
         :rtype: float
         """
-        new_center = (lower_bound + lower_bound) / 2
+        new_center = (upper_bound + lower_bound) / 2
         amplitude = (upper_bound - lower_bound) / 2
 
         if self.max_sum_frequency == 0:
             return 0
 
-        raw_ratio = self.sum_frequencies() / self.max_sum_frequency
+        raw_ratio = self.sum_frequencies() / (self.max_sum_frequency )#* Controller.N_REPEAT)
         normalized_ratio = raw_ratio * amplitude
         centered_ratio = normalized_ratio + new_center
-
+    
         return centered_ratio
 
     def convert_to_motion(self, motor):
@@ -229,7 +230,7 @@ class Frequency_Detector:
         :rtype: float
         """
         ratio = self.frequency_ratio()
-        return self.motions[motor][0] * ratio - self.motions[motor][1]
+        return self.motions[motor][0] * ratio - self.motions[motor][1]  
 
     def is_firing(self, index):
         """

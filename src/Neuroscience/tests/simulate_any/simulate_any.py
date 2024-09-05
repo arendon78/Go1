@@ -5,7 +5,7 @@ import json
 import numpy as np
 
 
-
+#change to import the structure that you want to simulate
 from sim.Counter_4_bits_sim import instance_and_input
 
 
@@ -22,7 +22,7 @@ from Neuroscience.structures.Inhibitory_Neuron import Inhibitory_Neuron
 # all you have to do is export the right instance_and_input(sim_time) function that returns the instance you want to simulate and the inputs you give it.
 
 res = 0.1                       # Set the resolution
-sim_time = 80000          # Set the simulation time
+sim_time = 10000          # Set the simulation time
 
 instance,inputs = instance_and_input(sim_time)
 name = instance.name

@@ -97,19 +97,19 @@ def plot_everything(neurons_coords, command_coords, frequency_parts, command, in
     plt.tight_layout()
     plt.show()
 
-    json_file_path0 = 'unitree_legged_sdk/example_py/Bezier/../../../../../trash/freq0.json'
-    json_file_path1 = 'unitree_legged_sdk/example_py/Bezier/../../../../../trash/freq1.json'
-    json_file_path2 = 'unitree_legged_sdk/example_py/Bezier/../../../../../trash/freq2.json'
+    # json_file_path0 = 'unitree_legged_sdk/example_py/Bezier/../../../../../trash/freq0.json'
+    # json_file_path1 = 'unitree_legged_sdk/example_py/Bezier/../../../../../trash/freq1.json'
+    # json_file_path2 = 'unitree_legged_sdk/example_py/Bezier/../../../../../trash/freq2.json'
 
-    freq0 = freq0.tolist()
-    freq1 = freq1.tolist()
-    freq2 = freq2.tolist()
+    # freq0 = freq0.tolist()
+    # freq1 = freq1.tolist()
+    # freq2 = freq2.tolist()
 
-    with open(os.path.join(project_root,json_file_path0), 'w') as json_file:
-        json.dump(freq0, json_file)
+    # with open(os.path.join(project_root,json_file_path0), 'w') as json_file:
+    #     json.dump(freq0, json_file)
 
-    with open(os.path.join(project_root,json_file_path1), 'w') as json_file:
-        json.dump(freq1, json_file)
+    # with open(os.path.join(project_root,json_file_path1), 'w') as json_file:
+    #     json.dump(freq1, json_file)
 
-    with open(os.path.join(project_root,json_file_path2), 'w') as json_file:
-        json.dump(freq2, json_file)
+    # with open(os.path.join(project_root,json_file_path2), 'w') as json_file:
+    #     json.dump(freq2, json_file)

@@ -73,7 +73,7 @@ class Controller(Organ):
         :returns: The index and distance of the closest combination.
         :rtype: tuple(int, float)
         """
-        distance = 2
+        distance =2 
         index = 0
         for i in range(len(Controller.main_list)):
             new_d = abs(ratio - Controller.main_list[i][0])

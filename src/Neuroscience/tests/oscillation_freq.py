@@ -76,10 +76,10 @@ for i in range(0,NUM_TIMES):
         # print( "i = ",i )
         freq.update_firing_rate(k)
         # print(i,k)
-        if (k<1000 and k>900):
-            print("inside loop : what is plotted : ",freq.get_freq(i))
-            print("inside loop : what is plotted : ",freq.get_freq(0))
-        F[i].append( freq.get_freq(i))
+        # if (k<1000 and k>900):
+            # print("inside loop : what is plotted : ",freq.get_freq(i))
+            # print("inside loop : what is plotted : ",freq.get_freq(0))
+        F[i].append( freq.frequency_ratio())
 
 
         oscillators[i].simulate(k,V[i])

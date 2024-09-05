@@ -106,7 +106,7 @@ def foot_trajectory(NUM_POINTS_BEZIER = 50 ,NUM_POINTS_STANCE = 50):
     delta= 0.02
     standy= -0.35
     Yspan= 0.04
-    deltaY= 0.01
+    deltaY= 0.01 
 
 
 

@@ -48,4 +48,19 @@ How to animate any neural network :
 - run the file 'python animate_any.py'
  
 
-## BE CAREFUL : If you do low quality (-pql option) make sure that the interval between each neuron in the activation function is the good one.
+### BE CAREFUL : If you do low quality (-pql option) make sure that the interval between each neuron in the activation function (located in /animation/animate_any.py of in /animation/display_neural_network.py )is the good one.
+
+Tomorrow : do the whole thing on another computer and make sure that it works 
+
+also make sure that all the other tests work
+
+animation/animate_any
+animation/display_neural_network
+
+forces/experiments/*
+
+Neuroscience/structures/test/simulate_any
+
+Neuroscience/tests/*
+
+unitree_legged_sdk/example_py/Bezier/forward_neuron with main_loop_v2 and without main_loop

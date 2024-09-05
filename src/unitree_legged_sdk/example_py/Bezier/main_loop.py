@@ -108,12 +108,6 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
         udp.GetRecv(state)
 
         # coord = trajectory[motiontime%len(trajectory)]
-
-        coords = {'FR': trajectories['FR'][motiontime%len(trajectory)*(TOTAL_OFFSET+1)],
-                    'FL': trajectories['FL'][motiontime%len(trajectory)*(TOTAL_OFFSET+1)],
-                    'RR': trajectories['RR'][motiontime%len(trajectory)*(TOTAL_OFFSET+1)],
-                    'RL': trajectories['RL'][motiontime%len(trajectory)*(TOTAL_OFFSET+1)]
-                }
         
         coords2 =  {'FR': neurons_coords['FR'][motiontime%len(trajectory)*(TOTAL_OFFSET+1)],
                     'FL': neurons_coords['FL'][motiontime%len(trajectory)*(TOTAL_OFFSET+1)],
@@ -125,12 +119,6 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
                     'FL': neurons_coords['FL'][0],
                     'RR': neurons_coords['RR'][0],
                     'RL': neurons_coords['RL'][0]
-                }
-        
-        after_1_step = { 'FR': neurons_coords['FR'][len(trajectory)*(0)],
-                         'FL': neurons_coords['FL'][len(trajectory)*(1)],
-                         'RR': neurons_coords['RR'][len(trajectory)*(1)],
-                         'RL': neurons_coords['RL'][len(trajectory)*(0)]
                 }
         
         STAND_UP_TIME = 1000
@@ -157,8 +145,8 @@ def main_loop(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up
             
                 rate_count += 1
                 rate = rate_count/(STAND_UP_TIME//2 - 100)                     # needs count to 500
-                Kp = [70, 70, 70]
-                Kd = [3, 3, 3]
+                Kp = [75,75,75]
+                Kd = [5,5,5]
                 
                 if (motiontime <=(STAND_UP_TIME+INIT_TIME)//2):
                     for part in parts : 

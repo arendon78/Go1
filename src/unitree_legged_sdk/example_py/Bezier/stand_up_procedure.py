@@ -56,8 +56,7 @@ def stand_up_procedure(motiontime,qInit,state,qDes,d,stand_up_1,rate_count,Kp,Kd
             rate_count += 1
             rate = rate_count/(STAND_UP_TIME//2 - 100)                     # needs count to 500
             Kp = [75, 75, 75]
-            Kd = [3, 3, 3]
-            # Kd = [5, 5, 5]
+            Kd = [5, 5, 5]
             
             if (motiontime <=(STAND_UP_TIME+INIT_TIME)//2):
                 for part in parts : 

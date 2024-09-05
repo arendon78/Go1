@@ -49,7 +49,7 @@ class Behavior_Walking_2_bits:
         :param trajectories: A dictionary containing the movement trajectories for each part of the robot.
         :type trajectories: dict
         """
-        self.sensor_stack = [["FL foot detected"],["No Object detected"]]
+        self.sensor_stack = ["FL foot detected"]
         self.counters = [Counter_1_bit(self.res)]
         self.sim_index = [0 for _ in range(len(self.counters))]
         self.inputs = self.build_inputs()
@@ -100,7 +100,7 @@ class Behavior_Walking_2_bits:
             V = []
             for j in range(len(self.counters[i].brain)):
                 sim_time = self.MAX_SIM_TIME
-                V.insert(j, np.zeros([sim_time, 1]))
+                V.insert(j, np.zeros([sim_time, 2]))
             l.append(V)
         return l
 

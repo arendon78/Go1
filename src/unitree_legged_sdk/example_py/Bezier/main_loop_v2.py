@@ -35,7 +35,7 @@ import robot_interface as sdk
 
 
 
-def main_loop_v2(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up_1,stand_up_2,stand_up_3):
+def main_loop_v2(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand_up_1):
     """
     The main control loop for managing the robot's movement, including standing up, walking, and lying down.
 
@@ -115,8 +115,8 @@ def main_loop_v2(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand
 
     is_up = False
     number_of_steps = 0
-    Kp = [75, 75, 75]
-    Kd = [5, 5, 5]
+    Kp = [0, 0, 0]
+    Kd = [0, 0, 0]
     rate_count = 0
 
     while motiontime < 100000:
@@ -131,7 +131,7 @@ def main_loop_v2(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand
 
         if motiontime >= 0 and motiontime < STAND_UP_TIME + INIT_TIME :
             # print("stand up !!",motiontime)
-            motiontime, qInit, state, qDes, d, stand_up_1, rate_count = stand_up_procedure(motiontime,qInit,state,qDes,d,stand_up_1,rate_count)
+            motiontime, qInit, state, qDes, d, stand_up_1, rate_count,Kp,Kd = stand_up_procedure(motiontime,qInit,state,qDes,d,stand_up_1,rate_count,Kp,Kd)
         if( motiontime == STAND_UP_TIME + INIT_TIME ): 
            is_up = True
            wake_up_time = motiontime
@@ -157,7 +157,7 @@ def main_loop_v2(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand
                 i = 0
                 behavior_walking.set_ready(False)
                 number_of_steps +=1
-                print("envoie d'une commande ! ")
+                print("sending a command ")
             if i < len(command['FR']):
 
 
@@ -169,17 +169,17 @@ def main_loop_v2(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand
 
             if i == len(command['FR']) : 
                 behavior_walking.set_ready(True)
+# 
+            # fr_force = state.footForce[0]# real version : uncomment to test in live
+            # fl_force = state.footForce[1]# real version : uncomment to test in live
+            # rr_force = state.footForce[2]# real version : uncomment to test in live
+            # rl_force = state.footForce[3]# real version : uncomment to test in live
 
-            fr_force = state.footForce[0]# real version : uncomment to test in live
-            fl_force = state.footForce[1]# real version : uncomment to test in live
-            rr_force = state.footForce[2]# real version : uncomment to test in live
-            rl_force = state.footForce[3]# real version : uncomment to test in live
 
-
-            # fr_force =  mock_forces['FR'][new_motion_time] # mock version
-            # fl_force =  mock_forces['FL'][new_motion_time] # mock version
-            # rr_force =  mock_forces['RR'][new_motion_time] # mock version
-            # rl_force =  mock_forces['RL'][new_motion_time] # mock version
+            fr_force =  mock_forces['FR'][new_motion_time] # mock version : uncomment to see how behavior walking works !
+            fl_force =  mock_forces['FL'][new_motion_time] # mock version : uncomment to see how behavior walking works !
+            rr_force =  mock_forces['RR'][new_motion_time] # mock version : uncomment to see how behavior walking works !
+            rl_force =  mock_forces['RL'][new_motion_time] # mock version : uncomment to see how behavior walking works !
 
             forces['FR'].append(fr_force)
             forces['FL'].append(fl_force)
@@ -206,7 +206,10 @@ def main_loop_v2(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand
                         json.dump(forces,json_file) 
 
                 new_motion_time = motiontime - lie_down_time
-                qDes = lie_down_procedure(new_motion_time,state,qInit,qDes,d,rate_count)
+                # qDes = lie_down_procedure(new_motion_time,state,qInit,qDes,d,rate_count)
+                # design a lie_down_procedure function so that the lie down procedure sends 
+                # exactly the same commands to the controllers (you can copy the pattern of
+                #  the standu_up_procedure function) 
 
 
 
@@ -228,14 +231,6 @@ def main_loop_v2(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand
             cmd.motorCmd[d[ part + '_2' ]].Kp = Kp[2]
             cmd.motorCmd[d[ part + '_2' ]].Kd = Kd[2]
             cmd.motorCmd[d[ part + '_2' ]].tau = 0.0
-            
-        print(qDes['FR'])
-        assert qDes['FR'] == qDes['FL']
-        assert qDes['FL'] == qDes['RR']
-        assert qDes['RR'] == qDes['RL']
-        fr_force = state.footForce[0]
-
-        print(fr_force)
 
         if(motiontime > 10):
             safe.PowerProtect(cmd, state, 1)

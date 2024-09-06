@@ -44,6 +44,7 @@ end_new =time.time()
 
 new_time = end_new - start_new
 old_time = end_old - start_old
+print("deprecated because controllers are sharing the same main list now")
 print("Benchmark ! \n New controller time : ", new_time, "\n Old controller time : ", old_time, " \nWhat a win for the new controller !! ")
 print("That's ",  old_time/new_time," times faster !!")
 

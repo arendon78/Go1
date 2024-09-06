@@ -13,7 +13,7 @@ from Neuroscience.structures.Frequency_Detector import Frequency_Detector
 # from Neuroscience.structures.Frequency_Detector_new import Frequency_Detector
 
 res = 0.1
-sim_time = 10000
+sim_time = 5000
 N_REPEAT = Controller.N_REPEAT
 
 ctrl = Controller(res,use_old_combinations=False)
@@ -36,7 +36,7 @@ t= 0
 ctrl.pass_inputs(1)
 while t<10:
     print(t*0.05)
-    for i in range(1000):
+    for i in range(500):
         watch.update_firing_rate(k)
         ctrl.simulate(k,V)
         ctrl.pass_inputs(0)

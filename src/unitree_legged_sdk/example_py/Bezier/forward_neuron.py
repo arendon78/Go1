@@ -23,6 +23,9 @@ if __name__ == '__main__':
 
     parts = ['FR','FL','RR','RL'] 
     # Generation of the foot trajectory
+    # NUM_POINTS_BEZIER = 50
+    # NUM_POINTS_STANCE = 50
+
     NUM_POINTS_BEZIER = 3
     NUM_POINTS_STANCE = 3
 
@@ -119,4 +122,4 @@ if __name__ == '__main__':
         with open(os.path.join(project_root,json_path), "r") as json_file:
             neurons_coords = json.load(json_file)
 
-    main_loop(trajectories, trajectory, TOTAL_OFFSET, neurons_coords, parts,stand_up_2)
+    main_loop_v2(trajectories, trajectory, TOTAL_OFFSET, neurons_coords, parts,stand_up_2)

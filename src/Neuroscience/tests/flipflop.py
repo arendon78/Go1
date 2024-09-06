@@ -77,10 +77,3 @@ print(FlipFlop.fth_NAND.brain[-1])
 print(FlipFlop.brain[-1])
 
 # FlipFlop.print()
-
-
-o = Organ()
-for neuron in FlipFlop.brain:
-    o.add_to_brain(neuron)
-
-o.build_and_display_neuron_graph()

@@ -29,7 +29,7 @@ name = instance.name
 
 print(instance)
 
-json_path = "../../../animation/datas/" + name + ".json" # path of the location saved
+json_path = "animation/datas/" + name + ".json" # path of the location saved
 
 
 instance.update_adjacency_matrix()
@@ -73,5 +73,5 @@ while k < sim_time:
 
 data["activity"] = data["activity"].tolist()
 
-with open(json_path,"w") as json_file: 
+with open(os.path.join(project_root,json_path),"w") as json_file: 
     json.dump(data ,json_file)

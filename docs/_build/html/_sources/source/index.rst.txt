@@ -4,16 +4,15 @@ Welcome to the Walking Neural Project !
 .. toctree::
    :maxdepth: 4
 
-   animation.display_neural_network_2
    Neuroscience.structures.Activity_Detector
    Neuroscience.structures.Tunable_Oscillator
+   animation.display_neural_network
    unitree_legged_sdk.example_py.Bezier.computation_neuron
    Neuroscience.structures.Controller
    unitree_legged_sdk.example_py.Bezier.lie_down_procedure
    Neuroscience.structures.Excitatory_Neuron
    animation.animate_any
    unitree_legged_sdk.example_py.Bezier.forward_neuron
-   Neuroscience.structures.Frequency_Detector_new
    unitree_legged_sdk.example_py.Bezier.stand_up_procedure
    unitree_legged_sdk.example_py.Bezier.main_loop_v2
    unitree_legged_sdk.example_py.Bezier.plot_neurons

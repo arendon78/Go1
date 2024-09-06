@@ -49,4 +49,5 @@ How to animate any neural network :
 - run the file 'python animate_any.py'
  
 
-## BE CAREFUL : If you do low quality (-pql option) make sure that the interval between each neuron in the activation function is the good one.
+### BE CAREFUL : If you do low quality (-pql option) make sure that the interval between each neuron in the activation function (located in /animation/animate_any.py of in /animation/display_neural_network.py )is the good one.
+

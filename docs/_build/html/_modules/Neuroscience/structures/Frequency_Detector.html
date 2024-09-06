@@ -40,6 +40,7 @@
 
 <span class="kn">from</span> <span class="nn">Neuroscience.structures.Excitatory_Neuron</span> <span class="kn">import</span> <span class="n">Excitatory_Neuron</span>
 <span class="kn">from</span> <span class="nn">Neuroscience.structures.Inhibitory_Neuron</span> <span class="kn">import</span> <span class="n">Inhibitory_Neuron</span>
+<span class="kn">from</span> <span class="nn">Neuroscience.structures.Controller</span> <span class="kn">import</span> <span class="n">Controller</span>
 
 <div class="viewcode-block" id="Frequency_Detector"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Frequency_Detector.html#Neuroscience.structures.Frequency_Detector.Frequency_Detector">[docs]</a><span class="k">class</span> <span class="nc">Frequency_Detector</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -240,16 +241,16 @@
 <span class="sd">        :returns: The normalized frequency ratio.</span>
 <span class="sd">        :rtype: float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">new_center</span> <span class="o">=</span> <span class="p">(</span><span class="n">lower_bound</span> <span class="o">+</span> <span class="n">lower_bound</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">new_center</span> <span class="o">=</span> <span class="p">(</span><span class="n">upper_bound</span> <span class="o">+</span> <span class="n">lower_bound</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
         <span class="n">amplitude</span> <span class="o">=</span> <span class="p">(</span><span class="n">upper_bound</span> <span class="o">-</span> <span class="n">lower_bound</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_sum_frequency</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="mi">0</span>
 
-        <span class="n">raw_ratio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sum_frequencies</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_sum_frequency</span>
+        <span class="n">raw_ratio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sum_frequencies</span><span class="p">()</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_sum_frequency</span> <span class="p">)</span><span class="c1">#* Controller.N_REPEAT)</span>
         <span class="n">normalized_ratio</span> <span class="o">=</span> <span class="n">raw_ratio</span> <span class="o">*</span> <span class="n">amplitude</span>
         <span class="n">centered_ratio</span> <span class="o">=</span> <span class="n">normalized_ratio</span> <span class="o">+</span> <span class="n">new_center</span>
-
+    
         <span class="k">return</span> <span class="n">centered_ratio</span></div>
 
 <div class="viewcode-block" id="Frequency_Detector.convert_to_motion"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Frequency_Detector.html#Neuroscience.structures.Frequency_Detector.Frequency_Detector.convert_to_motion">[docs]</a>    <span class="k">def</span> <span class="nf">convert_to_motion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">motor</span><span class="p">):</span>
@@ -262,7 +263,7 @@
 <span class="sd">        :rtype: float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ratio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequency_ratio</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">motions</span><span class="p">[</span><span class="n">motor</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">ratio</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">motions</span><span class="p">[</span><span class="n">motor</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">motions</span><span class="p">[</span><span class="n">motor</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">ratio</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">motions</span><span class="p">[</span><span class="n">motor</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>  </div>
 
 <div class="viewcode-block" id="Frequency_Detector.is_firing"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Frequency_Detector.html#Neuroscience.structures.Frequency_Detector.Frequency_Detector.is_firing">[docs]</a>    <span class="k">def</span> <span class="nf">is_firing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -319,13 +320,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Excitatory_Neuron.html">Neuroscience.structures.Excitatory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Flip_FLop_T.html">Neuroscience.structures.Flip_FLop_T</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Frequency_Detector.html">Neuroscience.structures.Frequency_Detector</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Frequency_Detector_new.html">Neuroscience.structures.Frequency_Detector_new</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Gate_NAND.html">Neuroscience.structures.Gate_NAND</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/animation.animate_any.html">animation.animate_any</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/forces.utils_forces.html">forces.utils_forces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/index.html">Welcome to the Walking Neural Project !</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>

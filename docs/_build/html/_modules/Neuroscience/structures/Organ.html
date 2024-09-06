@@ -32,8 +32,6 @@
             
   <h1>Source code for Neuroscience.structures.Organ</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
@@ -137,7 +135,7 @@
 <span class="sd">        :type name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">neuron_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">neuron</span><span class="o">.</span><span class="n">type</span> <span class="k">for</span> <span class="n">neuron</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">adjacency</span><span class="o">.</span><span class="n">pretty_print</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adjacency</span><span class="o">.</span><span class="n">plot_force_directed_graph</span><span class="p">(</span><span class="n">neuron_types</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
     
 <div class="viewcode-block" id="Organ.connect"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">neuron</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -161,7 +159,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">neuron</span></div>
 
-<div class="viewcode-block" id="Organ.simulate"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">V</span><span class="p">):</span>
+<div class="viewcode-block" id="Organ.simulate"><a class="viewcode-back" href="../../../source/Neuroscience.structures.Organ.html#Neuroscience.structures.Organ.Organ.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span><span class="n">use_simulation</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Simulates the neural activity within the organ for a single time step.</span>
 
@@ -177,15 +175,25 @@
             <span class="n">neuron</span><span class="o">.</span><span class="n">present_inputs</span><span class="p">(</span><span class="n">neuron</span><span class="o">.</span><span class="n">inputs</span><span class="p">)</span>
             
             <span class="k">if</span> <span class="ow">not</span> <span class="n">neuron</span><span class="o">.</span><span class="n">active_potential_bool</span><span class="p">:</span>
-                <span class="n">V</span><span class="p">[</span><span class="n">neuron_count</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">neuron</span><span class="o">.</span><span class="n">spatial_summation</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">use_simulation</span><span class="p">:</span> 
+                    <span class="n">V</span><span class="p">[</span><span class="n">neuron_count</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="n">neuron</span><span class="o">.</span><span class="n">spatial_summation</span><span class="p">()]</span>
+                <span class="k">else</span> <span class="p">:</span>
+                    <span class="n">V</span><span class="p">[</span><span class="n">neuron_count</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">neuron</span><span class="o">.</span><span class="n">spatial_summation</span><span class="p">()</span>
 
             <span class="k">if</span> <span class="n">neuron</span><span class="o">.</span><span class="n">active_potential_bool</span><span class="p">:</span>
                 <span class="n">neuron</span><span class="o">.</span><span class="n">time_neuron</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="n">pot</span> <span class="o">=</span> <span class="n">neuron</span><span class="o">.</span><span class="n">active_potential</span><span class="p">(</span><span class="n">neuron</span><span class="o">.</span><span class="n">time_neuron</span> <span class="o">*</span> <span class="n">neuron</span><span class="o">.</span><span class="n">resolution</span><span class="p">)</span>
-                <span class="n">V</span><span class="p">[</span><span class="n">neuron_count</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">pot</span>
+                <span class="k">if</span> <span class="n">use_simulation</span><span class="p">:</span>
+                    <span class="n">V</span><span class="p">[</span><span class="n">neuron_count</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="n">pot</span><span class="p">]</span>
+                <span class="k">else</span> <span class="p">:</span> 
+                    <span class="n">V</span><span class="p">[</span><span class="n">neuron_count</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">pot</span>
+                    
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">neuron</span><span class="o">.</span><span class="n">active_PSP</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">neuron</span><span class="o">.</span><span class="n">active_potential_bool</span><span class="p">:</span>
-                <span class="n">V</span><span class="p">[</span><span class="n">neuron_count</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">if</span> <span class="n">use_simulation</span><span class="p">:</span> 
+                    <span class="n">V</span><span class="p">[</span><span class="n">neuron_count</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">else</span> <span class="p">:</span> 
+                    <span class="n">V</span><span class="p">[</span><span class="n">neuron_count</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="n">neuron</span><span class="o">.</span><span class="n">time_neuron</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="n">neuron</span><span class="o">.</span><span class="n">membrane_potential</span> <span class="o">=</span> <span class="mi">0</span>   
 
@@ -221,13 +229,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Excitatory_Neuron.html">Neuroscience.structures.Excitatory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Flip_FLop_T.html">Neuroscience.structures.Flip_FLop_T</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Frequency_Detector.html">Neuroscience.structures.Frequency_Detector</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Frequency_Detector_new.html">Neuroscience.structures.Frequency_Detector_new</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Gate_NAND.html">Neuroscience.structures.Gate_NAND</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/animation.animate_any.html">animation.animate_any</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/forces.utils_forces.html">forces.utils_forces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/index.html">Welcome to the Walking Neural Project !</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>

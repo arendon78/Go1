@@ -36,13 +36,15 @@
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">comb</span>
+
 
 <div class="viewcode-block" id="jointLinearInterpolation"><a class="viewcode-back" href="../source/utils.html#utils.jointLinearInterpolation">[docs]</a><span class="k">def</span> <span class="nf">jointLinearInterpolation</span><span class="p">(</span><span class="n">initPos</span><span class="p">,</span> <span class="n">targetPos</span><span class="p">,</span> <span class="n">rate</span><span class="p">):</span>
 
     <span class="n">rate</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fmax</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">)</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">initPos</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">rate</span><span class="p">)</span> <span class="o">+</span> <span class="n">targetPos</span><span class="o">*</span><span class="n">rate</span>
     <span class="k">return</span> <span class="n">p</span></div>
+
+
 
 <div class="viewcode-block" id="theta_hip"><a class="viewcode-back" href="../source/utils.html#utils.theta_hip">[docs]</a><span class="k">def</span> <span class="nf">theta_hip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">):</span>
     <span class="n">x</span><span class="o">=</span> <span class="mi">0</span>
@@ -57,7 +59,7 @@
 <span class="sd">    float: The hip angle θ_hip in radians.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># print(&quot;z,y : &quot;, z,y)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;returned value : &quot;</span><span class="p">,(</span><span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="n">y</span><span class="p">))</span> <span class="o">%</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+    <span class="c1"># print(&quot;returned value : &quot;,(math.atan2(z,y)) %(math.pi))</span>
     <span class="c1"># true formula : (math.pi/2 + math.atan2(-y, z)) %(math.pi) equivalent to :</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="n">y</span><span class="p">))</span> <span class="o">%</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span></div>
     <span class="c1"># return math.atan2(y, z)</span>
@@ -292,6 +294,7 @@
 <span class="sd">        graph_name (str) : Le nom du graphe pour le titre de la visualisation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Créer le graphe dirigé à partir de la matrice d&#39;adjacence</span>
+        <span class="c1">#TO SHOW UNDIRECTED,, UNCOMMENT HERE</span>
         <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">from_numpy_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">)</span><span class="c1">#,create_using=nx.DiGraph)</span>
 
         <span class="c1"># Calculer la disposition des nœuds (force-directed)</span>
@@ -302,6 +305,7 @@
 
         <span class="c1"># Dessiner le graphe dirigé avec des flèches pour montrer la direction</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+        <span class="c1">#TO SHOW UNDIRECTED, UNCOMMENT HERE</span>
         <span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="n">node_colors</span><span class="p">,</span>
                 <span class="n">font_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">font_color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">edge_color</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                 <span class="n">arrows</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="c1">#True, arrowstyle=&#39;-|&gt;&#39;, arrowsize=10)</span>
@@ -344,13 +348,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../source/Neuroscience.structures.Excitatory_Neuron.html">Neuroscience.structures.Excitatory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/Neuroscience.structures.Flip_FLop_T.html">Neuroscience.structures.Flip_FLop_T</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/Neuroscience.structures.Frequency_Detector.html">Neuroscience.structures.Frequency_Detector</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../source/Neuroscience.structures.Frequency_Detector_new.html">Neuroscience.structures.Frequency_Detector_new</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/Neuroscience.structures.Gate_NAND.html">Neuroscience.structures.Gate_NAND</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/animation.animate_any.html">animation.animate_any</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../source/animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/forces.utils_forces.html">forces.utils_forces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/index.html">Welcome to the Walking Neural Project !</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>

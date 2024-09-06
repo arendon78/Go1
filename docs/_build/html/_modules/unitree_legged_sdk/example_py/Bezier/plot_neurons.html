@@ -34,14 +34,12 @@
 <span></span><span class="ch">#!/usr/bin/python</span>
 <span class="kn">import</span> <span class="nn">os</span> 
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="kn">import</span> <span class="nn">json</span>
 
-<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="o">*</span>
 
 
 <span class="n">project_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;../../../&#39;</span><span class="p">))</span>
@@ -130,24 +128,24 @@
 
 
     <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
-    <span class="n">json_file_path0</span> <span class="o">=</span> <span class="s1">&#39;../../../../../trash/freq0.json&#39;</span>
-    <span class="n">json_file_path1</span> <span class="o">=</span> <span class="s1">&#39;../../../../../trash/freq1.json&#39;</span>
-    <span class="n">json_file_path2</span> <span class="o">=</span> <span class="s1">&#39;../../../../../trash/freq2.json&#39;</span>
+    <span class="c1"># json_file_path0 = &#39;unitree_legged_sdk/example_py/Bezier/../../../../../trash/freq0.json&#39;</span>
+    <span class="c1"># json_file_path1 = &#39;unitree_legged_sdk/example_py/Bezier/../../../../../trash/freq1.json&#39;</span>
+    <span class="c1"># json_file_path2 = &#39;unitree_legged_sdk/example_py/Bezier/../../../../../trash/freq2.json&#39;</span>
 
-    <span class="n">freq0</span> <span class="o">=</span> <span class="n">freq0</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-    <span class="n">freq1</span> <span class="o">=</span> <span class="n">freq1</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-    <span class="n">freq2</span> <span class="o">=</span> <span class="n">freq2</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="c1"># freq0 = freq0.tolist()</span>
+    <span class="c1"># freq1 = freq1.tolist()</span>
+    <span class="c1"># freq2 = freq2.tolist()</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_file_path0</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
-        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">freq0</span><span class="p">,</span> <span class="n">json_file</span><span class="p">)</span>
+    <span class="c1"># with open(os.path.join(project_root,json_file_path0), &#39;w&#39;) as json_file:</span>
+    <span class="c1">#     json.dump(freq0, json_file)</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_file_path1</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
-        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">freq1</span><span class="p">,</span> <span class="n">json_file</span><span class="p">)</span>
+    <span class="c1"># with open(os.path.join(project_root,json_file_path1), &#39;w&#39;) as json_file:</span>
+    <span class="c1">#     json.dump(freq1, json_file)</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_file_path2</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
-        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">freq2</span><span class="p">,</span> <span class="n">json_file</span><span class="p">)</span></div>
+    <span class="c1"># with open(os.path.join(project_root,json_file_path2), &#39;w&#39;) as json_file:</span>
+    <span class="c1">#     json.dump(freq2, json_file)</span>
 </pre></div>
 
           </div>
@@ -178,13 +176,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Excitatory_Neuron.html">Neuroscience.structures.Excitatory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Flip_FLop_T.html">Neuroscience.structures.Flip_FLop_T</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Frequency_Detector.html">Neuroscience.structures.Frequency_Detector</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Frequency_Detector_new.html">Neuroscience.structures.Frequency_Detector_new</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Gate_NAND.html">Neuroscience.structures.Gate_NAND</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/animation.animate_any.html">animation.animate_any</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/forces.utils_forces.html">forces.utils_forces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/index.html">Welcome to the Walking Neural Project !</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>

@@ -43,6 +43,7 @@
 <span class="sd">    simulate walking behavior. The walking pattern is controlled by sensory inputs and the state of the </span>
 <span class="sd">    system, which determines the next movement command.</span>
 
+
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    sensor_stack : list of str</span>
@@ -132,7 +133,7 @@
             <span class="n">V</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">counters</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">brain</span><span class="p">)):</span>
                 <span class="n">sim_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAX_SIM_TIME</span>
-                <span class="n">V</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">sim_time</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+                <span class="n">V</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">sim_time</span><span class="p">,</span> <span class="mi">2</span><span class="p">]))</span>
             <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">l</span></div>
 
@@ -262,13 +263,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Excitatory_Neuron.html">Neuroscience.structures.Excitatory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Flip_FLop_T.html">Neuroscience.structures.Flip_FLop_T</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Frequency_Detector.html">Neuroscience.structures.Frequency_Detector</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Frequency_Detector_new.html">Neuroscience.structures.Frequency_Detector_new</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Gate_NAND.html">Neuroscience.structures.Gate_NAND</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/animation.animate_any.html">animation.animate_any</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/forces.utils_forces.html">forces.utils_forces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/index.html">Welcome to the Walking Neural Project !</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>

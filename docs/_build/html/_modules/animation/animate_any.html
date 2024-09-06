@@ -34,19 +34,15 @@
 <span></span>
 <span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span> 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">time</span>
-
 
 <span class="kn">import</span> <span class="nn">json</span> 
 
 <span class="n">project_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;../&#39;</span><span class="p">))</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">project_root</span><span class="p">)</span>
-
 
 
 <span class="kn">import</span> <span class="nn">manim</span> <span class="k">as</span> <span class="nn">m</span>
@@ -59,7 +55,7 @@
 <span class="c1"># Path to the JSON file</span>
 <span class="n">file_path</span> <span class="o">=</span> <span class="s1">&#39;/animation/datas&#39;</span>
 
-<span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;/Counter_4_bits&#39;</span>
+<span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;/Counter_1_bit&#39;</span>
 
 <span class="n">file_abs_path</span> <span class="o">=</span> <span class="n">project_root</span> <span class="o">+</span> <span class="n">file_path</span> <span class="o">+</span> <span class="n">name</span>
 
@@ -68,6 +64,12 @@
     <span class="n">data_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
 
 <span class="n">adjacency_matrices</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># this module allows to animate any neural network.</span>
+<span class="c1"># to animate a neural network, all you have to do is simulate it thanks to src/Neuroscience/tests/sim/simulate_any module</span>
+<span class="c1"># you will get a json file that will be added to src/animation/datas</span>
+<span class="c1"># by changing the &quot;name&quot; variable to the name of your file (that should be the name of the neural network you simulated) witout .json at the end, </span>
+<span class="c1"># you should be able to simulate it.</span>
 
 <div class="viewcode-block" id="pretty_print"><a class="viewcode-back" href="../../source/animation.animate_any.html#animation.animate_any.pretty_print">[docs]</a><span class="k">def</span> <span class="nf">pretty_print</span><span class="p">(</span><span class="n">matrix</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -491,7 +493,7 @@
         <span class="k">for</span> <span class="n">neuron_potentials_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_json</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">])):</span>
             <span class="n">neuron_potentials</span> <span class="o">=</span> <span class="n">data_json</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">][</span><span class="n">neuron_potentials_index</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">time_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">neuron_potentials</span><span class="p">)):</span>
-                <span class="n">p</span> <span class="o">=</span> <span class="n">data_json</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">][</span><span class="n">neuron_potentials_index</span><span class="p">][</span><span class="n">time_index</span><span class="p">]</span>                    
+                <span class="n">p</span> <span class="o">=</span> <span class="n">data_json</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">][</span><span class="n">neuron_potentials_index</span><span class="p">][</span><span class="n">time_index</span><span class="p">]</span>                 
                 <span class="c1"># print(p)</span>
                 <span class="c1"># time.sleep(0.00001)</span>
                 <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="n">ACT_POT</span> <span class="o">-</span> <span class="mf">0.05</span><span class="p">:</span>
@@ -543,15 +545,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Excitatory_Neuron.html">Neuroscience.structures.Excitatory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Flip_FLop_T.html">Neuroscience.structures.Flip_FLop_T</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Frequency_Detector.html">Neuroscience.structures.Frequency_Detector</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Frequency_Detector_new.html">Neuroscience.structures.Frequency_Detector_new</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Gate_NAND.html">Neuroscience.structures.Gate_NAND</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/animation.animate_any.html">animation.animate_any</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../source/animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/animation.display_neural_network.html">animation.display_neural_network</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/forces.utils_forces.html">forces.utils_forces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../source/index.html">Welcome to the Walking Neural Project !</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html">unitree_legged_sdk.example_py.Bezier.Foot_Sensor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>

@@ -1,4 +1,4 @@
-Welcome to the Walking Neural Project Documentation ! 
+Welcome to the Walking Neural Documentation ! 
 =========================================
 
 .. toctree::
@@ -15,15 +15,13 @@ Welcome to the Walking Neural Project Documentation !
    source/Neuroscience.structures.Excitatory_Neuron
    source/Neuroscience.structures.Flip_FLop_T
    source/Neuroscience.structures.Frequency_Detector
-   source/Neuroscience.structures.Frequency_Detector_new
    source/Neuroscience.structures.Gate_NAND
    source/Neuroscience.structures.Inhibitory_Neuron
    source/Neuroscience.structures.Organ
    source/Neuroscience.structures.Tunable_Oscillator
    source/animation.animate_any
-   source/animation.display_neural_network_2
+   source/animation.display_neural_network
    source/forces.utils_forces
-   source/index
    source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits
    source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor
    source/unitree_legged_sdk.example_py.Bezier.computation_neuron

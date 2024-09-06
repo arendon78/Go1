@@ -35,8 +35,6 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">time</span> 
 
@@ -70,7 +68,7 @@
 
 
 
-<div class="viewcode-block" id="main_loop_v2"><a class="viewcode-back" href="../../../../source/unitree_legged_sdk.example_py.Bezier.main_loop_v2.html#unitree_legged_sdk.example_py.Bezier.main_loop_v2.main_loop_v2">[docs]</a><span class="k">def</span> <span class="nf">main_loop_v2</span><span class="p">(</span><span class="n">trajectories</span><span class="p">,</span><span class="n">trajectory</span><span class="p">,</span><span class="n">TOTAL_OFFSET</span><span class="p">,</span><span class="n">neurons_coords</span><span class="p">,</span><span class="n">parts</span><span class="p">,</span><span class="n">stand_up_1</span><span class="p">,</span><span class="n">stand_up_2</span><span class="p">,</span><span class="n">stand_up_3</span><span class="p">):</span>
+<div class="viewcode-block" id="main_loop_v2"><a class="viewcode-back" href="../../../../source/unitree_legged_sdk.example_py.Bezier.main_loop_v2.html#unitree_legged_sdk.example_py.Bezier.main_loop_v2.main_loop_v2">[docs]</a><span class="k">def</span> <span class="nf">main_loop_v2</span><span class="p">(</span><span class="n">trajectories</span><span class="p">,</span><span class="n">trajectory</span><span class="p">,</span><span class="n">TOTAL_OFFSET</span><span class="p">,</span><span class="n">neurons_coords</span><span class="p">,</span><span class="n">parts</span><span class="p">,</span><span class="n">stand_up_1</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The main control loop for managing the robot&#39;s movement, including standing up, walking, and lying down.</span>
 
@@ -150,8 +148,8 @@
 
     <span class="n">is_up</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">number_of_steps</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">Kp</span> <span class="o">=</span> <span class="p">[</span><span class="mi">75</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">75</span><span class="p">]</span>
-    <span class="n">Kd</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+    <span class="n">Kp</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">Kd</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
     <span class="n">rate_count</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">while</span> <span class="n">motiontime</span> <span class="o">&lt;</span> <span class="mi">100000</span><span class="p">:</span>
@@ -166,82 +164,85 @@
 
         <span class="k">if</span> <span class="n">motiontime</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">motiontime</span> <span class="o">&lt;</span> <span class="n">STAND_UP_TIME</span> <span class="o">+</span> <span class="n">INIT_TIME</span> <span class="p">:</span>
             <span class="c1"># print(&quot;stand up !!&quot;,motiontime)</span>
-            <span class="n">motiontime</span><span class="p">,</span> <span class="n">qInit</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">qDes</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">stand_up_1</span><span class="p">,</span> <span class="n">rate_count</span> <span class="o">=</span> <span class="n">stand_up_procedure</span><span class="p">(</span><span class="n">motiontime</span><span class="p">,</span><span class="n">qInit</span><span class="p">,</span><span class="n">state</span><span class="p">,</span><span class="n">qDes</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">stand_up_1</span><span class="p">,</span><span class="n">rate_count</span><span class="p">)</span>
+            <span class="n">motiontime</span><span class="p">,</span> <span class="n">qInit</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">qDes</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">stand_up_1</span><span class="p">,</span> <span class="n">rate_count</span><span class="p">,</span><span class="n">Kp</span><span class="p">,</span><span class="n">Kd</span> <span class="o">=</span> <span class="n">stand_up_procedure</span><span class="p">(</span><span class="n">motiontime</span><span class="p">,</span><span class="n">qInit</span><span class="p">,</span><span class="n">state</span><span class="p">,</span><span class="n">qDes</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">stand_up_1</span><span class="p">,</span><span class="n">rate_count</span><span class="p">,</span><span class="n">Kp</span><span class="p">,</span><span class="n">Kd</span><span class="p">)</span>
         <span class="k">if</span><span class="p">(</span> <span class="n">motiontime</span> <span class="o">==</span> <span class="n">STAND_UP_TIME</span> <span class="o">+</span> <span class="n">INIT_TIME</span> <span class="p">):</span> 
            <span class="n">is_up</span> <span class="o">=</span> <span class="kc">True</span>
            <span class="n">wake_up_time</span> <span class="o">=</span> <span class="n">motiontime</span>
 
 <span class="c1"># # walking phase ---------------------------------------------------------------------</span>
-        <span class="c1"># if is_up and number_of_steps &lt;=15: </span>
-        <span class="c1">#     new_motion_time =  motiontime - wake_up_time</span>
-        <span class="c1">#     #retrieve the datas from the foot sensors</span>
-        <span class="c1">#     sensor_FL = foot_sensor.get_foot_detected(&quot;FL&quot;)</span>
-        <span class="c1">#     sensor_FR = foot_sensor.get_foot_detected(&quot;FR&quot;)</span>
+        <span class="k">if</span> <span class="n">is_up</span> <span class="ow">and</span> <span class="n">number_of_steps</span> <span class="o">&lt;=</span><span class="mi">15</span><span class="p">:</span> 
+            <span class="n">new_motion_time</span> <span class="o">=</span>  <span class="n">motiontime</span> <span class="o">-</span> <span class="n">wake_up_time</span>
+            <span class="c1">#retrieve the datas from the foot sensors</span>
+            <span class="n">sensor_FL</span> <span class="o">=</span> <span class="n">foot_sensor</span><span class="o">.</span><span class="n">get_foot_detected</span><span class="p">(</span><span class="s2">&quot;FL&quot;</span><span class="p">)</span>
+            <span class="n">sensor_FR</span> <span class="o">=</span> <span class="n">foot_sensor</span><span class="o">.</span><span class="n">get_foot_detected</span><span class="p">(</span><span class="s2">&quot;FR&quot;</span><span class="p">)</span>
             
-        <span class="c1">#     if  sensor_FL == &quot;FL foot detected&quot;: </span>
-        <span class="c1">#         behavior_walking.push(sensor_FL)</span>
-        <span class="c1">#         foot_sensor.reset_detection(&quot;FL&quot;)</span>
+            <span class="k">if</span>  <span class="n">sensor_FL</span> <span class="o">==</span> <span class="s2">&quot;FL foot detected&quot;</span><span class="p">:</span> 
+                <span class="n">behavior_walking</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">sensor_FL</span><span class="p">)</span>
+                <span class="n">foot_sensor</span><span class="o">.</span><span class="n">reset_detection</span><span class="p">(</span><span class="s2">&quot;FL&quot;</span><span class="p">)</span>
 
-        <span class="c1">#     if sensor_FR == &quot;FR foot detected&quot; : </span>
-        <span class="c1">#         behavior_walking.push(sensor_FR)</span>
-        <span class="c1">#         foot_sensor.reset_detection(&quot;FR&quot;)</span>
+            <span class="k">if</span> <span class="n">sensor_FR</span> <span class="o">==</span> <span class="s2">&quot;FR foot detected&quot;</span> <span class="p">:</span> 
+                <span class="n">behavior_walking</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">sensor_FR</span><span class="p">)</span>
+                <span class="n">foot_sensor</span><span class="o">.</span><span class="n">reset_detection</span><span class="p">(</span><span class="s2">&quot;FR&quot;</span><span class="p">)</span>
 
-        <span class="c1">#     response = behavior_walking.set_new_command()</span>
-        <span class="c1">#     if response != []:</span>
-        <span class="c1">#         command = response</span>
-        <span class="c1">#         i = 0</span>
-        <span class="c1">#         behavior_walking.set_ready(False)</span>
-        <span class="c1">#         number_of_steps +=1</span>
-        <span class="c1">#         print(&quot;envoie d&#39;une commande ! &quot;)</span>
-        <span class="c1">#     if i &lt; len(command[&#39;FR&#39;]):</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">behavior_walking</span><span class="o">.</span><span class="n">set_new_command</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">response</span> <span class="o">!=</span> <span class="p">[]:</span>
+                <span class="n">command</span> <span class="o">=</span> <span class="n">response</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">behavior_walking</span><span class="o">.</span><span class="n">set_ready</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">number_of_steps</span> <span class="o">+=</span><span class="mi">1</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sending a command &quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">command</span><span class="p">[</span><span class="s1">&#39;FR&#39;</span><span class="p">]):</span>
 
 
-        <span class="c1">#         for part in parts : </span>
-        <span class="c1">#             qDes[part][0] = command[part][i][0]</span>
-        <span class="c1">#             qDes[part][1] = command[part][i][1]</span>
-        <span class="c1">#             qDes[part][2] = command[part][i][2]</span>
-        <span class="c1">#         i += 1</span>
+                <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span> <span class="p">:</span> 
+                    <span class="n">qDes</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">command</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">qDes</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">command</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">qDes</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">command</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="c1">#     if i == len(command[&#39;FR&#39;]) : </span>
-        <span class="c1">#         behavior_walking.set_ready(True)</span>
-
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">command</span><span class="p">[</span><span class="s1">&#39;FR&#39;</span><span class="p">])</span> <span class="p">:</span> 
+                <span class="n">behavior_walking</span><span class="o">.</span><span class="n">set_ready</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># </span>
             <span class="c1"># fr_force = state.footForce[0]# real version : uncomment to test in live</span>
-        <span class="c1">#     fl_force = state.footForce[1]# real version : uncomment to test in live</span>
-        <span class="c1">#     rr_force = state.footForce[2]# real version : uncomment to test in live</span>
-        <span class="c1">#     rl_force = state.footForce[3]# real version : uncomment to test in live</span>
+            <span class="c1"># fl_force = state.footForce[1]# real version : uncomment to test in live</span>
+            <span class="c1"># rr_force = state.footForce[2]# real version : uncomment to test in live</span>
+            <span class="c1"># rl_force = state.footForce[3]# real version : uncomment to test in live</span>
 
 
-        <span class="c1">#     # fr_force =  mock_forces[&#39;FR&#39;][new_motion_time] # mock version</span>
-        <span class="c1">#     # fl_force =  mock_forces[&#39;FL&#39;][new_motion_time] # mock version</span>
-        <span class="c1">#     # rr_force =  mock_forces[&#39;RR&#39;][new_motion_time] # mock version</span>
-        <span class="c1">#     # rl_force =  mock_forces[&#39;RL&#39;][new_motion_time] # mock version</span>
+            <span class="n">fr_force</span> <span class="o">=</span>  <span class="n">mock_forces</span><span class="p">[</span><span class="s1">&#39;FR&#39;</span><span class="p">][</span><span class="n">new_motion_time</span><span class="p">]</span> <span class="c1"># mock version : uncomment to see how behavior walking works !</span>
+            <span class="n">fl_force</span> <span class="o">=</span>  <span class="n">mock_forces</span><span class="p">[</span><span class="s1">&#39;FL&#39;</span><span class="p">][</span><span class="n">new_motion_time</span><span class="p">]</span> <span class="c1"># mock version : uncomment to see how behavior walking works !</span>
+            <span class="n">rr_force</span> <span class="o">=</span>  <span class="n">mock_forces</span><span class="p">[</span><span class="s1">&#39;RR&#39;</span><span class="p">][</span><span class="n">new_motion_time</span><span class="p">]</span> <span class="c1"># mock version : uncomment to see how behavior walking works !</span>
+            <span class="n">rl_force</span> <span class="o">=</span>  <span class="n">mock_forces</span><span class="p">[</span><span class="s1">&#39;RL&#39;</span><span class="p">][</span><span class="n">new_motion_time</span><span class="p">]</span> <span class="c1"># mock version : uncomment to see how behavior walking works !</span>
+<span class="c1"># </span>
+            <span class="n">forces</span><span class="p">[</span><span class="s1">&#39;FR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fr_force</span><span class="p">)</span>
+            <span class="n">forces</span><span class="p">[</span><span class="s1">&#39;FL&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fl_force</span><span class="p">)</span>
+            <span class="n">forces</span><span class="p">[</span><span class="s1">&#39;RR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rr_force</span><span class="p">)</span>
+            <span class="n">forces</span><span class="p">[</span><span class="s1">&#39;RL&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rl_force</span><span class="p">)</span>
 
-        <span class="c1">#     forces[&#39;FR&#39;].append(fr_force)</span>
-        <span class="c1">#     forces[&#39;FL&#39;].append(fl_force)</span>
-        <span class="c1">#     forces[&#39;RR&#39;].append(rr_force)</span>
-        <span class="c1">#     forces[&#39;RL&#39;].append(rl_force)</span>
-
-        <span class="c1">#     #-----------force treatment and pattern recognition-------------</span>
-        <span class="c1">#     # firstly, we just use the sensor of FR limb to make it work</span>
-        <span class="c1">#     if new_motion_time%20 == 0: </span>
-        <span class="c1">#         print(&quot;new_motion_time :&quot; ,new_motion_time)</span>
-        <span class="c1">#     foot_sensor.detect(new_motion_time, fr_force,&#39;FR&#39;)</span>
-        <span class="c1">#     foot_sensor.detect(new_motion_time, fl_force,&#39;FL&#39;)</span>
-        <span class="c1">#     # is_step = foot_sensor.retrieve_datas()</span>
+            <span class="c1">#-----------force treatment and pattern recognition-------------</span>
+            <span class="c1"># firstly, we just use the sensor of FR limb to make it work</span>
+            <span class="k">if</span> <span class="n">new_motion_time</span><span class="o">%</span><span class="mi">20</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> 
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;new_motion_time :&quot;</span> <span class="p">,</span><span class="n">new_motion_time</span><span class="p">)</span>
+            <span class="n">foot_sensor</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">new_motion_time</span><span class="p">,</span> <span class="n">fr_force</span><span class="p">,</span><span class="s1">&#39;FR&#39;</span><span class="p">)</span>
+            <span class="n">foot_sensor</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">new_motion_time</span><span class="p">,</span> <span class="n">fl_force</span><span class="p">,</span><span class="s1">&#39;FL&#39;</span><span class="p">)</span>
+            <span class="c1"># is_step = foot_sensor.retrieve_datas()</span>
 
 
 
-        <span class="c1">#     if number_of_steps &gt; 10:  </span>
-        <span class="c1">#         if number_of_steps == 11 : </span>
-        <span class="c1">#             lie_down_time = motiontime</span>
-        <span class="c1">#             rate_count = 0</span>
+            <span class="k">if</span> <span class="n">number_of_steps</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>  
+                <span class="k">if</span> <span class="n">number_of_steps</span> <span class="o">==</span> <span class="mi">11</span> <span class="p">:</span> 
+                    <span class="n">lie_down_time</span> <span class="o">=</span> <span class="n">motiontime</span>
+                    <span class="n">rate_count</span> <span class="o">=</span> <span class="mi">0</span>
 
-        <span class="c1">#             json_path = &quot;data/forces.json&quot;</span>
-        <span class="c1">#             with open(json_path,&quot;w&quot;) as json_file: </span>
-        <span class="c1">#                 json.dump(forces,json_file) </span>
+                    <span class="n">json_path</span> <span class="o">=</span> <span class="s2">&quot;data/forces.json&quot;</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_path</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span> 
+                        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">forces</span><span class="p">,</span><span class="n">json_file</span><span class="p">)</span> 
 
-        <span class="c1">#         new_motion_time = motiontime - lie_down_time</span>
-        <span class="c1">#         qDes = lie_down_procedure(new_motion_time,state,qInit,qDes,d,rate_count)</span>
+                <span class="n">new_motion_time</span> <span class="o">=</span> <span class="n">motiontime</span> <span class="o">-</span> <span class="n">lie_down_time</span>
+                <span class="c1"># qDes = lie_down_procedure(new_motion_time,state,qInit,qDes,d,rate_count)</span>
+                <span class="c1"># design a lie_down_procedure function so that the lie down procedure sends </span>
+                <span class="c1"># exactly the same commands to the controllers (you can copy the pattern of</span>
+                <span class="c1">#  the standu_up_procedure function) </span>
 
 
 
@@ -263,14 +264,6 @@
             <span class="n">cmd</span><span class="o">.</span><span class="n">motorCmd</span><span class="p">[</span><span class="n">d</span><span class="p">[</span> <span class="n">part</span> <span class="o">+</span> <span class="s1">&#39;_2&#39;</span> <span class="p">]]</span><span class="o">.</span><span class="n">Kp</span> <span class="o">=</span> <span class="n">Kp</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
             <span class="n">cmd</span><span class="o">.</span><span class="n">motorCmd</span><span class="p">[</span><span class="n">d</span><span class="p">[</span> <span class="n">part</span> <span class="o">+</span> <span class="s1">&#39;_2&#39;</span> <span class="p">]]</span><span class="o">.</span><span class="n">Kd</span> <span class="o">=</span> <span class="n">Kd</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
             <span class="n">cmd</span><span class="o">.</span><span class="n">motorCmd</span><span class="p">[</span><span class="n">d</span><span class="p">[</span> <span class="n">part</span> <span class="o">+</span> <span class="s1">&#39;_2&#39;</span> <span class="p">]]</span><span class="o">.</span><span class="n">tau</span> <span class="o">=</span> <span class="mf">0.0</span>
-            
-        <span class="nb">print</span><span class="p">(</span><span class="n">qDes</span><span class="p">[</span><span class="s1">&#39;FR&#39;</span><span class="p">])</span>
-        <span class="k">assert</span> <span class="n">qDes</span><span class="p">[</span><span class="s1">&#39;FR&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">qDes</span><span class="p">[</span><span class="s1">&#39;FL&#39;</span><span class="p">]</span>
-        <span class="k">assert</span> <span class="n">qDes</span><span class="p">[</span><span class="s1">&#39;FL&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">qDes</span><span class="p">[</span><span class="s1">&#39;RR&#39;</span><span class="p">]</span>
-        <span class="k">assert</span> <span class="n">qDes</span><span class="p">[</span><span class="s1">&#39;RR&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">qDes</span><span class="p">[</span><span class="s1">&#39;RL&#39;</span><span class="p">]</span>
-        <span class="n">fr_force</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">footForce</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="n">fr_force</span><span class="p">)</span>
 
         <span class="k">if</span><span class="p">(</span><span class="n">motiontime</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">):</span>
             <span class="n">safe</span><span class="o">.</span><span class="n">PowerProtect</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -308,15 +301,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Excitatory_Neuron.html">Neuroscience.structures.Excitatory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Flip_FLop_T.html">Neuroscience.structures.Flip_FLop_T</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Frequency_Detector.html">Neuroscience.structures.Frequency_Detector</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Frequency_Detector_new.html">Neuroscience.structures.Frequency_Detector_new</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Gate_NAND.html">Neuroscience.structures.Gate_NAND</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Inhibitory_Neuron.html">Neuroscience.structures.Inhibitory_Neuron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Organ.html">Neuroscience.structures.Organ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/Neuroscience.structures.Tunable_Oscillator.html">Neuroscience.structures.Tunable_Oscillator</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/animation.animate_any.html">animation.animate_any</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/animation.display_neural_network_2.html">animation.display_neural_network_2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/animation.display_neural_network.html">animation.display_neural_network</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/forces.utils_forces.html">forces.utils_forces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../source/index.html">Welcome to the Walking Neural Project !</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits.html">unitree_legged_sdk.example_py.Bezier.Behavior_Walking_2_bits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.Foot_Sensor.html">unitree_legged_sdk.example_py.Bezier.Foot_Sensor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/unitree_legged_sdk.example_py.Bezier.computation_neuron.html">unitree_legged_sdk.example_py.Bezier.computation_neuron</a></li>

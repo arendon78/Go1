@@ -213,7 +213,7 @@ def compute_neurons(trajectories, controllers, watchers, V):
                 controllers[part][1].pass_inputs(0)
 
             # print("2cd controller to be simualted")
-            controllers[part][1].simulate(internal_time,data_json[part][1][1])
+            controllers[part][1].simulate(internal_time,data_json[part][1][1],use_simulation = True)
             frequency_parts[part][1].append(watchers[part][1].frequency_ratio())
            
             #2
@@ -226,7 +226,7 @@ def compute_neurons(trajectories, controllers, watchers, V):
             else : 
                 controllers[part][2].pass_inputs(0)
             # print("third")
-            controllers[part][2].simulate(internal_time,data_json[part][2][1])
+            controllers[part][2].simulate(internal_time,data_json[part][2][1],use_simulation = True)
             frequency_parts[part][2].append(watchers[part][2].frequency_ratio())
             
 
@@ -242,19 +242,19 @@ def compute_neurons(trajectories, controllers, watchers, V):
 
                 watchers[part][0].update_firing_rate(j)
                 controllers[part][0].pass_inputs(0)
-                None if j == 0 else controllers[part][0].simulate(internal_time,data_json[part][0][1])
+                None if j == 0 else controllers[part][0].simulate(internal_time,data_json[part][0][1],use_simulation = True)
                 frequency_parts[part][0].append(watchers[part][0].frequency_ratio())
                 command[part][0].append(hip)
 
                 watchers[part][1].update_firing_rate(j)
                 controllers[part][1].pass_inputs(0)
-                None if j == 0 else  controllers[part][1].simulate(internal_time,data_json[part][1][1])
+                None if j == 0 else  controllers[part][1].simulate(internal_time,data_json[part][1][1], use_simulation = True)
                 frequency_parts[part][1].append(watchers[part][1].frequency_ratio())
                 command[part][1].append(thigh)
 
                 watchers[part][2].update_firing_rate(j)
                 controllers[part][2].pass_inputs(0)
-                None if j == 0 else controllers[part][2].simulate(internal_time,data_json[part][2][1])
+                None if j == 0 else controllers[part][2].simulate(internal_time,data_json[part][2][1], use_simulation = True)
                 frequency_parts[part][2].append(watchers[part][2].frequency_ratio())
                 command[part][2].append(calf)
 

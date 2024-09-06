@@ -23,8 +23,8 @@ if __name__ == '__main__':
 
     parts = ['FR','FL','RR','RL'] 
     # Generation of the foot trajectory
-    NUM_POINTS_BEZIER = 5
-    NUM_POINTS_STANCE = 5
+    NUM_POINTS_BEZIER = 3
+    NUM_POINTS_STANCE = 3
 
     trajectory = foot_trajectory(NUM_POINTS_BEZIER, NUM_POINTS_STANCE)
 
@@ -81,7 +81,7 @@ if __name__ == '__main__':
     }
 
     # Simulates the neurons on the trajectory
-    compute_simulation = False
+    compute_simulation = True
 
     if compute_simulation:
         neurons_coords, command_coords, frequency_parts, command, inside_oscillator = compute_neurons(trajectories, controllers, watchers, V)
@@ -119,4 +119,4 @@ if __name__ == '__main__':
         with open(os.path.join(project_root,json_path), "r") as json_file:
             neurons_coords = json.load(json_file)
 
-    main_loop_v2(trajectories, trajectory, TOTAL_OFFSET, neurons_coords, parts,stand_up_2)
+    main_loop(trajectories, trajectory, TOTAL_OFFSET, neurons_coords, parts,stand_up_2)

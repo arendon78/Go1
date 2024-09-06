@@ -180,7 +180,7 @@ def main_loop_v2(trajectories,trajectory,TOTAL_OFFSET,neurons_coords,parts,stand
             fl_force =  mock_forces['FL'][new_motion_time] # mock version : uncomment to see how behavior walking works !
             rr_force =  mock_forces['RR'][new_motion_time] # mock version : uncomment to see how behavior walking works !
             rl_force =  mock_forces['RL'][new_motion_time] # mock version : uncomment to see how behavior walking works !
-
+# 
             forces['FR'].append(fr_force)
             forces['FL'].append(fl_force)
             forces['RR'].append(rr_force)

@@ -126,7 +126,7 @@ class Organ:
         """
         self.brain[index] = neuron
 
-    def simulate(self, k, V):
+    def simulate(self, k, V,use_simulation=False):
         """
         Simulates the neural activity within the organ for a single time step.
 
@@ -142,15 +142,25 @@ class Organ:
             neuron.present_inputs(neuron.inputs)
             
             if not neuron.active_potential_bool:
-                V[neuron_count][k] = [k,neuron.spatial_summation()]
+                if use_simulation: 
+                    V[neuron_count][k] = [k,neuron.spatial_summation()]
+                else :
+                    V[neuron_count][k] = neuron.spatial_summation()
 
             if neuron.active_potential_bool:
                 neuron.time_neuron += 1
                 pot = neuron.active_potential(neuron.time_neuron * neuron.resolution)
-                V[neuron_count][k] = [k,pot]
+                if use_simulation:
+                    V[neuron_count][k] = [k,pot]
+                else : 
+                    V[neuron_count][k] = pot
+                    
 
             if not np.any(neuron.active_PSP) and not neuron.active_potential_bool:
-                V[neuron_count][k] = [k,0]
+                if use_simulation: 
+                    V[neuron_count][k] = [k,0]
+                else : 
+                    V[neuron_count][k] = 0
                 neuron.time_neuron = 0
                 neuron.membrane_potential = 0   
 

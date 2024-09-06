@@ -460,7 +460,7 @@ class NeuralNetwork(m.Scene):
         for neuron_potentials_index in range(len(data_json["activity"])):
             neuron_potentials = data_json["activity"][neuron_potentials_index]
             for time_index in range(len(neuron_potentials)):
-                p = data_json["activity"][neuron_potentials_index][time_index][1]                    
+                p = data_json["activity"][neuron_potentials_index][time_index]                 
                 # print(p)
                 # time.sleep(0.00001)
                 if p > ACT_POT - 0.05:
